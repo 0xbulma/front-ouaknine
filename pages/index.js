@@ -42,11 +42,7 @@ export default function Home({ data }) {
       <div className={classes.upper}>
         <div className={`${classes.upperinner}`}>
           <div className={classes.titlegroup}>
-            {title2 && (
-              <p className={classes.subtitle}>
-                {title1 ? `${title1.trim()} - ${title2.trim()}` : title2.trim()}
-              </p>
-            )}
+            {title2 && <p className={classes.subtitle}>{title2.trim()}</p>}
             {title1 && (
               <h1 className={classes.title}>{title1?.trim()}</h1>
             )}
