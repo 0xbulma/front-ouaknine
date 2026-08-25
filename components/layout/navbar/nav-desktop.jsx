@@ -1,9 +1,10 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import LanguagePicker from './language-picker';
+import { IskaMention } from './iska-mention';
 import classes from './nav-desktop.module.scss';
 
-function NavDesktop({ navlinks }) {
+function NavDesktop({ navlinks, iska }) {
   const { pathname } = useRouter();
 
   return (
@@ -25,6 +26,7 @@ function NavDesktop({ navlinks }) {
             </li>)}
           )}
       </ul>
+      <IskaMention content={iska} />
       <div className={classes.locales}>
         <LanguagePicker />
       </div>

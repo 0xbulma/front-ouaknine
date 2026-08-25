@@ -78,10 +78,14 @@ function MainHeader() {
               />
             </a>
           </Link>
-          <NavDesktop navlinks={navlinks[locale].nav} />
+          <NavDesktop navlinks={navlinks[locale].nav} iska={navlinks[locale].iska} />
           <NavMobileButton />
         </div>
-        <NavMobile navlinks={navlinks[locale].nav} onclick={toggleNav} />
+        <NavMobile
+          navlinks={navlinks[locale].nav}
+          iska={navlinks[locale].iska}
+          onclick={toggleNav}
+        />
       </header>
     </>
   );
