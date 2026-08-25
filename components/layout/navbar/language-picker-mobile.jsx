@@ -17,7 +17,11 @@ function LanguagePickerMobile(props) {
   // the same page is display:none at this width, so it never intersects —
   // the other language has to be asked for by hand.
   useEffect(() => {
-    router.prefetch(localePath(router, other), undefined, { locale: other });
+    // router.prefetch only takes a string, unlike router.push below.
+    const target = localePath(router, other);
+    router.prefetch(typeof target === 'string' ? target : pathname, undefined, {
+      locale: other,
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [asPath, other]);
 
