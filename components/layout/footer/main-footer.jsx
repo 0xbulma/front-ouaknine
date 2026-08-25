@@ -71,15 +71,6 @@ function MainFooter() {
         </div>
         <div className={classes.credit}></div>
       </div>
-
-      <a
-        href='https://www.linkedin.com/in/benjamin-anoufa/'
-        target='_blank'
-        rel='noreferrer'
-        className={classes.design}
-      >
-        Website by Benjamin Anoufa
-      </a>
     </footer>
   );
 }

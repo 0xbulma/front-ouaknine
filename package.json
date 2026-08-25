@@ -2,6 +2,9 @@
   "name": "front-ouaknine",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "24.x"
+  },
   "browserslist": [
     ">0.3%",
     "not ie 11",
@@ -30,7 +33,6 @@
     "react-intersection-observer": "9.4.0",
     "react-lottie": "1.2.3",
     "react-markdown": "8.0.3",
-    "react-share": "4.4.0",
     "sharp": "0.30.7",
     "sib-api-v3-sdk": "8.4.0",
     "styled-components": "5.3.5",
