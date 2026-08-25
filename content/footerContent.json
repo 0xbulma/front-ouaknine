@@ -4,13 +4,15 @@
     "link2": "Mentions Légales",
     "link3": "Admin",
     "address": "17 rue de Douai, 75009 Paris, France\nTél. : +33 (0)1 84 16 20 35",
-    "email": "cabinet@ouaknine-avocats.com"
+    "email": "cabinet@ouaknine-avocats.com",
+    "mobile": "+33 (0)6 29 65 35 12"
   },
   "en": {
     "link1": "Ouaknine Law Firm",
     "link2": "Legal Terms",
     "link3": "Admin",
     "address": "17 rue de Douai, 75009 Paris, France\nTel: +33 (0)1 84 16 20 35",
-    "email": "cabinet@ouaknine-avocats.com"
+    "email": "cabinet@ouaknine-avocats.com",
+    "mobile": "+33 (0)6 29 65 35 12"
   }
 }

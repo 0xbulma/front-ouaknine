@@ -15,7 +15,6 @@
 
 .map {
   display: block;
-  border: 1px solid $rule;
   animation: rise 0.5s $ease both;
 }
 
@@ -30,7 +29,7 @@
   grid-template-columns: 9rem 1fr;
   gap: $space-4;
   align-items: baseline;
-  padding: $space-5 0;
+  padding: $space-4 0;
   border-bottom: 1px solid $rule;
 }
 
@@ -46,8 +45,8 @@
   gap: $space-2;
   margin: 0;
   @include serif;
-  font-size: $fs-h3;
-  line-height: $lh-heading;
+  font-size: clamp(1.0625rem, 0.98rem + 0.37vw, 1.25rem);
+  line-height: 1.45;
   color: $ink;
   overflow-wrap: anywhere;
 }
@@ -57,19 +56,6 @@
 
   &:hover {
     color: $paper-raised;
-  }
-}
-
-.rowaction {
-  @include micro;
-  color: $ink-muted;
-  padding-bottom: 2px;
-  border-bottom: 1px solid $rule;
-  transition: color $dur-fast $ease, border-color $dur-fast $ease;
-
-  &:hover {
-    color: $ink;
-    border-color: $ink;
   }
 }
 

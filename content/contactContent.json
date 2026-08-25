@@ -4,13 +4,15 @@
     "google": "Google Map",
     "addressLabel": "Adresse",
     "phoneLabel": "Téléphone",
-    "emailLabel": "Email"
+    "emailLabel": "Email",
+    "mobileLabel": "Mobile"
   },
   "en": {
     "call": "Call us",
     "google": "Google Map",
     "addressLabel": "Address",
     "phoneLabel": "Phone",
-    "emailLabel": "Email"
+    "emailLabel": "Email",
+    "mobileLabel": "Mobile"
   }
 }

@@ -23,6 +23,8 @@ function Contact({ data }) {
   // repeat the label above it
   const phoneNumber = phoneLine.replace(/^[^:]*:\s*/, '');
   const email = footerContent[locale].email;
+  const mobile = footerContent[locale].mobile;
+  const telHref = n => `tel:${n.replace(/\(0\)/, '').replace(/[^+0-9]/g, '')}`;
 
   return (
     <div>
@@ -49,15 +51,14 @@ function Contact({ data }) {
                 {contactContent[locale].addressLabel}
               </dt>
               <dd className={classes.rowvalue}>
-              <span>{addressLine}</span>
-              <a
-                className={classes.rowaction}
-                href={MAPS_URL}
-                target='_blank'
-                rel='noreferrer'
-              >
-                {contactContent[locale].google}
-              </a>
+                <a
+                  className={classes.rowlink}
+                  href={MAPS_URL}
+                  target='_blank'
+                  rel='noreferrer'
+                >
+                  {addressLine}
+                </a>
               </dd>
             </div>
 
@@ -71,6 +72,19 @@ function Contact({ data }) {
               </a>
               </dd>
             </div>
+
+            {mobile && (
+              <div className={classes.row}>
+                <dt className={classes.rowlabel}>
+                  {contactContent[locale].mobileLabel}
+                </dt>
+                <dd className={classes.rowvalue}>
+                  <a className={classes.rowlink} href={telHref(mobile)}>
+                    {mobile}
+                  </a>
+                </dd>
+              </div>
+            )}
 
             <div className={classes.row}>
               <dt className={classes.rowlabel}>
