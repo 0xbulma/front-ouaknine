@@ -21,6 +21,7 @@ function Contact({ data }) {
   // the stored line carries its own prefix ("Tél. : ", "Tel: "), which would
   // repeat the label above it
   const phoneNumber = phoneLine.replace(/^[^:]*:\s*/, '');
+  const email = footerContent[locale].email;
 
   return (
     <div>
@@ -64,6 +65,17 @@ function Contact({ data }) {
               <dd className={classes.rowvalue}>
                 <a className={classes.rowlink} href={TEL_HREF}>
                   {phoneNumber}
+                </a>
+              </dd>
+            </div>
+
+            <div className={classes.row}>
+              <dt className={classes.rowlabel}>
+                {contactContent[locale].emailLabel}
+              </dt>
+              <dd className={classes.rowvalue}>
+                <a className={classes.rowlink} href={`mailto:${email}`}>
+                  {email}
                 </a>
               </dd>
             </div>

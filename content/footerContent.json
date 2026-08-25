@@ -1,15 +1,16 @@
 {
   "fr": {
     "link1": "Cabinet Ouaknine",
-    "link2" : "Mentions Légales",
-    "link3" : "Admin",
-    "address" : "17 rue de Douai, 75009 Paris, France\nTél. : +33 (0)1 84 16 20 35"
+    "link2": "Mentions Légales",
+    "link3": "Admin",
+    "address": "17 rue de Douai, 75009 Paris, France\nTél. : +33 (0)1 84 16 20 35",
+    "email": "cabinet@ouaknine-avocats.com"
   },
-
   "en": {
     "link1": "Ouaknine Law Firm",
-    "link2" : "Legal Terms",
-    "link3" : "Admin",
-    "address" : "17 rue de Douai, 75009 Paris, France\nTel: +33 (0)1 84 16 20 35"
+    "link2": "Legal Terms",
+    "link3": "Admin",
+    "address": "17 rue de Douai, 75009 Paris, France\nTel: +33 (0)1 84 16 20 35",
+    "email": "cabinet@ouaknine-avocats.com"
   }
 }

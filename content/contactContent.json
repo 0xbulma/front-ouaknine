@@ -3,12 +3,14 @@
     "call": "Nous appeler",
     "google": "Google Map",
     "addressLabel": "Adresse",
-    "phoneLabel": "Téléphone"
+    "phoneLabel": "Téléphone",
+    "emailLabel": "Email"
   },
   "en": {
     "call": "Call us",
     "google": "Google Map",
     "addressLabel": "Address",
-    "phoneLabel": "Phone"
+    "phoneLabel": "Phone",
+    "emailLabel": "Email"
   }
 }
