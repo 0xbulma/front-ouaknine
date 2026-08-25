@@ -8,6 +8,8 @@ import HeadPage from '../components/head/head-page';
 import footerContent from '../content/footerContent.json';
 
 import PageTitle from '../components/layout/page-title';
+import Image from 'next/image';
+import parisMap from '../public/images/paris-map.svg';
 
 const MAPS_URL =
   'https://www.google.com/maps/place/Ouaknine+Alice+Avocat/@48.876648,2.3255411,14.2z/data=!4m5!3m4!1s0x0:0x51a276d4dfa05806!8m2!3d48.8775684!4d2.316890';
@@ -29,12 +31,24 @@ function Contact({ data }) {
       <PageTitle title={title ? title : ''} />
 
       <section className={classes.container}>
-        <dl className={classes.details}>
-          <div className={classes.row}>
-            <dt className={classes.rowlabel}>
-              {contactContent[locale].addressLabel}
-            </dt>
-            <dd className={classes.rowvalue}>
+        <div className={classes.grid}>
+          <a
+            className={classes.map}
+            href={MAPS_URL}
+            target='_blank'
+            rel='noreferrer'
+            tabIndex={-1}
+            aria-hidden='true'
+          >
+            <Image src={parisMap} alt='' layout='responsive' />
+          </a>
+
+          <dl className={classes.details}>
+            <div className={classes.row}>
+              <dt className={classes.rowlabel}>
+                {contactContent[locale].addressLabel}
+              </dt>
+              <dd className={classes.rowvalue}>
               <span>{addressLine}</span>
               <a
                 className={classes.rowaction}
@@ -44,31 +58,32 @@ function Contact({ data }) {
               >
                 {contactContent[locale].google}
               </a>
-            </dd>
-          </div>
+              </dd>
+            </div>
 
-          <div className={classes.row}>
-            <dt className={classes.rowlabel}>
-              {contactContent[locale].phoneLabel}
-            </dt>
-            <dd className={classes.rowvalue}>
+            <div className={classes.row}>
+              <dt className={classes.rowlabel}>
+                {contactContent[locale].phoneLabel}
+              </dt>
+              <dd className={classes.rowvalue}>
               <a className={classes.rowlink} href={TEL_HREF}>
                 {phoneNumber}
               </a>
-            </dd>
-          </div>
+              </dd>
+            </div>
 
-          <div className={classes.row}>
-            <dt className={classes.rowlabel}>
-              {contactContent[locale].emailLabel}
-            </dt>
-            <dd className={classes.rowvalue}>
+            <div className={classes.row}>
+              <dt className={classes.rowlabel}>
+                {contactContent[locale].emailLabel}
+              </dt>
+              <dd className={classes.rowvalue}>
               <a className={classes.rowlink} href={`mailto:${email}`}>
                 {email}
               </a>
-            </dd>
-          </div>
-        </dl>
+              </dd>
+            </div>
+          </dl>
+        </div>
       </section>
     </div>
   );

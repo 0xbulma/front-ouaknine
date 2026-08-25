@@ -4,8 +4,21 @@
   @include desktop-container;
 }
 
-// One full-width column: a micro-caps label gutter beside the value, rules
-// spanning the container — the same shape as the practice list on the home page.
+// Map on the left, details on the right. The map is recoloured to the dark kit
+// so it reads as texture behind the type rather than a bright plate.
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr);
+  gap: $space-7;
+  align-items: center;
+}
+
+.map {
+  display: block;
+  border: 1px solid $rule;
+  animation: rise 0.5s $ease both;
+}
+
 .details {
   margin: 0;
   border-top: 1px solid $rule;
@@ -14,7 +27,7 @@
 
 .row {
   display: grid;
-  grid-template-columns: 12rem 1fr;
+  grid-template-columns: 9rem 1fr;
   gap: $space-4;
   align-items: baseline;
   padding: $space-5 0;
@@ -72,6 +85,11 @@
 }
 
 @media (max-width: $breakpoint-md) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: $space-5;
+  }
+
   .row {
     grid-template-columns: 1fr;
     gap: $space-2;
