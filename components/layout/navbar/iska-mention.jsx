@@ -21,6 +21,7 @@ function IskaMention({ content }) {
         width={52}
         height={21}
         layout={'fixed'}
+        priority
       />
     </a>
   );

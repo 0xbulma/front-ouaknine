@@ -10,15 +10,16 @@
   gap: 13px;
   flex: 0 0 auto;
   color: inherit;
-  transition: opacity 0.25s ease;
+  transition: opacity $dur-fast $ease;
 
+  // accent on hover, matching the nav links beside it
   &:hover .label,
   &:focus-visible .label {
-    color: $gray800;
+    color: $accent;
   }
 
+  // focus ring comes from the global :focus-visible rule in globals.scss
   &:focus-visible {
-    outline: 1px solid $gray800;
     outline-offset: 6px;
   }
 }
@@ -27,7 +28,7 @@
   width: 1px;
   height: 36px;
   margin-right: 15px;
-  background-color: $gray200;
+  background-color: $rule;
   flex: 0 0 auto;
 }
 
@@ -39,8 +40,8 @@
   text-transform: uppercase;
   text-align: right;
   white-space: pre;
-  color: $gray500;
-  transition: color 0.25s ease;
+  color: $ink-muted;
+  transition: color $dur-fast $ease;
 }
 
 .mobile {
@@ -57,5 +58,5 @@
   font-size: 14px;
   letter-spacing: 0.17em;
   text-transform: uppercase;
-  color: $gray500;
+  color: $ink-muted;
 }
