@@ -74,7 +74,7 @@ function ExpertiseFields({ items, label, linkLabel, current }) {
           </p>
 
           <div className={classes.titlemask}>
-            <h2 className={classes.title}>{field?.title?.trim()}</h2>
+            <h1 className={classes.title}>{field?.title?.trim()}</h1>
           </div>
 
           <div className={classes.rule} />
@@ -88,7 +88,7 @@ function ExpertiseFields({ items, label, linkLabel, current }) {
             {field?.right && (
               <aside className={classes.spe}>
                 {field.titleSpe && (
-                  <h3 className={classes.spetitle}>{field.titleSpe}</h3>
+                  <h2 className={classes.spetitle}>{field.titleSpe}</h2>
                 )}
                 <div className={classes.spelist}>
                   <RichText value={field.right} />
