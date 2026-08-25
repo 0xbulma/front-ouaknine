@@ -10,6 +10,7 @@ import classes from './Home.module.scss';
 import portrait from '../public/images/alice-portrait-illustration.png';
 import useLocale from '../hooks/useLocale';
 import footerContent from '../content/footerContent.json';
+import { expertiseSlug } from '../libs/expertise';
 
 export default function Home({ data }) {
   const {
@@ -51,7 +52,7 @@ export default function Home({ data }) {
           <ul className={classes.spegroup}>
             {tags.map((tag, i) => (
               <li key={tag.link ? tag.link : tag.label}>
-                <Link href={{ pathname: '/expertise', query: { _id: tag.link } }}>
+                <Link href={`/expertise/${expertiseSlug(tag.link)}`}>
                   <a className={classes.spe}>
                     <span className={classes.speindex}>
                       {String(i + 1).padStart(2, '0')}
@@ -113,11 +114,11 @@ export async function getStaticProps(ctx) {
         title1,
         title2,
         tag1,
-        "link1": link1->_id,
+        "link1": link1->title,
         tag2,
-        "link2": link2->_id,
+        "link2": link2->title,
         tag3,
-        "link3": link3->_id,
+        "link3": link3->title,
         sectionTitle,
         body}`
     );

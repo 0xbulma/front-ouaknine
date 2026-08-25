@@ -1,5 +1,6 @@
 import classes from './main-footer.module.scss';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import LogoSquare from '../../../public/images/logosquare.svg';
 import Image from 'next/image';
 import useLocale from '../../../hooks/useLocale';
@@ -9,9 +10,16 @@ import { FaLinkedin, FaGooglePlusSquare } from 'react-icons/fa';
 
 function MainFooter() {
   const locale = useLocale();
+  const { pathname } = useRouter();
+
+  const underPinnedIndex = pathname.startsWith('/expertise');
 
   return (
-    <footer className={classes.footer}>
+    <footer
+      className={`${classes.footer} ${
+        underPinnedIndex ? classes.footerbare : ''
+      }`}
+    >
       <div className={classes.innercontainer}>
         <div className={classes.logo}>
           <Image
