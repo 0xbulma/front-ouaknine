@@ -47,7 +47,6 @@ function MainHeader() {
     <>
       <header
         className={`${classes.header} ${
-          pathname.includes('/articles/[_id]') ||
           pathname.includes('/legal') ||
           pathname.includes('/404')
             ? classes.border
