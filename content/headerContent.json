@@ -8,7 +8,7 @@
     "iska": {
       "label": "Membre du\nréseau",
       "labelMobile": "Membre du réseau",
-      "aria": "Membre du réseau ISKA, ouverture dans un nouvel onglet"
+      "aria": "Membre du réseau ISKA"
     }
   },
 
@@ -21,7 +21,7 @@
     "iska": {
       "label": "Member of the\nnetwork",
       "labelMobile": "Member of the network",
-      "aria": "Member of the ISKA network, opens in a new tab"
+      "aria": "Member of the ISKA network"
     }
   }
 }

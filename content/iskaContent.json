@@ -1,0 +1,71 @@
+{
+  "fr": {
+    "titleseo": "Réseau ISKA — Alice Ouaknine, avocat à Paris",
+    "descriptionseo": "Alice Ouaknine est membre du réseau ISKA Avocats, réseau d’avocats indépendants implanté au cœur de Paris.",
+    "title": "Réseau ISKA",
+    "tagline": "ISKA Avocats est un réseau d’avocats indépendants combinant leurs compétences pour offrir une analyse transversale et des prestations d’excellence.",
+    "cta": "Découvrir le réseau",
+    "ctaAria": "Site du réseau ISKA, ouverture dans un nouvel onglet",
+    "email": "contact@iska-avocats.fr",
+    "networkTitle": "Le réseau",
+    "network": [
+      "Implanté au cœur de Paris, au 17 rue de Douai, le réseau accompagne et défend les entreprises et leurs dirigeants, les ONG, les institutions et les particuliers.",
+      "Ses avocats exercent tant en conseil qu’en contentieux et plaident devant toutes les juridictions civiles, pénales, commerciales et sociales."
+    ],
+    "bringTitle": "Ce que le réseau apporte",
+    "bring": [
+      "Le cabinet reste indépendant. Alice Ouaknine conduit elle-même ses dossiers de droit pénal, de droit pénal des affaires, de presse et médias, d’enquêtes internes et de préjudice corporel.",
+      "Lorsqu’une affaire déborde du pénal — un volet social, commercial, immobilier ou de propriété intellectuelle — elle s’appuie sur les avocats du réseau, à la même adresse, sans que vous ayez à chercher un autre conseil.",
+      "Une seule interlocutrice, une analyse transversale, et la même exigence sur chaque volet du dossier."
+    ],
+    "skillsTitle": "Les compétences du réseau",
+    "skills": [
+      "Droit pénal",
+      "Droit pénal des affaires",
+      "Enquêtes internes",
+      "Préjudice corporel",
+      "Droit des affaires",
+      "Droit des entreprises en difficultés",
+      "Droit du travail",
+      "Droit immobilier",
+      "Propriété intellectuelle",
+      "Presse et médias",
+      "Nouvelles technologies"
+    ]
+  },
+
+  "en": {
+    "titleseo": "ISKA network — Alice Ouaknine, attorney in Paris",
+    "descriptionseo": "Alice Ouaknine is a member of ISKA Avocats, a network of independent attorneys based in the heart of Paris.",
+    "title": "ISKA network",
+    "tagline": "ISKA Avocats is a network of independent attorneys combining their skills to offer cross-disciplinary analysis and services of excellence.",
+    "cta": "Visit the network",
+    "ctaAria": "ISKA network website, opens in a new tab",
+    "email": "contact@iska-avocats.fr",
+    "networkTitle": "The network",
+    "network": [
+      "Based in the heart of Paris, at 17 rue de Douai, the network advises and defends companies and their executives, NGOs, institutions and individuals.",
+      "Its attorneys act both in advisory and litigation matters, and plead before all civil, criminal, commercial and employment courts."
+    ],
+    "bringTitle": "What the network brings",
+    "bring": [
+      "The firm remains independent. Alice Ouaknine handles her own criminal law, white-collar criminal law, press and media, internal investigation and personal injury matters.",
+      "When a case runs beyond criminal law — an employment, commercial, real estate or intellectual property dimension — she draws on the network’s attorneys, at the same address, without you having to look for another counsel.",
+      "One point of contact, cross-disciplinary analysis, and the same standard on every part of the case."
+    ],
+    "skillsTitle": "The network’s practice areas",
+    "skills": [
+      "Criminal law",
+      "White-collar criminal law",
+      "Internal investigations",
+      "Personal injury",
+      "Business law",
+      "Insolvency law",
+      "Employment law",
+      "Real estate law",
+      "Intellectual property",
+      "Press and media",
+      "New technologies"
+    ]
+  }
+}

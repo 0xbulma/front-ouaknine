@@ -30,6 +30,11 @@
   }
 }
 
+// matches the nav links: the mention is an internal destination now
+.active .label {
+  color: $ink;
+}
+
 .separator {
   width: 1px;
   height: 36px;

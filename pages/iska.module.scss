@@ -1,0 +1,165 @@
+@use '../styles/variables' as *;
+
+.container {
+  @include desktop-container;
+}
+
+// The network's own collage is the one image this page carries; the wordmark,
+// tagline and the link out sit against it.
+.lede {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.72fr);
+  gap: $space-7;
+  align-items: center;
+  padding: $space-6 0 $space-7 0;
+  animation: rise 0.5s $ease both;
+}
+
+.ledetext {
+  min-width: 0;
+}
+
+.wordmark {
+  display: block;
+  line-height: 0;
+  margin-bottom: $space-4;
+}
+
+.tagline {
+  margin: 0;
+  max-width: $measure;
+  @include seriflight;
+  font-size: $fs-h2;
+  line-height: 1.25;
+  letter-spacing: -0.005em;
+  color: $ink;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: $space-4;
+  margin-top: $space-5;
+}
+
+.cta {
+  flex: 0 0 auto;
+  justify-content: center;
+  padding: $space-2 $space-4;
+}
+
+.email {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+  color: $ink-muted;
+  transition: color $dur-fast $ease;
+
+  &:hover {
+    color: $paper;
+  }
+}
+
+.visual {
+  min-width: 0;
+  animation: rise 0.6s $ease $stagger both;
+}
+
+.block {
+  padding-bottom: $space-7;
+  animation: rise 0.5s $ease $stagger both;
+}
+
+.blockindex {
+  @include micro;
+  color: $ink-muted;
+  display: block;
+  margin-bottom: $space-3;
+}
+
+.blocktitle {
+  @include serif;
+  margin: 0 0 $space-4 0;
+  font-size: $fs-section;
+  line-height: $lh-title;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: $ink;
+}
+
+.body p {
+  max-width: $measure;
+  color: $ink-muted;
+}
+
+// globals.scss zeroes paragraph margins
+.body p + p {
+  margin-top: $space-2;
+}
+
+// Eleven practice areas would run as a full-height list; wrapped micro-caps
+// keeps them a single block of texture instead.
+.skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-2 $space-5;
+  margin: 0;
+  padding: $space-3 0 0 0;
+  list-style: none;
+  border-top: 1px solid $rule;
+}
+
+.skill {
+  @include micro;
+  color: $ink-muted;
+  padding: $space-1 0;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: $breakpoint-md) {
+  .lede {
+    grid-template-columns: 1fr;
+    gap: $space-5;
+    padding: $space-5 0 $space-6 0;
+  }
+
+  .visual {
+    width: 80%;
+  }
+
+  .block {
+    padding-bottom: $space-6;
+  }
+}
+
+@media (max-width: $breakpoint-sm) {
+  // one practice area per line would rebuild the long list this replaced
+  .skills {
+    gap: $space-2 $space-3;
+  }
+
+  .skill {
+    font-size: 0.6875rem;
+    letter-spacing: 0.12em;
+  }
+
+  .actions {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: $space-3;
+  }
+
+  .cta {
+    width: 100%;
+  }
+}

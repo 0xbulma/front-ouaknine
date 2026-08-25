@@ -1,17 +1,25 @@
 import classes from './button.module.scss';
 
-function Button(props) {
-  if (props.href) {
+// The anchor branch forwards the remaining props so callers can set aria-label,
+// download, etc. — they used to be silently dropped on links.
+function Button({ href, target, className, children, ...rest }) {
+  if (href) {
     return (
-      <a className={`${classes.btn} ${props.className}`} href={props.href} target={props.target} rel='noreferrer'>
-        {props.children}
+      <a
+        className={`${classes.btn} ${className ?? ''}`}
+        href={href}
+        target={target}
+        rel='noreferrer'
+        {...rest}
+      >
+        {children}
       </a>
     );
   }
 
   return (
-    <button className={classes.btn} onClick={props.onclick} {...props}>
-      {props.children}
+    <button className={`${classes.btn} ${className ?? ''}`} {...rest}>
+      {children}
     </button>
   );
 }
