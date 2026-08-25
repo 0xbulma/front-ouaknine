@@ -105,10 +105,6 @@
     .railtitle {
       color: $ink;
     }
-
-    .railtitle {
-      transform: translateX($space-1);
-    }
   }
 }
 
@@ -123,7 +119,7 @@
   letter-spacing: 0.1em;
   line-height: 1.5;
   color: $ink-muted;
-  transition: color $dur $ease, transform $dur $ease;
+  transition: color $dur $ease;
 }
 
 // ---------------------------------------------------------------------------
@@ -188,6 +184,7 @@
 
 .description {
   grid-column: span 6 / span 6;
+  max-width: $measure;
 
   // The opening paragraph carries the field on its own; the rest is detail.
   > p:first-child {
@@ -313,6 +310,5 @@
 
   .railtitle {
     transition: color $dur $ease;
-    transform: none;
   }
 }

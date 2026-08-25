@@ -8,13 +8,14 @@ import {
 } from '@heroicons/react/outline';
 
 import useLocale from '../../../hooks/useLocale';
+import localePath from '../../../libs/localePath';
 
 import classes from './language-picker.module.scss';
 
 function LanguagePicker() {
   const [state, setState] = useState(false);
   const locale = useLocale();
-  const { pathname, query } = useRouter();
+  const router = useRouter();
   const dropdown = useRef();
   const capLocale = locale.charAt(0).toUpperCase() + locale.slice(1);
 
@@ -37,13 +38,7 @@ function LanguagePicker() {
         />
       </div>
       <div className={`${classes.selector} ${state && classes.selectoractive}`}>
-        <Link
-          locale='fr'
-          href={{
-            pathname: pathname,
-            query,
-          }}
-        >
+        <Link locale='fr' href={localePath(router, 'fr')}>
           <a className={classes.label}>
             <CheckIcon
               className={`${classes.check} ${
@@ -54,10 +49,7 @@ function LanguagePicker() {
           </a>
         </Link>
 
-        <Link locale='en' href={{
-            pathname: pathname,
-            query,
-          }}>
+        <Link locale='en' href={localePath(router, 'en')}>
           <a className={classes.label}>
             <CheckIcon
               className={`${classes.check} ${
