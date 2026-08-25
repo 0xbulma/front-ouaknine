@@ -29,6 +29,7 @@
 // name runs to 144px. Nothing in between.
 .subtitle {
   @include micro;
+  font-size: $fs-display-sub;
   color: $ink-muted;
   margin: 0 0 $space-4 0;
   animation: rise 0.5s $ease both;
