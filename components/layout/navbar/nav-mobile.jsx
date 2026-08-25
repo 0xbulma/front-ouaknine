@@ -2,10 +2,11 @@ import { useContext } from 'react';
 import Link from 'next/link';
 import { NavContextSchema } from '../../../context/nav-context';
 import LanguagePickerMobile from './language-picker-mobile';
+import { IskaMentionMobile } from './iska-mention';
 
 import classes from './nav-mobile.module.scss';
 
-function NavMobile({ navlinks }) {
+function NavMobile({ navlinks, iska }) {
   const { isOn, toggleNav } = useContext(NavContextSchema);
   let i = 0;
 
@@ -34,8 +35,11 @@ function NavMobile({ navlinks }) {
               </li>
             );
           })}
+        <li className={`${classes.navitem} ${classes[`animation${i}`]}`}>
+          <IskaMentionMobile content={iska} onClick={toggleNav} />
+        </li>
         <li
-          className={`${classes.navitem} ${classes.langblock} ${classes[`animation${i}`]}`}
+          className={`${classes.navitem} ${classes.langblock} ${classes[`animation${i + 1}`]}`}
         >
           <LanguagePickerMobile onClick={toggleNav}/>
         </li>

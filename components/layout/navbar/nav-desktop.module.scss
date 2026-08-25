@@ -71,6 +71,17 @@
   padding-left: 3.5rem;
 }
 
+/* Entre 992 et 1200 px, la barre doit loger la mention ISKA : on resserre. */
+@media (max-width: $breakpoint-lg) {
+  .navlist {
+    gap: 2.25rem;
+  }
+
+  .locales {
+    padding-left: 2rem;
+  }
+}
+
 @media (max-width: $breakpoint-md) {
   .nav {
     display: none;

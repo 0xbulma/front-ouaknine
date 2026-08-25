@@ -4,7 +4,12 @@
       { "label": "Le Cabinet", "url": "/" },
       { "label": "Expertise", "url": "/expertise" },
       { "label": "Contact", "url": "/contact" }
-    ]
+    ],
+    "iska": {
+      "label": "Membre du\nréseau",
+      "labelMobile": "Membre du réseau",
+      "aria": "Membre du réseau ISKA, ouverture dans un nouvel onglet"
+    }
   },
 
   "en": {
@@ -12,6 +17,11 @@
       { "label": "The Firm", "url": "/" },
       { "label": "Expertise", "url": "/expertise" },
       { "label": "Contact", "url": "/contact" }
-    ]
+    ],
+    "iska": {
+      "label": "Member of the\nnetwork",
+      "labelMobile": "Member of the network",
+      "aria": "Member of the ISKA network, opens in a new tab"
+    }
   }
 }

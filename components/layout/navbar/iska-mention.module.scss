@@ -1,0 +1,61 @@
+@use '../../../styles/variables' as *;
+
+/* Mention « Membre du réseau ISKA ».
+   Les bascules d'affichage sont assurées par nav-desktop / nav-mobile,
+   qui portent déjà le point de rupture du menu ($breakpoint-md). */
+
+.mention {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  flex: 0 0 auto;
+  color: inherit;
+  transition: opacity 0.25s ease;
+
+  &:hover .label,
+  &:focus-visible .label {
+    color: $gray800;
+  }
+
+  &:focus-visible {
+    outline: 1px solid $gray800;
+    outline-offset: 6px;
+  }
+}
+
+.separator {
+  width: 1px;
+  height: 36px;
+  margin-right: 15px;
+  background-color: $gray200;
+  flex: 0 0 auto;
+}
+
+.label {
+  @include seriflight;
+  font-size: 13px;
+  line-height: 1.4;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+  text-align: right;
+  white-space: pre;
+  color: $gray500;
+  transition: color 0.25s ease;
+}
+
+.mobile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 5vh;
+  color: inherit;
+}
+
+.mobilelabel {
+  @include seriflight;
+  font-size: 14px;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+  color: $gray500;
+}
