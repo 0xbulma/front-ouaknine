@@ -5,10 +5,10 @@ body {
   position: relative;
   padding: 0;
   margin: 0;
-  font-family: 'Instrument Sans', -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
   color: $ink;
-  background-color: $paper;
+  background-color: $bg;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
  // scroll-behavior: smooth;
@@ -63,6 +63,8 @@ h1 {
   margin-bottom: $space-5;
   font-size: $fs-h1;
   line-height: $lh-title;
+  text-transform: uppercase;
+  letter-spacing: -0.005em;
   @include seriflight;
 }
 h2 {
@@ -70,14 +72,19 @@ h2 {
   margin-bottom: $space-3;
   font-size: $fs-h2;
   line-height: $lh-heading;
+  text-transform: uppercase;
+  letter-spacing: -0.005em;
   @include serif;
 }
 h3,h4,h5,h6 {
   margin-top: 0;
   margin-bottom: $space-2;
-  font-size: $fs-h3;
+  font-size: 1rem;
   line-height: $lh-heading;
-  @include serif;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 p {
@@ -105,7 +112,7 @@ button {
 }
 // Keyboard focus was entirely unstyled before this. One rule, everywhere.
 :focus-visible {
-  outline: 2px solid $accent;
+  outline: 2px solid $paper;
   outline-offset: 3px;
   border-radius: 2px;
 }
@@ -121,4 +128,11 @@ button {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+// The section index (01, 02, 03...) is the only ornament on the site. It is a
+// label, not a heading, so it never uses the display face.
+.indexlabel {
+  @include micro;
+  color: $ink-muted;
 }

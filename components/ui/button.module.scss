@@ -10,18 +10,16 @@
   background-color: transparent;
   cursor: pointer;
   border: 1px solid $rule;
-  @include serif;
-  font-weight: 500;
-  font-size: 1.0625rem;
+  @include micro;
   // Colour only. The previous translate(0.5px, -0.8px) hover nudged the button
   // under the cursor on every pointer-over.
   transition: color $dur-fast $ease, border-color $dur-fast $ease,
     background-color $dur-fast $ease;
 
   &:hover {
-    color: $accent;
-    border-color: $accent;
-    background-color: rgba($accent, 0.04);
+    color: $bg;
+    border-color: $paper;
+    background-color: $paper;
   }
 
   &:disabled {

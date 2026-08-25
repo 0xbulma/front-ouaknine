@@ -4,6 +4,14 @@
    Les bascules d'affichage sont assurées par nav-desktop / nav-mobile,
    qui portent déjà le point de rupture du menu ($breakpoint-md). */
 
+.chip {
+  display: inline-flex;
+  align-items: center;
+  background-color: $paper;
+  padding: 6px 9px;
+  line-height: 0;
+}
+
 .mention {
   display: flex;
   align-items: center;
@@ -33,7 +41,7 @@
 }
 
 .label {
-  @include seriflight;
+  font-family: 'Inter', sans-serif;
   font-size: 13px;
   line-height: 1.4;
   letter-spacing: 0.17em;
@@ -54,7 +62,7 @@
 }
 
 .mobilelabel {
-  @include seriflight;
+  font-family: 'Inter', sans-serif;
   font-size: 14px;
   letter-spacing: 0.17em;
   text-transform: uppercase;

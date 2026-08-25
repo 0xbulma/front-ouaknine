@@ -10,7 +10,8 @@
   align-items: flex-start;
   gap: 1.5rem;
 
-  background-color: $paper-raised;
+  background-color: $bg-raised;
+  border: 1px solid $rule;
   padding: 1.2rem;
   box-shadow: 2px 2px 4px rgba(black, 0.1);
 
@@ -39,14 +40,7 @@
   }
 }
 
-.cookie {
-  position: relative;
-  flex: 0 0 auto;
-  width: 70px;
-  height: 70px;
-  stroke-width: 1px;
-  color: $ink-muted;
-}
+
 
 @media (max-width: $breakpoint-md) {
   .container {
@@ -55,9 +49,7 @@
   }
 }
 @media (max-width: $breakpoint-sm) {
-  .cookie {
-    display: none;
-  }
+  
 }
 
 .right {
@@ -86,11 +78,7 @@
   color: $green600;
 }
 
-.accept {
-  color: $green600;
-}
 
-.deny {
-  color: $red600;
-}
+
+
 

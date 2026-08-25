@@ -36,17 +36,27 @@ $cyan800: #155e75;
   border-right: solid 1px $rule;
 }
 
-@mixin seriflight{
- font-family: 'Cormorant';
- //font-family: 'Lora', serif;
-
-  font-weight: 300;
-}
-@mixin serif{
- font-family: 'Cormorant';
- //font-family: 'Lora', serif;
-
+// Bodoni Moda for display, Inter for everything else. Two families, split by
+// size: the Didone only appears above ~40px, where its hairlines survive.
+@mixin seriflight {
+  font-family: 'Bodoni Moda', Didot, 'Times New Roman', serif;
   font-weight: 400;
+  font-optical-sizing: auto;
+}
+@mixin serif {
+  font-family: 'Bodoni Moda', Didot, 'Times New Roman', serif;
+  font-weight: 500;
+  font-optical-sizing: auto;
+}
+
+// The counterweight to the display type: tiny, letterspaced, uppercase. Used
+// for nav, labels, section numbers and anything else that is not a headline.
+@mixin micro {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
 }
 
 @mixin desktop-container {
@@ -85,18 +95,19 @@ $cyan800: #155e75;
   }
 }
 // ---------------------------------------------------------------------------
-// Surface & ink
-// The site carries no photography, so the ground tone and a single accent do
-// the work the hero image used to. Warm off-white reads as paper; pure #fff
-// reads as unfinished once there is nothing on top of it.
+// Monochrome. Black ground, paper ink, nothing else — the only colour on the
+// site is the dot in the ISKA wordmark.
 // ---------------------------------------------------------------------------
-$paper: #fbfaf8;
+$bg: #0a0a0a;
+$bg-raised: #141414;
+$paper: #f2f0ea;
 $paper-raised: #ffffff;
-$ink: #1a1a18;
-$ink-muted: #5c5b56;
-$rule: #e3e0d9;
-$accent: #1f3a5f;
-$accent-hover: #2d5486;
+$ink: #f2f0ea;
+$ink-muted: #8f8c85;
+$rule: #2a2a2a;
+$rule-strong: #454545;
+$accent: #f2f0ea;
+$accent-hover: #ffffff;
 
 // ---------------------------------------------------------------------------
 // Spacing scale (8px base). Vertical rhythm is the layout now that imagery is
@@ -124,12 +135,12 @@ $stagger: 80ms;
 // Fluid type scale — interpolates between 375px and 1440px viewports, clamped
 // at both ends so it stops growing on very wide screens.
 // ---------------------------------------------------------------------------
-$fs-display: clamp(2.75rem, 1.26rem + 6.38vw, 7rem);
-$fs-display-sub: clamp(1.375rem, 0.98rem + 1.69vw, 2.5rem);
+$fs-display: clamp(3rem, 0.6rem + 10.2vw, 9rem);
+$fs-display-sub: clamp(0.75rem, 0.68rem + 0.28vw, 0.9375rem);
 // Page banners and section headings are deliberately oversized — the titles
 // are the ornament now, so they run well past ordinary heading scale.
 $fs-h1: clamp(2.75rem, 1.78rem + 4.13vw, 5.5rem);
-$fs-section: clamp(2.5rem, 1.62rem + 3.76vw, 5rem);
+$fs-section: clamp(2.25rem, 1.63rem + 2.63vw, 4rem);
 $fs-h2: clamp(1.625rem, 1.32rem + 1.31vw, 2.5rem);
 $fs-h3: clamp(1.25rem, 1.07rem + 0.75vw, 1.75rem);
 
@@ -137,4 +148,5 @@ $lh-display: 1.02;
 $lh-title: 1.1;
 $lh-heading: 1.25;
 
-$measure: 68ch;
+$measure: 62ch;
+$fs-micro: 0.75rem;

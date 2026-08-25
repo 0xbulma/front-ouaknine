@@ -46,7 +46,7 @@ $localewidth: 100px;
 .tag {
   font-size: 1rem;
   user-select: none;
-  @include seriflight;
+  font-family: 'Inter', sans-serif;
 }
 
 .check {
@@ -70,7 +70,7 @@ $localewidth: 100px;
   user-select: none;
   transition: all 0.15s;
 
-  @include seriflight;
+  font-family: 'Inter', sans-serif;
 
   &:hover {
     background-color: rgba($accent, 0.06);
@@ -90,13 +90,13 @@ $localewidth: 100px;
   align-items: flex-start;
   gap: 0.1rem;
   padding: 0.1rem 0.1rem;
-  background-color: $paper-raised;
+  background-color: $bg-raised;
   border: solid 1px $rule;
   width: $localewidth;
   opacity: 0;
   transition: all 0.15s;
   visibility: hidden;
-  @include serif;
+  font-family: 'Inter', sans-serif;
 
 }
 

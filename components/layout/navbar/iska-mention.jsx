@@ -15,14 +15,16 @@ function IskaMention({ content }) {
     >
       <span className={classes.separator} aria-hidden={'true'}></span>
       <span className={classes.label}>{content.label}</span>
-      <Image
-        src={IskaLogo}
-        alt={'ISKA'}
-        width={52}
-        height={21}
-        layout={'fixed'}
-        priority
-      />
+      <span className={classes.chip}>
+        <Image
+          src={IskaLogo}
+          alt={'ISKA'}
+          width={52}
+          height={21}
+          layout={'fixed'}
+          priority
+        />
+      </span>
     </a>
   );
 }
@@ -38,13 +40,15 @@ function IskaMentionMobile({ content, onClick }) {
       onClick={onClick}
     >
       <span className={classes.mobilelabel}>{content.labelMobile}</span>
-      <Image
-        src={IskaLogo}
-        alt={'ISKA'}
-        width={54}
-        height={22}
-        layout={'fixed'}
-      />
+      <span className={classes.chip}>
+        <Image
+          src={IskaLogo}
+          alt={'ISKA'}
+          width={54}
+          height={22}
+          layout={'fixed'}
+        />
+      </span>
     </a>
   );
 }

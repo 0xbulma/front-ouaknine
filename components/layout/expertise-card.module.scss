@@ -60,11 +60,19 @@
     flex-grow: 1;
   }
 
+  &_index {
+    @include micro;
+    color: $ink-muted;
+    margin-right: $space-3;
+  }
+
   &_title {
     display: inline;
     margin-bottom: 0rem;
     font-size: $fs-h2;
     line-height: $lh-heading;
+    text-transform: uppercase;
+    letter-spacing: -0.005em;
     @include serif;
 
     user-select: none;
@@ -131,14 +139,17 @@
   &_titlespe {
     margin-bottom: 1.5rem;
     padding-left: 0rem;
+    font-family: 'Inter', sans-serif;
     //@include seriflight;
   }
 
   &_right {
     padding: 1rem 2rem 0rem 2rem;
     grid-column: span 3 / span 3;
-    font-size: 1.1rem;
-    @include serif;
+    font-size: 0.9375rem;
+    font-family: 'Inter', sans-serif;
+    color: $ink-muted;
+    line-height: 1.7;
     border-left: none !important;
   }
 
@@ -186,8 +197,7 @@
     align-items: center;
     gap: 0.5rem;
 
-    @include serif;
-    font-size: 1.1rem;
+    @include micro;
     align-self: flex-end;
   }
 }
@@ -260,8 +270,8 @@
     &_right {
       padding: 0rem;
       grid-column: span 9 / span 9;
-      font-size: 1.2rem;
-      @include serif;
+      font-size: 0.9375rem;
+      font-family: 'Inter', sans-serif;
       border-left: none !important;
     }
   }

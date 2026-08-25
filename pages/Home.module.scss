@@ -2,8 +2,7 @@
 
 .upper {
   position: relative;
-  background-color: $paper;
-  // the scale mark is drawn from a wide viewBox; keep it from widening the page
+  background-color: $bg;
   overflow-x: hidden;
 }
 
@@ -21,88 +20,75 @@
   display: flex;
   margin-top: auto;
   flex-direction: column;
-  gap: $space-5;
   user-select: none;
   color: $ink;
-  padding: 0;
   z-index: 1;
 }
 
-.titlegroup h1 {
-  margin: 0;
-  padding: 0;
+// Extreme scale contrast is the whole idea: the role sits at label size, the
+// name runs to 144px. Nothing in between.
+.subtitle {
+  @include micro;
+  color: $ink-muted;
+  margin: 0 0 $space-4 0;
+  animation: rise 0.5s $ease both;
 }
 
 .title {
   position: relative;
-  letter-spacing: 0.03em;
+  margin: 0;
   font-size: $fs-display;
   line-height: $lh-display;
-  font-weight: 500;
-  margin-bottom: $space-2;
-  display: block;
-  animation: rise 0.5s $ease both;
-}
-
-.subtitle {
-  display: block;
-  font-size: $fs-display-sub;
-  line-height: $lh-heading;
-  letter-spacing: 0.18em;
-  color: $ink-muted;
-  margin: 0;
-  padding: 0;
-  font-weight: 400;
+  letter-spacing: -0.015em;
   text-transform: uppercase;
-  animation: rise 0.5s $ease $stagger both;
-}
-
-// The scales-of-justice line drawing is the page's only ornament now that the
-// photography is gone. It sits under the title as a rule, not a decoration.
-.heromark {
-  margin-top: auto;
-  padding-top: $space-6;
-  width: 100%;
-  overflow: hidden;
+  @include serif;
+  animation: rise 0.6s $ease $stagger both;
 }
 
 .spegroup {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  gap: $space-2;
+  margin-top: $space-6;
+  border-top: 1px solid $rule;
   z-index: 1;
 }
 
 .spe {
-  padding: $space-1 $space-4 $space-1 0;
+  display: flex;
+  align-items: baseline;
+  gap: $space-4;
+  padding: $space-3 0;
   color: $ink;
-  font-size: 1.0625rem;
-  @include serif;
-  font-weight: 500;
-  letter-spacing: 0.01em;
   border-bottom: 1px solid $rule;
-  min-width: min(22rem, 100%);
   transition: color $dur-fast $ease, border-color $dur-fast $ease;
-  z-index: 1;
 
   &:hover {
-    color: $accent;
-    border-color: $accent;
+    color: $paper-raised;
+    border-color: $rule-strong;
   }
 }
 
+.speindex {
+  @include micro;
+  color: $ink-muted;
+  flex: 0 0 auto;
+}
+
+.spelabel {
+  font-size: 1.0625rem;
+  letter-spacing: 0.01em;
+}
+
 @for $i from 1 through 10 {
-  .spe:nth-child(#{$i}) {
-    animation: rise 0.4s $ease ($stagger * ($i + 1)) both;
+  .spegroup li:nth-child(#{$i}) .spe {
+    animation: rise 0.4s $ease ($stagger * ($i + 2)) both;
   }
 }
 
 @keyframes rise {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(12px);
   }
   to {
     opacity: 1;
@@ -110,30 +96,28 @@
   }
 }
 
+// The scales-of-justice line drawing appears exactly once on the site, here,
+// as a signature under the hero.
+.heromark {
+  margin-top: auto;
+  padding-top: $space-6;
+  width: 100%;
+  overflow: hidden;
+}
+
 @media (max-width: $breakpoint-sm) {
   .upperinner {
     min-height: calc(100svh - 80px);
-    // clears the fixed phone button in the bottom-right corner
     padding: $space-5 0 calc($space-7 + env(safe-area-inset-bottom)) 0;
   }
 
-  .titlegroup {
-    gap: $space-4;
-  }
-
-  // 0.18em of tracking on a 22px line runs past the container on a phone
-  .subtitle {
-    letter-spacing: 0.08em;
-  }
-
   .spegroup {
-    gap: $space-1;
-    margin-bottom: $space-2;
+    margin-top: $space-5;
   }
 
   .spe {
-    font-size: 1.0625rem;
-    min-width: 100%;
+    gap: $space-3;
+    padding: $space-2 0;
   }
 
   .heromark {
@@ -141,77 +125,40 @@
   }
 }
 
-@keyframes moving {
-  from {
-    transform: translateY(0);
-  }
-  to {
-    transform: translateY(6px);
-  }
-}
-
-.arrow {
-  align-self: center;
-  margin-top: $space-4;
-  width: 2.75rem;
-  height: 2.75rem;
-  stroke-width: 1px;
-  color: $ink-muted;
-  cursor: pointer;
-  padding: 10px;
-  transition: color $dur-fast $ease, border-color $dur-fast $ease;
-  border: 1px solid $rule;
-  border-radius: 100px;
-
-  &:hover {
-    animation: moving 0.3s ease-in;
-    animation-iteration-count: infinite;
-    animation-direction: alternate;
-    color: $accent;
-    border-color: $accent;
-  }
-}
-
-@media (max-width: $breakpoint-sm) {
-  .arrow {
-    display: none;
-  }
-}
-
 .bottom {
   display: flex;
   flex-direction: row;
   align-items: stretch;
-  gap: $space-4;
+  gap: $space-6;
   padding-top: $space-7;
   @include desktop-container;
 }
 
-// Portrait keeps its own 2:3 aspect rather than stretching to the text panel,
-// and takes the same diagonal cut as the panel beside it.
+// Grayscaled so the portrait reads as part of a monochrome page rather than
+// the one colour object on it.
 .portrait {
-  flex: 0 0 30%;
-  clip-path: polygon(0 0, 100% 0, 88% 100%, 0% 100%);
+  flex: 0 0 34%;
+  filter: grayscale(1) contrast(1.06);
 }
 
 .desc {
   flex: 1 1 auto;
   min-width: 0;
-  background-color: $rule;
-  padding: 1px;
-  clip-path: polygon(5% 0, 100% 0, 100% 100%, 0% 100%);
-}
-
-.descinner {
-  height: 100%;
-  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: $space-6 $space-4 $space-6 $space-8;
-  background-color: $paper-raised;
-  clip-path: polygon(5% 0, 100% 0, 100% 100%, 0% 100%);
+}
+
+.descinner {
+  width: 100%;
   font-size: 1rem;
+}
+
+.sectionindex {
+  @include micro;
+  color: $ink-muted;
+  display: block;
+  margin-bottom: $space-3;
 }
 
 .descinner p {
@@ -226,33 +173,22 @@
   font-size: $fs-section;
   line-height: $lh-title;
   letter-spacing: -0.01em;
+  text-transform: uppercase;
   color: $ink;
 }
 
 @media (max-width: $breakpoint-md) {
   .bottom {
-    padding-top: $space-4;
+    padding-top: $space-5;
     flex-direction: column;
     justify-content: flex-start;
-    align-items: center;
+    align-items: flex-start;
     gap: $space-5;
   }
 
   .portrait {
     flex: 0 0 auto;
-    width: 60%;
-    clip-path: none;
-  }
-
-  .desc {
-    width: 100%;
-    clip-path: none;
-  }
-
-  .descinner {
-    display: block;
-    padding: $space-5 $space-3;
-    clip-path: none;
+    width: 62%;
   }
 }
 

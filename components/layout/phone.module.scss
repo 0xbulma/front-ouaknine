@@ -17,15 +17,14 @@
 }
 
 .svg{
-  @include borderlight;
-  background-color: rgba($paper, 0.85);
+  border: 1px solid $rule-strong;
+  background-color: $bg;
   backdrop-filter: blur(5px);
   border-radius: 100px;
   padding: 1rem;
   width: 60px;
   height: 60px;
-  box-shadow: 2px 2px 4px rgba(black, .1);
-  color: $ink-muted;
+  color: $paper;
   overflow: visible;
 }
 

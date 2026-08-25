@@ -36,13 +36,13 @@
   @include desktop-container;
   @include borderlight;
   padding: 3rem;
-  background-color: $paper;
+  background-color: $bg-raised;
 }
 
 .phasegroupinner {
   display: flex;
   flex-direction: column;
-  background-color: $paper;
+  background-color: $bg-raised;
   padding: 4rem 4rem 2rem 4rem;
   font-size: 1.1rem;
 }
@@ -78,7 +78,7 @@
   align-items: center;
   gap: 0.5rem;
 
-  @include seriflight;
+  font-family: 'Inter', sans-serif;
   font-size: 1.1rem;
   align-self: flex-end;
 }

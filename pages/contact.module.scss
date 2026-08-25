@@ -25,16 +25,15 @@
 
 .leftblock {
   opacity: 0;
-  padding: 1px;
-  clip-path: polygon(0 0, 100% 0, 92% 100%, 0% 100%);
+  padding: 0;
+  border-top: 1px solid $rule;
   overflow: hidden;
-  background-color: $rule;
+  background-color: transparent;
   animation: appear 1s linear 0.4s;
   animation-fill-mode: forwards;
 }
 
 .leftblockinner {
-  clip-path: polygon(0 0, 100% 0, 92% 100%, 0% 100%);
   height: 100%;
   overflow: hidden;
   display: flex;
@@ -42,7 +41,7 @@
   flex-direction: column;
   gap: 1.5rem;
   padding: 3rem 3rem 3rem 3rem;
-  background-color: $paper-raised;
+  background-color: transparent;
 }
 
 .portable {
@@ -142,16 +141,14 @@
   }
 
   .leftblock {
-    clip-path: none;
     order: 2;
   }
 
   .leftblockinner {
-    clip-path: none;
 
     gap: 1.5rem;
     padding: 1.5rem 2rem;
-    background-color: $paper-raised;
+    background-color: transparent;
   }
 
   .btngroup {
@@ -180,10 +177,9 @@
 
 
   .leftblockinner {
-    clip-path: none;
 
     gap: 1.5rem;
     padding: 1.5rem 1.5rem 2rem 1.5rem;
-    background-color: $paper-raised;
+    background-color: transparent;
   }
 }

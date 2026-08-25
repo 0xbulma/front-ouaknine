@@ -4,7 +4,7 @@
   position: sticky;
   top: 0;
   z-index: 10;
-  background-color: rgba($paper, 0.78);
+  background-color: rgba($bg, 0.72);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   width: 100%;
@@ -45,8 +45,4 @@
  
 }
 
-.banner {
-  clip-path: polygon(0 0, 100% 0, 100% 30%, 0 100%);
 
-  opacity: 0.3;
-}
