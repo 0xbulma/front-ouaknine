@@ -26,8 +26,8 @@ function Iska() {
               <Image
                 src={iskaLogo}
                 alt={content.title}
-                width={340}
-                height={138}
+                width={260}
+                height={105}
                 layout='intrinsic'
                 priority
               />

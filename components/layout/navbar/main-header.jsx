@@ -18,7 +18,6 @@ function MainHeader() {
       <header
         className={`${classes.header} ${
           pathname.includes('/legal') ||
-          pathname.includes('/iska') ||
           pathname.includes('/404')
             ? classes.border
             : ''
