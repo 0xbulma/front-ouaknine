@@ -97,13 +97,26 @@
   }
 }
 
-// The scales-of-justice line drawing appears exactly once on the site, here,
-// as a signature under the hero.
-.heromark {
+// Closes the hero with a rule and the two facts a visitor wants, rather than
+// with ornament.
+.herofoot {
   margin-top: auto;
-  padding-top: $space-6;
-  width: 100%;
-  overflow: hidden;
+  padding-top: $space-3;
+  border-top: 1px solid $rule;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: $space-3;
+}
+
+.herofootitem {
+  @include micro;
+  color: $ink-muted;
+  transition: color $dur-fast $ease;
+}
+
+a.herofootitem:hover {
+  color: $paper;
 }
 
 @media (max-width: $breakpoint-sm) {
@@ -121,8 +134,9 @@
     padding: $space-2 0;
   }
 
-  .heromark {
-    padding-top: $space-5;
+  .herofoot {
+    flex-direction: column;
+    gap: $space-1;
   }
 }
 

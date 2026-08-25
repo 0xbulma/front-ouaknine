@@ -1,7 +1,7 @@
 {
   "fr": {
     "nav": [
-      { "label": "Alice Ouaknine", "url": "/" },
+      { "label": "Le Cabinet", "url": "/" },
       { "label": "Expertise", "url": "/expertise" },
       { "label": "Contact", "url": "/contact" }
     ],
@@ -14,7 +14,7 @@
 
   "en": {
     "nav": [
-      { "label": "Alice Ouaknine", "url": "/" },
+      { "label": "The Firm", "url": "/" },
       { "label": "Expertise", "url": "/expertise" },
       { "label": "Contact", "url": "/contact" }
     ],

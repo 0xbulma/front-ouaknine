@@ -2,14 +2,14 @@ import Link from 'next/link';
 import Image from 'next/image';
 import clientApi from '../libs/clientApi';
 import RichText from '../components/ui/rich-text.jsx';
-import AnimatedScale from '../components/layout/animated-scale';
 
 import HeadPage from '../components/head/head-page';
 
 import classes from './Home.module.scss';
 
-import AnimatedScaleMobile from '../components/layout/animated-scale-mobile';
 import portrait from '../public/images/_50A7988_1.jpeg';
+import useLocale from '../hooks/useLocale';
+import footerContent from '../content/footerContent.json';
 
 export default function Home({ data }) {
   const {
@@ -26,6 +26,9 @@ export default function Home({ data }) {
     sectionTitle,
     body,
   } = data;
+
+  const locale = useLocale();
+  const [addressLine, phoneLine] = footerContent[locale].address.split('\n');
 
   const tags = [
     { label: tag1, link: link1 },
@@ -64,9 +67,11 @@ export default function Home({ data }) {
             ))}
           </ul>
 
-          <div className={classes.heromark} aria-hidden='true'>
-            <AnimatedScale draw />
-            <AnimatedScaleMobile draw />
+          <div className={classes.herofoot}>
+            <span className={classes.herofootitem}>{addressLine}</span>
+            <a className={classes.herofootitem} href='tel:+33184162035'>
+              {phoneLine}
+            </a>
           </div>
         </div>
       </div>

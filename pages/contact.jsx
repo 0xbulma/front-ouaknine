@@ -1,7 +1,6 @@
 import classes from './contact.module.scss';
 import Form from '../components/ui/form/form';
 
-import { useRef, useState } from 'react';
 import RichText from '../components/ui/rich-text';
 import contactContent from '../content/contactContent.json';
 
@@ -10,15 +9,10 @@ import clientApi from '../libs/clientApi';
 import HeadPage from '../components/head/head-page';
 import footerContent from '../content/footerContent.json';
 
-import { useInView } from 'react-intersection-observer';
-
 import Button from '../components/ui/button';
 import { PhoneIcon, LocationMarkerIcon } from '@heroicons/react/solid';
 
 import PageTitle from '../components/layout/page-title';
-import useOffset from '../hooks/useOffset';
-
-import AnimatedScale from '../components/layout/animated-scale-center';
 
 function Contact({ data }) {
   const {
@@ -32,16 +26,6 @@ function Contact({ data }) {
   } = data;
   const locale = useLocale();
 
-  const { ref, inView, entry } = useInView({
-    /* Optional options */
-    threshold: 0.5,
-    triggerOnce: true,
-  });
-
-  const scaleRef = useRef();
-  const [percentView, setPercentView] = useState(1);
-
-  useOffset(percentView, setPercentView, scaleRef, -200, 1.5)
 
   return (
     <div>
@@ -85,12 +69,7 @@ function Contact({ data }) {
         </div>
       </section>
 
-      <div className={classes.separator} ref={ref} id='section2'>
-            <div ref={scaleRef}>
-            <AnimatedScale animate={inView} percentView={percentView}/>
-            </div>
-            
-      </div>
+      <div className={classes.separator} id='section2'></div>
       <section className={classes.container}>
         <Form titleform={titleform && titleform} subform={subform && subform} />
       </section>
