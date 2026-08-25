@@ -34,7 +34,8 @@
 
 .sectiontitle {
   @include serif;
-  font-size: 3rem;
+  font-size: $fs-h1;
+  line-height: $lh-title;
   margin: 0;
   margin-bottom: 1rem;
 }
@@ -45,14 +46,11 @@
     margin-bottom: 6rem;
     padding: 0;
   }
-
-  .sectiontitle {
-    font-size: 2.5rem;
-  }
 }
 
 .sectiontitle2 {
-  font-size: 3rem;
+  font-size: $fs-h1;
+  line-height: $lh-title;
   margin-bottom: 2rem;
 }
 

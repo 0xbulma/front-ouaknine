@@ -60,30 +60,29 @@
 .title {
   position: relative;
   opacity: 0;
-  font-size: 3.5rem;
+  font-size: $fs-h1;
+  line-height: $lh-title;
   font-weight: 500;
   margin-top: 0rem;
   margin-bottom: 0rem;
-  letter-spacing: 0.1rem;
   width: 100%;
   animation: appear 2s;
   animation-fill-mode: forwards;
-  width: 100%;
-  letter-spacing: 4px;
+  letter-spacing: 0.06em;
 }
 
 @media (max-width: $breakpoint-sm) {
   .title{
     animation: none;
     opacity: 1;
-    letter-spacing: 2px;
   }
 }
 
 
 
 .subtitle {
-  font-size: 1.4rem;
+  font-size: $fs-h3;
+  line-height: $lh-heading;
   font-weight: 300;
 }
 
@@ -102,8 +101,6 @@
 
   .title {
     font-weight: 500;
-    font-size: 2.5rem;
-     line-height: 2.5rem;
   }
 
   .subtitle {

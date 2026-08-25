@@ -54,24 +54,27 @@ ol {
 h1 {
   margin-top: 0rem;
   margin-bottom: 3rem;
-  font-size: 3rem;
+  font-size: $fs-h1;
+  line-height: $lh-title;
   @include seriflight;
 }
 h2 {
   margin-top: 2rem;
   margin-bottom: 1.5rem;
-  font-size: 2rem;
+  font-size: $fs-h2;
+  line-height: $lh-heading;
   @include serif;
 }
 h3,h4,h5,h6 {
   margin-top: 0;
   margin-bottom: 1rem;
-  font-size: 1.6rem;
+  font-size: $fs-h3;
+  line-height: $lh-heading;
   @include serif;
 }
 
 p {
-  line-height: 1.5rem;
+  line-height: 1.65;
   //letter-spacing: 1px;
   margin: 0;
   padding: 0;
