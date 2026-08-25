@@ -135,7 +135,10 @@ $stagger: 80ms;
 // Fluid type scale — interpolates between 375px and 1440px viewports, clamped
 // at both ends so it stops growing on very wide screens.
 // ---------------------------------------------------------------------------
-$fs-display: clamp(3rem, 0.6rem + 10.2vw, 9rem);
+// Below ~379px the hero is bound by its longest word (CRIMINAL) against the
+// container, so it tracks pure vw and holds a constant fill instead of going
+// flat and clipping on 320px screens. Above that, the usual fluid line to 144.
+$fs-display: min(17vw, 2.25rem + 7.5vw, 9rem);
 $fs-display-sub: clamp(0.75rem, 0.706rem + 0.188vw, 0.875rem);
 // Page banners and section headings are deliberately oversized — the titles
 // are the ornament now, so they run well past ordinary heading scale.
