@@ -14,7 +14,7 @@ const EXPERTISE_PAIRS = [
   ['cyber-criminalite', 'cyber-crime'],
   [
     'defense-des-ressortissants-americains-et-des-etrangers-anglophones',
-    'defense-of-american-citizens-and-english-speaking-foreigners',
+    'defense-of-american-citizens-and-foreigners',
   ],
   ['droit-de-la-presse', 'press-and-media-law'],
   ['droit-penal-du-travail', 'criminal-employment-law'],

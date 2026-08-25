@@ -1,4 +1,14 @@
 {
+  "postalAddress": {
+    "streetAddress": "17 rue de Douai",
+    "postalCode": "75009",
+    "addressLocality": "Paris",
+    "addressRegion": "Île-de-France",
+    "addressCountry": "FR"
+  },
+  "phone": "+33184162035",
+  "mobilePhone": "+33629653512",
+
   "fr": {
     "link1": "Cabinet Ouaknine",
     "link2": "Mentions Légales",

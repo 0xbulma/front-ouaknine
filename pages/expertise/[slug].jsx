@@ -1,5 +1,6 @@
 import ExpertisePage from '../../components/layout/expertise-page';
 import { expertiseSlug, fetchExpertise, plainText } from '../../libs/expertise';
+import organizationContent from '../../content/organizationContent.json';
 
 export default ExpertisePage;
 
@@ -35,12 +36,17 @@ export async function getStaticProps({ params, locale }) {
 
     if (!field) return { notFound: true, revalidate: 10 };
 
+    // The field leads, then the practice and the city. Every commercial query
+    // in Search Console pairs a field with "paris"; the section label the title
+    // used to carry ("Practice Areas") matched none of them.
+    const org = organizationContent[locale] ?? organizationContent.fr;
+
     return {
       props: {
         data: content,
         slug: params.slug,
         seo: {
-          title: `${field.title.trim()} — ${content?.title?.trim() ?? ''}`,
+          title: `${field.title.trim()} | ${org.name}, ${org.areaServed}`,
           description: plainText(field.description),
         },
       },

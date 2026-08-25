@@ -1,4 +1,5 @@
 import HeadPage from '../head/head-page';
+import ExpertiseSchema from '../head/expertise-schema';
 import ExpertiseFields from './expertise-fields';
 
 import ExpertiseContent from '../../content/expertiseContent.json';
@@ -13,10 +14,11 @@ function ExpertisePage({ data, slug, seo }) {
   return (
     <div>
       <HeadPage
-        title={seo?.title ? seo.title : ''}
-        description={seo?.description ? seo.description : ''}
-        canonicalPath={`/expertise/${slug}`}
+        title={seo?.title ?? ''}
+        description={seo?.description ?? ''}
+        alternatePaths={seo?.alternates}
       />
+      <ExpertiseSchema items={expertiseList ?? []} current={slug} />
       <section id='section1' className={classes.section1}>
         {expertiseList?.length > 0 && (
           <ExpertiseFields

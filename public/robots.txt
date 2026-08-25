@@ -1,2 +1,6 @@
 User-agent: *
-Sitemap: https://www.ouaknine-avocats.com/api/sitemap
+Allow: /
+
+# /api/sitemap is the only API route and it serves this file, so nothing under
+# /api is disallowed, so the previously submitted /api/sitemap URL keeps working.
+Sitemap: https://www.ouaknine-avocats.com/sitemap.xml

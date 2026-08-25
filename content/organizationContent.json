@@ -1,0 +1,16 @@
+{
+  "fr": {
+    "name": "Cabinet Ouaknine",
+    "description": "Cabinet d'avocat en droit pénal et en droit pénal des affaires à Paris 9e. Alice Ouaknine, avocate aux barreaux de Paris et de Californie, assure la défense pénale des particuliers, des entreprises et de leurs dirigeants.",
+    "jobTitle": "Avocate au barreau de Paris",
+    "bars": ["Barreau de Paris", "State Bar of California"],
+    "areaServed": "Paris"
+  },
+  "en": {
+    "name": "Ouaknine Law Firm",
+    "description": "Criminal and white-collar criminal defence law firm in Paris. Alice Ouaknine, admitted to the Paris and California bars, defends individuals, companies and their executives, in French and in English.",
+    "jobTitle": "Attorney at law, Paris Bar",
+    "bars": ["Paris Bar", "State Bar of California"],
+    "areaServed": "Paris"
+  }
+}
