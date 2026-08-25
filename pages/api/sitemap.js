@@ -1,7 +1,7 @@
 import clientApi from '../../libs/clientApi';
 import { expertiseSlug } from '../../libs/expertise';
 
-const PAGES = ['', '/contact', '/expertise', '/legal'];
+const PAGES = ['', '/contact', '/expertise', '/iska', '/legal'];
 const LOCALES = [
   ['fr', ''],
   ['en', '/en'],
