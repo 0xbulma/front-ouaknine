@@ -13,7 +13,6 @@
   background-color: $bg-raised;
   border: 1px solid $rule;
   padding: 1.2rem;
-  box-shadow: 2px 2px 4px rgba(black, 0.1);
 
   width: calc(50% - 2rem);
   @include borderlight;
