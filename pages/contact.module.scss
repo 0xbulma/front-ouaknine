@@ -59,6 +59,10 @@
 
 .subtitle {
   margin-top: 0;
+  margin-bottom: $space-3;
+  font-size: $fs-section;
+  line-height: $lh-title;
+  letter-spacing: -0.01em;
   @include serif;
 }
 

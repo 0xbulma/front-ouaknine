@@ -17,13 +17,16 @@
 
 .titleblock{
   grid-column: span 2 / span 2;
-  margin-bottom: 2rem;
+  margin-bottom: $space-4;
 }
 
 .title{
   @include serif;
   margin-top: 0;
-  margin-bottom: 1.5rem;
+  margin-bottom: $space-3;
+  font-size: $fs-section;
+  line-height: $lh-title;
+  letter-spacing: -0.01em;
 }
 
 

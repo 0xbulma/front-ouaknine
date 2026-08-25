@@ -126,7 +126,10 @@ $stagger: 80ms;
 // ---------------------------------------------------------------------------
 $fs-display: clamp(2.75rem, 1.26rem + 6.38vw, 7rem);
 $fs-display-sub: clamp(1.375rem, 0.98rem + 1.69vw, 2.5rem);
-$fs-h1: clamp(2.5rem, 1.8rem + 3vw, 4.5rem);
+// Page banners and section headings are deliberately oversized — the titles
+// are the ornament now, so they run well past ordinary heading scale.
+$fs-h1: clamp(2.75rem, 1.78rem + 4.13vw, 5.5rem);
+$fs-section: clamp(2.5rem, 1.62rem + 3.76vw, 5rem);
 $fs-h2: clamp(1.625rem, 1.32rem + 1.31vw, 2.5rem);
 $fs-h3: clamp(1.25rem, 1.07rem + 0.75vw, 1.75rem);
 

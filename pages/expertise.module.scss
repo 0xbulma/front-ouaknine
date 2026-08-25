@@ -26,34 +26,6 @@
   grid-column: span 2 / span 2;
 }
 
-.sectiontitlegroup {
-  margin-bottom: $space-7;
-  // @include borderlight;
-  // padding: 3rem 4rem 5rem 4rem;
-}
-
-.sectiontitle {
-  @include serif;
-  font-size: $fs-h1;
-  line-height: $lh-title;
-  margin: 0;
-  margin-bottom: 1rem;
-}
-
-@media (max-width: $breakpoint-sm) {
-  .sectiontitlegroup {
-    border: none;
-    margin-bottom: $space-6;
-    padding: 0;
-  }
-}
-
-.sectiontitle2 {
-  font-size: $fs-h1;
-  line-height: $lh-title;
-  margin-bottom: 2rem;
-}
-
 .arrowlink {
   width: 20px;
   height: 20px;
