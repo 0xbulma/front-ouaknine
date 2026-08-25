@@ -4,34 +4,8 @@
   @include desktop-container;
 }
 
-// Two columns of comparable weight: the invitation on the left, the two
-// concrete details on the right. No panels, no fills — rules do the dividing.
-.grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: $space-8;
-  align-items: start;
-}
-
-.intro {
-  animation: rise 0.5s $ease both;
-}
-
-.introtitle {
-  @include serif;
-  margin: 0 0 $space-4 0;
-  font-size: $fs-section;
-  line-height: $lh-title;
-  letter-spacing: -0.01em;
-  text-transform: uppercase;
-  color: $ink;
-}
-
-.introbody p {
-  max-width: 38ch;
-  color: $ink-muted;
-}
-
+// One full-width column: a micro-caps label gutter beside the value, rules
+// spanning the container — the same shape as the practice list on the home page.
 .details {
   margin: 0;
   border-top: 1px solid $rule;
@@ -39,10 +13,11 @@
 }
 
 .row {
-  display: flex;
-  flex-direction: column;
-  gap: $space-2;
-  padding: $space-4 0;
+  display: grid;
+  grid-template-columns: 12rem 1fr;
+  gap: $space-4;
+  align-items: baseline;
+  padding: $space-5 0;
   border-bottom: 1px solid $rule;
 }
 
@@ -97,12 +72,9 @@
 }
 
 @media (max-width: $breakpoint-md) {
-  .grid {
-    grid-template-columns: repeat(1, minmax(0, 1fr));
-    gap: $space-6;
-  }
-
-  .introbody p {
-    max-width: $measure;
+  .row {
+    grid-template-columns: 1fr;
+    gap: $space-2;
+    padding: $space-4 0;
   }
 }

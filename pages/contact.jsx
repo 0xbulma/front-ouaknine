@@ -1,6 +1,5 @@
 import classes from './contact.module.scss';
 
-import RichText from '../components/ui/rich-text';
 import contactContent from '../content/contactContent.json';
 
 import useLocale from '../hooks/useLocale';
@@ -15,7 +14,7 @@ const MAPS_URL =
 const TEL_HREF = 'tel:+33184162035';
 
 function Contact({ data }) {
-  const { titleseo, descriptionseo, title, titlebox, body } = data;
+  const { titleseo, descriptionseo, title } = data;
   const locale = useLocale();
   const [addressLine, phoneLine] = footerContent[locale].address.split('\n');
   // the stored line carries its own prefix ("Tél. : ", "Tel: "), which would
@@ -30,57 +29,46 @@ function Contact({ data }) {
       <PageTitle title={title ? title : ''} />
 
       <section className={classes.container}>
-        <div className={classes.grid}>
-          <div className={classes.intro}>
-            {titlebox && <h2 className={classes.introtitle}>{titlebox}</h2>}
-            {body && (
-              <div className={classes.introbody}>
-                <RichText value={body} />
-              </div>
-            )}
+        <dl className={classes.details}>
+          <div className={classes.row}>
+            <dt className={classes.rowlabel}>
+              {contactContent[locale].addressLabel}
+            </dt>
+            <dd className={classes.rowvalue}>
+              <span>{addressLine}</span>
+              <a
+                className={classes.rowaction}
+                href={MAPS_URL}
+                target='_blank'
+                rel='noreferrer'
+              >
+                {contactContent[locale].google}
+              </a>
+            </dd>
           </div>
 
-          <dl className={classes.details}>
-            <div className={classes.row}>
-              <dt className={classes.rowlabel}>
-                {contactContent[locale].addressLabel}
-              </dt>
-              <dd className={classes.rowvalue}>
-                <span>{addressLine}</span>
-                <a
-                  className={classes.rowaction}
-                  href={MAPS_URL}
-                  target='_blank'
-                  rel='noreferrer'
-                >
-                  {contactContent[locale].google}
-                </a>
-              </dd>
-            </div>
+          <div className={classes.row}>
+            <dt className={classes.rowlabel}>
+              {contactContent[locale].phoneLabel}
+            </dt>
+            <dd className={classes.rowvalue}>
+              <a className={classes.rowlink} href={TEL_HREF}>
+                {phoneNumber}
+              </a>
+            </dd>
+          </div>
 
-            <div className={classes.row}>
-              <dt className={classes.rowlabel}>
-                {contactContent[locale].phoneLabel}
-              </dt>
-              <dd className={classes.rowvalue}>
-                <a className={classes.rowlink} href={TEL_HREF}>
-                  {phoneNumber}
-                </a>
-              </dd>
-            </div>
-
-            <div className={classes.row}>
-              <dt className={classes.rowlabel}>
-                {contactContent[locale].emailLabel}
-              </dt>
-              <dd className={classes.rowvalue}>
-                <a className={classes.rowlink} href={`mailto:${email}`}>
-                  {email}
-                </a>
-              </dd>
-            </div>
-          </dl>
-        </div>
+          <div className={classes.row}>
+            <dt className={classes.rowlabel}>
+              {contactContent[locale].emailLabel}
+            </dt>
+            <dd className={classes.rowvalue}>
+              <a className={classes.rowlink} href={`mailto:${email}`}>
+                {email}
+              </a>
+            </dd>
+          </div>
+        </dl>
       </section>
     </div>
   );
@@ -94,9 +82,7 @@ export async function getStaticProps(ctx) {
       `*[_type == "contact" && language == "${locale}"]{
         titleseo,
         descriptionseo,
-        title,
-        titlebox,
-        body
+        title
       }`
     );
     return { props: { data: content?.length && content[0] }, revalidate: 10  };
