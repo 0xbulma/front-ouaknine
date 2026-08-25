@@ -6,6 +6,14 @@
   font-weight: 300;
 }
 
+// The expertise index is pinned and, on a short viewport, reaches past the
+// section it belongs to. A rule across the top of the footer would be drawn
+// straight through it, so on those pages the section runs into the footer
+// without one.
+.footerbare {
+  border-top: none;
+}
+
 .innercontainer {
   padding: 2rem 0;
   display: flex;
