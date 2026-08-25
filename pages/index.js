@@ -41,7 +41,7 @@ export default function Home({ data }) {
           <div className={classes.titlegroup}>
             {title2 && (
               <p className={classes.subtitle}>
-                {title1 ? `${title1.trim()} — ${title2.trim()}` : title2.trim()}
+                {title1 ? `${title1.trim()} - ${title2.trim()}` : title2.trim()}
               </p>
             )}
             {title1 && (
@@ -77,7 +77,7 @@ export default function Home({ data }) {
             src={portrait}
             alt={
               title1 && title2
-                ? `${title1.trim()} — ${title2.trim()}`
+                ? `${title1.trim()} - ${title2.trim()}`
                 : 'Alice Ouaknine'
             }
             layout='responsive'

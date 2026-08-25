@@ -4,13 +4,10 @@
    Les bascules d'affichage sont assurées par nav-desktop / nav-mobile,
    qui portent déjà le point de rupture du menu ($breakpoint-md). */
 
-// The mark is a black wordmark; knock it out to white so it sits on the black
-// ground without a plate behind it.
 .chip {
   display: inline-flex;
   align-items: center;
   line-height: 0;
-  filter: brightness(0) invert(1);
 }
 
 .mention {
