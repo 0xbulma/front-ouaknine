@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import clientApi from '../libs/clientApi';
 import RichText from '../components/ui/rich-text.jsx';
 import { ChevronDoubleDownIcon } from '@heroicons/react/outline';
@@ -10,6 +11,7 @@ import HeadPage from '../components/head/head-page';
 import classes from './Home.module.scss';
 
 import AnimatedScaleMobile from '../components/layout/animated-scale-mobile';
+import portrait from '../public/images/_50A7988_1.jpeg';
 
 export default function Home({ data }) {
   const {
@@ -71,6 +73,20 @@ export default function Home({ data }) {
       </div>
 
       <section className={classes.bottom} id='homedesc'>
+        <div className={classes.portrait}>
+          <Image
+            src={portrait}
+            alt={
+              title1 && title2
+                ? `${title1.trim()} — ${title2.trim()}`
+                : 'Alice Ouaknine'
+            }
+            layout='responsive'
+            sizes='(min-width: 992px) 30vw, 70vw'
+            placeholder='blur'
+            quality={72}
+          />
+        </div>
         <div className={`${classes.desc}`}>
           <div className={classes.descinner}>
             {sectionTitle && (

@@ -23,6 +23,11 @@ section{
   padding: $space-7 0;
 }
 
+// the sticky header would otherwise sit on top of any anchor target
+[id] {
+  scroll-margin-top: 96px;
+}
+
 @media (max-width:$breakpoint-sm){
   section {
     padding: $space-5 0;

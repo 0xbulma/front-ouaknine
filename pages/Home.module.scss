@@ -181,20 +181,33 @@
 .bottom {
   display: flex;
   flex-direction: row;
+  align-items: stretch;
+  gap: $space-4;
   padding-top: $space-7;
   @include desktop-container;
 }
 
+// Portrait keeps its own 2:3 aspect rather than stretching to the text panel,
+// and takes the same diagonal cut as the panel beside it.
+.portrait {
+  flex: 0 0 30%;
+  clip-path: polygon(0 0, 100% 0, 88% 100%, 0% 100%);
+}
+
 .desc {
+  flex: 1 1 auto;
+  min-width: 0;
   background-color: $rule;
   padding: 1px;
   clip-path: polygon(5% 0, 100% 0, 100% 100%, 0% 100%);
-  width: 100%;
 }
 
 .descinner {
   height: 100%;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   padding: $space-6 $space-4 $space-6 $space-8;
   background-color: $paper-raised;
   clip-path: polygon(5% 0, 100% 0, 100% 100%, 0% 100%);
@@ -221,14 +234,29 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
+    gap: $space-5;
+  }
+
+  .portrait {
+    flex: 0 0 auto;
+    width: 60%;
+    clip-path: none;
   }
 
   .desc {
+    width: 100%;
     clip-path: none;
   }
 
   .descinner {
+    display: block;
     padding: $space-5 $space-3;
     clip-path: none;
+  }
+}
+
+@media (max-width: $breakpoint-sm) {
+  .portrait {
+    width: 78%;
   }
 }
