@@ -33,5 +33,9 @@ export const plainText = (blocks, limit = 160) => {
   if (text.length <= limit) return text;
 
   const cut = text.lastIndexOf(' ', limit);
-  return `${text.slice(0, cut > 0 ? cut : limit)}…`;
+
+  // Trailing punctuation would run straight into the ellipsis ("commun....").
+  const kept = text.slice(0, cut > 0 ? cut : limit).replace(/[\s.,;:]+$/, '');
+
+  return `${kept}…`;
 };

@@ -13,7 +13,6 @@ import parisMap from '../public/images/paris-map.svg';
 
 const MAPS_URL =
   'https://www.google.com/maps/place/Ouaknine+Alice+Avocat/@48.876648,2.3255411,14.2z/data=!4m5!3m4!1s0x0:0x51a276d4dfa05806!8m2!3d48.8775684!4d2.316890';
-const TEL_HREF = 'tel:+33184162035';
 
 function Contact({ data }) {
   const { titleseo, descriptionseo, title } = data;
@@ -24,7 +23,6 @@ function Contact({ data }) {
   const phoneNumber = phoneLine.replace(/^[^:]*:\s*/, '');
   const email = footerContent[locale].email;
   const mobile = footerContent[locale].mobile;
-  const telHref = n => `tel:${n.replace(/\(0\)/, '').replace(/[^+0-9]/g, '')}`;
 
   return (
     <div>
@@ -67,7 +65,7 @@ function Contact({ data }) {
                 {contactContent[locale].phoneLabel}
               </dt>
               <dd className={classes.rowvalue}>
-              <a className={classes.rowlink} href={TEL_HREF}>
+              <a className={classes.rowlink} href={`tel:${footerContent.phone}`}>
                 {phoneNumber}
               </a>
               </dd>
@@ -79,7 +77,7 @@ function Contact({ data }) {
                   {contactContent[locale].mobileLabel}
                 </dt>
                 <dd className={classes.rowvalue}>
-                  <a className={classes.rowlink} href={telHref(mobile)}>
+                  <a className={classes.rowlink} href={`tel:${footerContent.mobilePhone}`}>
                     {mobile}
                   </a>
                 </dd>

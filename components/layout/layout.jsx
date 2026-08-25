@@ -3,6 +3,7 @@ import MainFooter from './footer/main-footer';
 import Cookie from './cookie';
 import Phone from './phone';
 import GaScript from './ga-script';
+import SiteSchema from '../head/site-schema';
 
 import classes from './layout.module.scss';
 
@@ -16,6 +17,7 @@ function Layout(props) {
 
   return (
     <>
+      <SiteSchema />
       {isAccepted && <GaScript />}
       {!doNotShow && !isOn && <Cookie />}
       {!isOn && <Phone />}

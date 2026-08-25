@@ -1,17 +1,39 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import useLocale from '../../hooks/useLocale';
 
-function HeadPage(props) {
-  const locale = useLocale();
+import { localeHref } from '../../libs/localePath';
 
-  const { title, description, canonicalPath } = props;
-  const { asPath, locales, query } = useRouter();
+// A missing env var would otherwise publish `undefined/expertise/...` as a
+// canonical, which is invisible in review and expensive in the index.
+export const HOST =
+  process.env.NEXT_PUBLIC_HOST ?? 'https://www.ouaknine-avocats.com';
 
-  const pathLocale = locale === 'en' ? '/en': '';
+const OG_LOCALE = { fr: 'fr_FR', en: 'en_US' };
 
-  const path = `${process.env.NEXT_PUBLIC_HOST}${pathLocale}${canonicalPath ?? asPath}`
+const SHARE_IMAGE = `${HOST}/images/banner-meta.png`;
 
+function HeadPage({ title, description, alternatePaths }) {
+  const router = useRouter();
+  const { locale, locales } = router;
+
+  // One entry per language that actually has this page. A field of expertise
+  // whose counterpart has been renamed in the studio has none, and is left out
+  // rather than annotated with a URL that does not exist.
+  //
+  // `alternatePaths` is for a page that stands in for another one: the
+  // expertise landing page renders the first field, so it publishes that
+  // field's URLs rather than its own.
+  const pathFor = target =>
+    alternatePaths ? alternatePaths[target] : localeHref(router, target);
+
+  const alternates = locales
+    .map(target => [target, pathFor(target)])
+    .filter(([, path]) => path);
+
+  const canonical = `${HOST}${pathFor(locale)}`;
+
+  // France is 88% of the traffic, so an unmatched language gets the French page.
+  const french = alternates.find(([target]) => target === 'fr')?.[1];
 
   return (
     <Head>
@@ -19,50 +41,47 @@ function HeadPage(props) {
       <meta name='viewport' content='width=device-width, initial-scale=1' />
       <title>{title}</title>
       <meta name='description' content={description} />
-      <meta name='author' content='Alice Ouaknine'></meta>
+      <meta name='author' content='Alice Ouaknine' />
 
-      {locales.map((locale, index) => (
+      {alternates.map(([target, path]) => (
         <link
-          key={index}
+          // `next/head` de-dupes every child against one shared key namespace,
+          // so a bare locale here would collide with og:locale:alternate below
+          // and silently drop one of the two annotations.
+          key={`hreflang-${target}`}
           rel='alternate'
-          hrefLang={locale.toLowerCase()}
-          href={`${
-            process.env.NEXT_PUBLIC_HOST
-          }/${locale.toLowerCase()}${asPath}`}
+          hrefLang={target}
+          href={`${HOST}${path}`}
         />
       ))}
-      <link
-        rel='alternate'
-        hrefLang='x-default'
-        href={`${process.env.NEXT_PUBLIC_HOST}${asPath}`}
-      />
+      {french && (
+        <link rel='alternate' hrefLang='x-default' href={`${HOST}${french}`} />
+      )}
 
       <meta property='og:title' content={title} />
       <meta property='og:description' content={description} />
       <meta property='og:type' content='website' />
-      <meta
-        property='og:url'
-        content={path}
-      />
-      <meta
-        property='og:image'
-        content={'https://www.ouaknine-avocats.com/images/banner-meta.png'}
-      />
+      <meta property='og:site_name' content='Cabinet Ouaknine' />
+      <meta property='og:url' content={canonical} />
+      <meta property='og:locale' content={OG_LOCALE[locale]} />
+      {locales
+        .filter(target => target !== locale)
+        .map(target => (
+          <meta
+            key={`og-locale-${target}`}
+            property='og:locale:alternate'
+            content={OG_LOCALE[target]}
+          />
+        ))}
+      <meta property='og:image' content={SHARE_IMAGE} />
       <meta property='og:image:alt' content={title} />
 
+      <meta name='twitter:card' content='summary_large_image' />
       <meta name='twitter:title' content={title} />
       <meta name='twitter:description' content={description} />
-      <meta
-        name='twitter:image'
-        content={'https://www.ouaknine-avocats.com/images/banner-meta.png'}
-      />
-      <meta name='twitter:site' content='@USERNAME' />
-      <meta name='twitter:creator' content='@USERNAME' />
+      <meta name='twitter:image' content={SHARE_IMAGE} />
 
-      <link
-        rel='canonical'
-        href={path}
-      />
+      <link rel='canonical' href={canonical} />
       <link rel='icon' href='/favicon.ico' />
 
       <link

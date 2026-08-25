@@ -4,20 +4,64 @@ const SIDE = { fr: 0, en: 1 };
 
 const FIELD_ROUTE = '/expertise/[slug]';
 
-// Where the language switch should go from the page currently on screen. Most
-// routes are the same path in either language; a field of expertise is not,
-// so it is looked up by its counterpart's slug.
+// A field of expertise is a different slug in each language, so its counterpart
+// is looked up rather than derived. Every other route is the same path in both.
+const counterpartSlug = (router, target) =>
+  EXPERTISE_PAIRS.find(slugs => slugs[SIDE[router.locale]] === router.query.slug)?.[
+    SIDE[target]
+  ];
+
+// Where the language switch should go from the page currently on screen.
+//
+// A pair that falls out of date — a field renamed in the studio, which changes
+// its slug — sends the switch to the index rather than to a URL that does not
+// exist.
 const localePath = (router, target) => {
-  const { pathname, query, locale } = router;
+  const { pathname, query } = router;
 
   if (pathname !== FIELD_ROUTE) return { pathname, query };
 
-  const pair = EXPERTISE_PAIRS.find(
-    slugs => slugs[SIDE[locale]] === query.slug
-  );
-  const counterpart = pair?.[SIDE[target]];
-
+  const counterpart = counterpartSlug(router, target);
   return counterpart ? `/expertise/${counterpart}` : '/expertise';
+};
+
+// The public path a route has in a given language. French is the default
+// locale and carries no prefix, so its path is the bare route; the home page is
+// `/` in French and `/en` in English.
+export const withLocale = (locale, path) =>
+  locale === 'fr' ? path : `/${locale}${path === '/' ? '' : path}`;
+
+// Both public paths for a field of expertise, from either side's slug. The
+// landing page renders the first field and needs to present itself as that
+// field, which the router alone cannot tell it.
+export const fieldAlternates = slug => {
+  const pair = EXPERTISE_PAIRS.find(slugs => slugs.includes(slug));
+  if (!pair) return null;
+
+  const [fr, en] = pair;
+  return {
+    fr: withLocale('fr', `/expertise/${fr}`),
+    en: withLocale('en', `/expertise/${en}`),
+  };
+};
+
+// The same destination as a concrete public path, for a canonical or an
+// hreflang.
+//
+// Returns null when the page has no counterpart in the target language, so the
+// caller can leave the annotation out rather than publish a link to a 404,
+// which is what an unpaired field of expertise would otherwise get.
+export const localeHref = (router, target) => {
+  const translated =
+    router.pathname === FIELD_ROUTE && target !== router.locale;
+
+  const counterpart = translated ? counterpartSlug(router, target) : null;
+
+  const path = translated
+    ? counterpart && `/expertise/${counterpart}`
+    : router.asPath.split(/[?#]/)[0];
+
+  return path ? withLocale(target, path) : null;
 };
 
 export default localePath;

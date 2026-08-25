@@ -66,7 +66,7 @@ export default function Home({ data }) {
 
           <div className={classes.herofoot}>
             <span className={classes.herofootitem}>{addressLine}</span>
-            <a className={classes.herofootitem} href='tel:+33184162035'>
+            <a className={classes.herofootitem} href={`tel:${footerContent.phone}`}>
               {phoneLine}
             </a>
           </div>
