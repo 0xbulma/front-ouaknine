@@ -4,181 +4,104 @@
   @include desktop-container;
 }
 
-@keyframes slidefromleft {
-  from {
-    transform: translateX(-200%);
-  }
-  to {
-    transform: translateX(0%);
-  }
-}
-
+// Two columns of comparable weight: the invitation on the left, the two
+// concrete details on the right. No panels, no fills — rules do the dividing.
 .grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
+  gap: $space-8;
+  align-items: start;
 }
 
-.title {
-  padding-left: 0rem;
+.intro {
+  animation: rise 0.5s $ease both;
 }
 
-.leftblock {
-  opacity: 0;
-  padding: 0;
-  border-top: 1px solid $rule;
-  overflow: hidden;
-  background-color: transparent;
-  animation: appear 1s linear 0.4s;
-  animation-fill-mode: forwards;
-}
-
-.leftblockinner {
-  height: 100%;
-  overflow: hidden;
-  display: flex;
-  align-items: flex-start;
-  flex-direction: column;
-  gap: 1.5rem;
-  padding: 3rem 3rem 3rem 3rem;
-  background-color: transparent;
-}
-
-.portable {
-  white-space: pre-line;
-}
-
-.address {
-  margin-left: 0rem;
-}
-
-.subtitleblock {
-  margin-bottom: 0rem;
-}
-
-.subtitle {
-  margin-top: 0;
-  margin-bottom: $space-3;
+.introtitle {
+  @include serif;
+  margin: 0 0 $space-4 0;
   font-size: $fs-section;
   line-height: $lh-title;
   letter-spacing: -0.01em;
-  @include serif;
+  text-transform: uppercase;
+  color: $ink;
 }
 
-.btngroup {
+.introbody p {
+  max-width: 38ch;
+  color: $ink-muted;
+}
+
+.details {
+  margin: 0;
+  border-top: 1px solid $rule;
+  animation: rise 0.5s $ease $stagger both;
+}
+
+.row {
   display: flex;
-  //  align-items: center;
-  gap: 1rem;
+  flex-direction: column;
+  gap: $space-2;
+  padding: $space-4 0;
+  border-bottom: 1px solid $rule;
 }
 
-.phone {
-  height: 20px;
-  width: 20px;
-  stroke-width: 1px;
+.rowlabel {
+  @include micro;
+  color: $ink-muted;
 }
 
-@keyframes appear {
+.rowvalue {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: $space-2;
+  margin: 0;
+  @include serif;
+  font-size: $fs-h3;
+  line-height: $lh-heading;
+  color: $ink;
+}
+
+.rowlink {
+  transition: color $dur-fast $ease;
+
+  &:hover {
+    color: $paper-raised;
+  }
+}
+
+.rowaction {
+  @include micro;
+  color: $ink-muted;
+  padding-bottom: 2px;
+  border-bottom: 1px solid $rule;
+  transition: color $dur-fast $ease, border-color $dur-fast $ease;
+
+  &:hover {
+    color: $ink;
+    border-color: $ink;
+  }
+}
+
+@keyframes rise {
   from {
     opacity: 0;
-    transform: translateX(-5%);
+    transform: translateY(12px);
   }
   to {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateY(0);
   }
-}
-
-.separator {
-  margin: 0 auto $space-2 auto;
-  height: 1px;
-  width: 40%;
-  background-color: $rule;
-}
-
-@media (max-width: $breakpoint-md) {
-  .separator {
-    width: 60%;
-  }
-}
-@media (max-width: $breakpoint-sm) {
-  .phasegroup {
-    padding: 0.5rem;
-  }
-
-  .phasegroupinner {
-    padding: 1rem 0.5rem 2rem 0.5rem;
-    font-size: 1rem;
-  }
-
-  .separator {
-    width: 90%;
-  }
-}
-
-.rightblock {
-  display: flex;
-  align-items: center;
-  margin: 0 auto;
-  width: 95%;
-}
-
-.addressblock {
-  @include serif;
-  font-style: normal;
-  font-size: $fs-h3;
-  line-height: 1.6;
-  color: $ink;
-  white-space: pre-line;
-  padding-left: $space-5;
-  border-left: 1px solid $rule;
 }
 
 @media (max-width: $breakpoint-md) {
   .grid {
     grid-template-columns: repeat(1, minmax(0, 1fr));
-    gap: 3rem;
+    gap: $space-6;
   }
 
-  .leftblock {
-    order: 2;
-  }
-
-  .leftblockinner {
-
-    gap: 1.5rem;
-    padding: 1.5rem 2rem;
-    background-color: transparent;
-  }
-
-  .btngroup {
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-
-  .rightblock {
-    width: 100%;
-    order: 1;
-  }
-
-  .addressblock {
-    padding-left: 0;
-    padding-top: $space-3;
-    border-left: none;
-    border-top: 1px solid $rule;
-  }
-}
-
-@media (max-width: $breakpoint-sm) {
-  .leftblock{
-    animation: none !important;
-    opacity: 1 !important;
-  }
-
-
-  .leftblockinner {
-
-    gap: 1.5rem;
-    padding: 1.5rem 1.5rem 2rem 1.5rem;
-    background-color: transparent;
+  .introbody p {
+    max-width: $measure;
   }
 }
