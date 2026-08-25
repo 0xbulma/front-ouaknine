@@ -1,11 +1,12 @@
 @use '../../../styles/variables' as *;
 
 .header {
- 
-  position: relative;
-  z-index: 1;
- background-color: rgba($white, 1);
-  backdrop-filter: blur(2px);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: rgba($bg, 0.72);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   width: 100%;
 }
 
@@ -17,35 +18,9 @@
   margin: 0 auto;
   position: relative;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
-  padding: 1rem 0rem;
+  padding: $space-2 0rem;
   @include desktop-container;
 }
 
-.logocontainer{
-  position:relative;
-  width: 209px;
-  height: 39.16px;
-  cursor: pointer;
-}
-
-.logo {
-  width: 209px ;
-  height: 39.16px;
-  
-}
-
-@media (max-width: $breakpoint-sm){
-  .logocontainer{
-    width: 209px * .9;
-    height: 39.16px * .9;
-  }
- 
-}
-
-.banner {
-  clip-path: polygon(0 0, 100% 0, 100% 30%, 0 100%);
-
-  opacity: 0.3;
-}

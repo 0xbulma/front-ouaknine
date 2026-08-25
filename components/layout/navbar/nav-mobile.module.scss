@@ -27,7 +27,7 @@
   padding: 0rem 1rem;
   margin-top: 3vh;
   width: 100%;
-  background-color: $white;
+  background-color: $bg;
   overflow: hidden;
 }
 
@@ -38,14 +38,14 @@
 .separator {
   margin: 0 auto;
   height: 1px;
-  background-color: $gray200;
+  background-color: $rule;
   width: 80%;
 }
 
 .link {
   display: block;
   padding: 4.5vh 0;
-  @include serif;
+  font-family: 'Inter', sans-serif;
   @include scaleclick;
 }
 
@@ -59,8 +59,8 @@
 }
 
 .navitem {
-  font-size: 1.5rem;
-  font-weight: normal;
+  font-size: 1.125rem;
+  @include micro;
 }
 
 $prevDelay: 0s;

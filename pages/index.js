@@ -1,19 +1,15 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { useInView } from 'react-intersection-observer';
 import clientApi from '../libs/clientApi';
 import RichText from '../components/ui/rich-text.jsx';
-import { ChevronDoubleDownIcon } from '@heroicons/react/outline';
-import scrollTo from '../libs/scrollTo';
-import AnimatedScale from '../components/layout/animated-scale';
 
-import { useRef, useState } from 'react';
 import HeadPage from '../components/head/head-page';
 
 import classes from './Home.module.scss';
 
-import useOffset from '../hooks/useOffset';
-import AnimatedScaleMobile from '../components/layout/animated-scale-mobile';
+import portrait from '../public/images/alice-portrait-illustration.png';
+import useLocale from '../hooks/useLocale';
+import footerContent from '../content/footerContent.json';
 
 export default function Home({ data }) {
   const {
@@ -27,124 +23,73 @@ export default function Home({ data }) {
     link2,
     tag3,
     link3,
-    white,
-    imageTitleUrl,
-    imageTitleAlt,
-    imgRatioTitle,
-    lqipTitle,
     sectionTitle,
     body,
-    imageUrl,
-    imageAlt,
-    lqip,
-    imgRatio,
   } = data;
 
-  const { ref, inView, entry } = useInView({
-    /* Optional options */
-    threshold: 0.1,
-    triggerOnce: true,
-  });
-  const scaleRef = useRef();
-  const [percentView, setPercentView] = useState(1);
+  const locale = useLocale();
+  const [addressLine, phoneLine] = footerContent[locale].address.split('\n');
 
-  useOffset(percentView, setPercentView, scaleRef, 200, 1);
+  const tags = [
+    { label: tag1, link: link1 },
+    { label: tag2, link: link2 },
+    { label: tag3, link: link3 },
+  ].filter(t => t.label);
 
   return (
     <div className={classes.container}>
       <HeadPage title={titleseo ? titleseo : ''} description={descriptionseo ? descriptionseo : ''} />
       <div className={classes.upper}>
-        {imageTitleUrl && <Image
-          className={classes.img}
-          src={imageTitleUrl ? `${imageTitleUrl}?w=1600` : ''}
-          alt={imageTitleAlt ? imageTitleAlt : 'Image background'}
-          objectFit={'cover'}
-          layout={'fill'}
-          objectPosition={'center'}
-          blurDataURL={lqipTitle ? lqipTitle : null}
-          placeholder={'empty'}
-          sizes='100vw'
-          priority
-          quality={30}
-        />}
-
-        <div className={classes.overlay}></div>
-
         <div className={`${classes.upperinner}`}>
-          <div className={`${classes.titlegroup} ${!white && classes.black}`}>
-            {title1 && title2 && (
-              <h1>
-                <span className={classes.title}>{`${title1?.trim()} `}</span>
-                <span className={classes.subtitle}>{title2?.trim()}</span>
-              </h1>
+          <div className={classes.titlegroup}>
+            {title2 && <p className={classes.subtitle}>{title2.trim()}</p>}
+            {title1 && (
+              <h1 className={classes.title}>{title1?.trim()}</h1>
             )}
-            <div className={classes.spegroup}>
-              {tag1 && (
-                <Link href={{ pathname: '/expertise', query: { _id: link1 } }}>
-                  <a
-                    className={`${classes.spe} ${!white && classes.spe_black}`}
-                  >
-                    {tag1?.trim()}
-                  </a>
-                </Link>
-              )}
-              {tag2 && (
-                <Link href={{ pathname: '/expertise', query: { _id: link2 } }}>
-                  <a
-                    className={`${classes.spe} ${!white && classes.spe_black}`}
-                  >
-                    {tag2?.trim()}
-                  </a>
-                </Link>
-              )}
-              {tag3 && (
-                <Link href={{ pathname: '/expertise', query: { _id: link3 } }}>
-                  <a
-                    className={`${classes.spe} ${!white && classes.spe_black}`}
-                  >
-                    {tag3?.trim()}
-                  </a>
-                </Link>
-              )}
-            </div>
           </div>
-      
 
-          <ChevronDoubleDownIcon
-            className={`${classes.arrow} ${!white && classes.arrow_black}`}
-            onClick={() => scrollTo('homedesc')}
-          />
+          <ul className={classes.spegroup}>
+            {tags.map((tag, i) => (
+              <li key={tag.link ? tag.link : tag.label}>
+                <Link href={{ pathname: '/expertise', query: { _id: tag.link } }}>
+                  <a className={classes.spe}>
+                    <span className={classes.speindex}>
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    <span className={classes.spelabel}>{tag.label?.trim()}</span>
+                  </a>
+                </Link>
+              </li>
+            ))}
+          </ul>
 
-   
-        </div>
-      </div>
-
-      <div className={classes.separator} id='section2'>
-        <div ref={scaleRef}>
-          <AnimatedScale animate={inView} percentView={percentView} />
-          <AnimatedScaleMobile animate={inView} percentView={percentView} />
+          <div className={classes.herofoot}>
+            <span className={classes.herofootitem}>{addressLine}</span>
+            <a className={classes.herofootitem} href='tel:+33184162035'>
+              {phoneLine}
+            </a>
+          </div>
         </div>
       </div>
 
       <section className={classes.bottom} id='homedesc'>
-        <div className={`${classes.image}`} ref={ref}>
-          {imageUrl && (
-            <Image
-              src={`${imageUrl}?w=700`}
-              alt={imageAlt}
-              width={700}
-              height={700 / imgRatio}
-              objectFit={'cover'}
-              blurDataURL={lqip}
-              placeholder={'blur'}
-              sizes='(min-width: 769px) 25vw,
-              50vw'
-              quality={50}
-            />
-          )}
+        <div className={classes.portrait}>
+          <Image
+            src={portrait}
+            alt={
+              title1 && title2
+                ? `${title1.trim()} - ${title2.trim()}`
+                : 'Alice Ouaknine'
+            }
+            layout='responsive'
+            sizes='(min-width: 992px) 34vw, 78vw'
+            placeholder='blur'
+            quality={72}
+          />
         </div>
         <div className={`${classes.desc}`}>
           <div className={classes.descinner}>
+            <span className={classes.sectionindex}>01</span>
             {sectionTitle && (
               <h2 className={classes.bottomtitle}>{sectionTitle?.trim()}</h2>
             )}
@@ -152,40 +97,29 @@ export default function Home({ data }) {
           </div>
         </div>
       </section>
-
-   
     </div>
   );
 }
 
 export async function getStaticProps(ctx) {
-  
+
   try {
     const locale = ctx?.locale;
 
     const content = await clientApi.fetch(
       `*[_type == "home" && language == "${locale ? locale : "en"}"]{
-        titleseo, 
-        descriptionseo, 
+        titleseo,
+        descriptionseo,
         title1,
         title2,
         tag1,
         "link1": link1->_id,
         tag2,
         "link2": link2->_id,
-        tag3, 
+        tag3,
         "link3": link3->_id,
-        white,
-        "imageTitleUrl": imageTitle.asset->url,
-        "imageTitleAlt" : imageTitle.alt,
-        "imgRatioTitle" : imageTitle.asset->metadata.dimensions.aspectRatio,
-        "lqipTitle": imageTitle.asset->metadata.lqip,
         sectionTitle,
-        body,   
-        "imageUrl": mainImage.asset->url,
-        "imageAlt" : mainImage.title,
-        "imgRatio" : mainImage.asset->metadata.dimensions.aspectRatio,
-        "lqip": mainImage.asset->metadata.lqip}`
+        body}`
     );
     return { props: { data: content?.length && content[0] }, revalidate: 10};
   } catch (err) {

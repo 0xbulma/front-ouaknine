@@ -26,48 +26,6 @@
   grid-column: span 2 / span 2;
 }
 
-.sectiontitlegroup {
-  margin-bottom: 6rem;
-  // @include borderlight;
-  // padding: 3rem 4rem 5rem 4rem;
-}
-
-.sectiontitle {
-  @include serif;
-  font-size: 3rem;
-  margin: 0;
-  margin-bottom: 1rem;
-}
-
-@media (max-width: $breakpoint-sm) {
-  .sectiontitlegroup {
-    border: none;
-    margin-bottom: 6rem;
-    padding: 0;
-  }
-
-  .sectiontitle {
-    font-size: 2.5rem;
-  }
-}
-
-.sectiontitle2 {
-  font-size: 3rem;
-  margin-bottom: 2rem;
-}
-
-.overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  background: linear-gradient(135deg, rgba($white, 0.1), rgba($white, 0.3));
-  background-size: cover;
-  z-index: 0;
-}
-
-
 .arrowlink {
   width: 20px;
   height: 20px;
@@ -78,13 +36,13 @@
   @include desktop-container;
   @include borderlight;
   padding: 3rem;
-  background-color: $gray50;
+  background-color: $bg-raised;
 }
 
 .phasegroupinner {
   display: flex;
   flex-direction: column;
-  background-color: $gray50;
+  background-color: $bg-raised;
   padding: 4rem 4rem 2rem 4rem;
   font-size: 1.1rem;
 }
@@ -92,13 +50,13 @@
 .linkcontainer {
   align-self: flex-end;
   margin-top: 3rem;
-  color: $gray500;
+  color: $ink-muted;
 
   @media (hover: hover) and (pointer: fine) {
     &::after {
       content: '';
       display: block;
-      background-color: $gray800;
+      background-color: $ink;
       height: 1px;
       width: 0%;
       transform: translateY(5px);
@@ -106,7 +64,7 @@
     }
 
     &:hover {
-      color: $gray800;
+      color: $ink;
     }
 
     &:hover:after {
@@ -120,7 +78,7 @@
   align-items: center;
   gap: 0.5rem;
 
-  @include seriflight;
+  font-family: 'Inter', sans-serif;
   font-size: 1.1rem;
   align-self: flex-end;
 }
@@ -132,7 +90,7 @@
   margin-bottom: 1rem;
   height: 100%;
   width: 40%;
-  //background-color: $gray200;
+  //background-color: $rule;
   //grid-column: 1 / span 5;
  // transform: translateX(50px);
 }

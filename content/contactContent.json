@@ -1,11 +1,18 @@
 {
   "fr": {
     "call": "Nous appeler",
-    "google": "Google Map"
+    "google": "Google Map",
+    "addressLabel": "Adresse",
+    "phoneLabel": "Téléphone",
+    "emailLabel": "Email",
+    "mobileLabel": "Mobile"
   },
-
   "en": {
     "call": "Call us",
-    "google": "Google Map"
+    "google": "Google Map",
+    "addressLabel": "Address",
+    "phoneLabel": "Phone",
+    "emailLabel": "Email",
+    "mobileLabel": "Mobile"
   }
 }

@@ -3,7 +3,6 @@ import useClickOutside from '../../../hooks/useClickoutside';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import {
-  GlobeIcon,
   ChevronDownIcon,
   CheckIcon,
 } from '@heroicons/react/outline';
@@ -30,7 +29,6 @@ function LanguagePicker() {
     <div className={classes.container} onClick={toggleHandler} ref={dropdown}>
       <div className={classes.innercontainer}>
         <div className={classes.firstgroup}>
-          <GlobeIcon className={classes.svg} />
           <div className={classes.tag}>{capLocale}</div>
         </div>
 

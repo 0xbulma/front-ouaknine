@@ -2,407 +2,210 @@
 
 .upper {
   position: relative;
-}
-
-.img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 0;
-}
-
-.overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  // background: linear-gradient(135deg, rgba($gray900, 0.7), rgba($gray900, 0.2));
-  background: linear-gradient(135deg, rgba($gray800, 0.7), rgba($white, 0.2));
-  // background: linear-gradient(135deg, rgba(#0e7490, .8), rgba(#0e7490, 0.1));
-
-  background-size: cover;
-  z-index: 0;
+  background-color: $bg;
+  overflow-x: hidden;
 }
 
 .upperinner {
   position: relative;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: flex-start;
+  flex-direction: column;
+  align-items: stretch;
   min-height: calc(100vh - 72px);
-  padding: 4rem 0;
+  padding: $space-6 0 $space-5 0;
   @include desktop-container;
 }
 
 .titlegroup {
-  flex: 1 0 100%;
   display: flex;
-  margin: auto 0;
-  margin-bottom: 0;
+  margin-top: auto;
   flex-direction: column;
-  gap: 2.5rem;
   user-select: none;
-  color: $white;
-  padding: 0rem 2rem;
-  animation: opa 1.5s;
+  color: $ink;
   z-index: 1;
 }
 
-.black {
-  color: $gray800;
-}
-
-@keyframes opa {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.titlegroup h1 {
-  margin: 0;
-  padding: 0;
+// Extreme scale contrast is the whole idea: the role sits at label size, the
+// name runs to 144px. Nothing in between.
+.subtitle {
+  @include micro;
+  font-size: $fs-display-sub;
+  color: $ink-muted;
+  margin: 0 0 $space-4 0;
+  animation: rise 0.5s $ease both;
 }
 
 .title {
-  //font-family: le-monde-livre-classic-byol, serif;
   position: relative;
-  letter-spacing: 0.5vw;
-  font-size: 4.5vw;
-  line-height: 4.5vw;
-  font-weight: 500;
-  margin-bottom: 1rem;
-  display: block;
-}
-
-.subtitle {
-  display: block;
-  font-size: 2.5vw;
-  line-height: 2.5vw;
-  letter-spacing: 0.8vw;
-
   margin: 0;
-  padding: 0;
-  font-weight: 300;
-  margin-bottom: 1rem;
+  font-size: $fs-display;
+  line-height: $lh-display;
+  letter-spacing: -0.015em;
+  text-transform: uppercase;
+  @include serif;
+  animation: rise 0.6s $ease $stagger both;
 }
 
 .spegroup {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  gap: 1.5rem;
+  margin-top: $space-6;
+  border-top: 1px solid $rule;
   z-index: 1;
 }
 
 .spe {
-  padding: 0.5rem 5.4rem 0.5rem 1.8rem;
-  background-color: rgba($white, 0.1);
-  color: rgba($white, 0.8);
-  font-size: 1.1rem;
-  //font-size: 1.5vw;
-  backdrop-filter: blur(2px);
-  border: 1px solid rgba($white, 0.8);
-  @include serif;
-  font-weight: 500;
-  transition: all 0.2s;
-  z-index: 1;
+  display: flex;
+  align-items: baseline;
+  gap: $space-4;
+  padding: $space-3 0;
+  color: $ink;
+  border-bottom: 1px solid $rule;
+  transition: color $dur-fast $ease, border-color $dur-fast $ease;
 
   &:hover {
-    transform: translate(1px, -1px);
-    background-color: rgba($white, 0.2);
-    box-shadow: 4px 4px 4px rgba($white, 0.1);
-  }
-
-  &:active {
-    background-color: rgba($white, 0.2);
-    transform: scale(0.98);
-  }
-
-  &_black {
-    border: 1px solid $gray700;
-    color: $gray700;
-    background-color: rgba($gray400, 0.1);
-
-    &:hover {
-      background-color: rgba($gray400, 0.2);
-      box-shadow: 4px 4px 4px rgba($gray700, 0.1);
-    }
-
-    &:active {
-      background-color: rgba($gray400, 0.2);
-    }
+    color: $paper-raised;
+    border-color: $rule-strong;
   }
 }
 
-$prevDel: 0.1s;
-$newDel: 0s;
-$gapDel: 0.6s;
+.speindex {
+  @include micro;
+  color: $ink-muted;
+  flex: 0 0 auto;
+}
+
+.spelabel {
+  font-size: 1.0625rem;
+  letter-spacing: 0.01em;
+}
+
 @for $i from 1 through 10 {
-  $newDel: $prevDel + $gapDel;
-  $prevDel: $newDel;
-  .spe:nth-child(#{$i}) {
-    animation: appearspeleft 0.6s;
-    animation-delay: $newDel;
-    animation-fill-mode: backwards;
+  .spegroup li:nth-child(#{$i}) .spe {
+    animation: rise 0.4s $ease ($stagger * ($i + 2)) both;
   }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Closes the hero with a rule and the two facts a visitor wants, rather than
+// with ornament.
+.herofoot {
+  margin-top: auto;
+  padding-top: $space-3;
+  border-top: 1px solid $rule;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: $space-3;
+}
+
+.herofootitem {
+  @include micro;
+  color: $ink-muted;
+  transition: color $dur-fast $ease;
+}
+
+a.herofootitem:hover {
+  color: $paper;
 }
 
 @media (max-width: $breakpoint-sm) {
   .upperinner {
     min-height: calc(100svh - 80px);
-    // padding: 2rem 0;
-  }
-
-  .titlegroup {
-    margin: 0;
-    padding: 0rem 0rem;
-    // gap:3rem;
-    animation: none;
-    opacity: 1;
-  }
-
-  .title {
-    // text-align: end;
-    font-size: 12vw;
-    line-height: 12vw;
-    letter-spacing: 1.2vw;
-    font-weight: 500;
-  }
-  .subtitle {
-    // text-align: end;
-    font-size: 5.6vw;
-    line-height: 7.5vw;
-    letter-spacing: 1.3vw;
-    // margin-bottom: 4svh;
-    font-weight: 500;
+    padding: $space-5 0 calc($space-7 + env(safe-area-inset-bottom)) 0;
   }
 
   .spegroup {
-    // align-items: flex-end;
-    gap: 1.2rem;
-    margin-bottom: 1rem;
+    margin-top: $space-5;
   }
 
   .spe {
-    padding: 0.5rem 5.4rem 0.5rem 1.2rem;
-    font-size: 1.1rem;
-    letter-spacing: 0.07rem;
-    //  backdrop-filter: blur(2px);
-    font-weight: 500;
-    animation: none !important;
-    opacity: 1;
-  }
-}
-
-@keyframes appearspeleft {
-  from {
-    opacity: 0;
-    transform: translateX(-10%);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes moving {
-  from {
-    transform: translateY(0);
-  }
-  to {
-    transform: translateY(6px);
-  }
-}
-@keyframes scale {
-  from {
-    transform: scale(1);
-  }
-  to {
-    transform: scale(0.9);
-  }
-}
-
-.arrow {
-  align-self: flex-end;
-  width: 3rem;
-  height: 3rem;
-  stroke-width: 1px;
-  // color: $gray400;
-  color: rgba($white, 0.7);
-  //background-color: rgba($white, .2);
-  cursor: pointer;
-  padding: 10px;
-  transition: all 0.2s ease-in;
-  // border: 1px solid transparent;
-  border: 1px solid rgba($white, 0.8);
-  border-radius: 100px;
-
-  &:hover {
-    animation: moving 0.3s ease-in;
-    animation-iteration-count: infinite;
-    animation-direction: alternate;
-    background-color: rgba($white, 0.1);
-    // background-color: $white;
-    // border-color: $gray300;
-    border-radius: 100px;
+    gap: $space-3;
+    padding: $space-2 0;
   }
 
-  &:active {
-    animation-play-state: paused;
-    animation: scale 0.2s;
-  }
-
-  &_black {
-    border: 1px solid $gray700;
-    color: $gray700;
-
-    &:hover {
-      background-color: rgba($gray400, 0.2);
-    }
-
-    &:active {
-      background-color: rgba($gray400, 0.2);
-    }
-  }
-}
-
-@media (max-width: $breakpoint-sm) {
-  .arrow {
-    display: none;
-  }
-}
-
-.separator {
-  position: relative;
-  margin: 0rem auto;
-  margin-top: 3rem;
-  margin-bottom: 0rem;
-  height: 100%;
-  width: 90%;
-  max-width: 1200px;
-}
-
-@media (max-width: $breakpoint-sm) {
-  .separator {
-    width: 100%;
-    margin-top: 1rem;
-    margin-bottom: 0rem;
-    object-fit: cover;
-    overflow: hidden;
+  .herofoot {
+    flex-direction: column;
+    gap: $space-1;
   }
 }
 
 .bottom {
   display: flex;
-  gap: 1rem;
   flex-direction: row;
-  padding-top: 5rem;
+  align-items: stretch;
+  gap: $space-6;
+  padding-top: $space-7;
   @include desktop-container;
 }
 
-@keyframes appearleft {
-  from {
-    opacity: 0;
-    transform: translateX(-15%);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-.image {
-  opacity: 1;
-  clip-path: polygon(0 0, 100% 0, 88% 100%, 0% 100%);
-  flex-shrink: 0;
-  flex-grow: 1;
-  width: 25vw;
-  height: 100%;
-}
-
-.show {
-  animation: appearleft 1.2s;
-  animation-fill-mode: forwards;
+.portrait {
+  flex: 0 0 34%;
 }
 
 .desc {
-  background-color: $gray200;
-  padding: 1px;
-  clip-path: polygon(5% 0, 100% 0, 100% 100%, 0% 100%);
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .descinner {
-  height: 100%;
   width: 100%;
-  padding: 3rem 2rem 3rem 6rem;
-  background-color: $white;
-  clip-path: polygon(5% 0, 100% 0, 100% 100%, 0% 100%);
   font-size: 1rem;
+}
+
+.sectionindex {
+  @include micro;
+  color: $ink-muted;
+  display: block;
+  margin-bottom: $space-3;
+}
+
+.descinner p {
+  max-width: $measure;
+  color: $ink-muted;
 }
 
 .bottomtitle {
   @include serif;
   margin-top: 0;
-  margin-bottom: 1.5rem;
-  font-size: 2rem;
+  margin-bottom: $space-4;
+  font-size: $fs-section;
+  line-height: $lh-title;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: $ink;
 }
 
 @media (max-width: $breakpoint-md) {
   .bottom {
-    padding-top: 2rem;
+    padding-top: $space-5;
     flex-direction: column;
     justify-content: flex-start;
-    align-items: center;
-    gap: 3rem;
+    align-items: flex-start;
+    gap: $space-5;
   }
 
-  .image {
-    margin: 0 auto;
-    text-align: center;
-    clip-path: none;
-    width: 30%;
-    height: 100%;
-  }
-
-  .desc {
-    clip-path: none;
-  }
-
-  .descinner {
-    padding: 3rem 1.5rem;
-    clip-path: none;
+  .portrait {
+    flex: 0 0 auto;
+    width: 62%;
   }
 }
 
 @media (max-width: $breakpoint-sm) {
-  .bottom {
-    padding-top: 2rem;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 3rem;
-  }
-
-  .image {
-    margin: 0 auto;
-    text-align: center;
-    clip-path: none;
-    width: 60%;
-    height: 100%;
-  }
-
-  .desc {
-    clip-path: none;
-  }
-
-  .descinner {
-    padding: 3rem 1.5rem;
-    clip-path: none;
+  .portrait {
+    width: 78%;
   }
 }

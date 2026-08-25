@@ -2,7 +2,7 @@
 
 .footer {
   @include bordertoplight;
-  background-color: $white;
+  background-color: $bg;
   font-weight: 300;
 }
 
@@ -26,7 +26,7 @@
   align-items: center;
   font-size: 0.9rem;
   gap: 1rem;
-  color: $gray700;
+  color: $ink-muted;
   transition: all .4s;
 }
 
@@ -36,7 +36,7 @@
   &::after{
     content: '';
     display: block;
-    background-color: $gray400;
+    background-color: $accent;
     height: 1px;
     width: 0%;
     transform: translateY(5px);
@@ -59,7 +59,7 @@
 .address {
   text-align: center;
   font-size: 0.9rem;
-  color: $gray700;
+  color: $ink-muted;
 
   white-space: pre;
   line-height: 1.3rem;
@@ -76,11 +76,11 @@
 .socialicon {
   width: 35px;
   height: 35px;
-  color: $gray600;
+  color: $ink-muted;
   transition: all 0.3s;
 
   &:hover {
-    color: $gray800;
+    color: $ink;
   }
   &:active {
     transform: scale(0.95);

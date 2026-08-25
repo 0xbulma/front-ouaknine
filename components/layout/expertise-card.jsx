@@ -81,6 +81,9 @@ function ExpertiseCard({
             }`}
           />
           <div className={classes.spe_titleouter}>
+            <span className={classes.spe_index}>
+              {String(index + 1).padStart(2, '0')}
+            </span>
             <h2 className={`${classes.spe_title}`}>{title}</h2>
             <div
               className={`${classes.spe_titlebar} ${
