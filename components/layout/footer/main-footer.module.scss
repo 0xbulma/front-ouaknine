@@ -1,7 +1,6 @@
 @use '../../../styles/variables' as *;
 
 .footer {
-  position: relative;
   @include bordertoplight;
   background-color: $white;
   font-weight: 300;
@@ -85,28 +84,5 @@
   }
   &:active {
     transform: scale(0.95);
-  }
-}
-
-.design {
-  position: absolute;
-  bottom: 1.5rem;
-  right: 2rem;
-  color: $gray700;
-  font-size: 0.8rem;
- // font-weight: 100;
-}
-
-@media (max-width: $breakpoint-sm) {
-  .innercontainer {
-    padding-bottom: 4rem;
-    gap: 1.5rem;
-    
-  }
-
-  .design {
-    
-    right: none;
-    left: 2rem;
   }
 }

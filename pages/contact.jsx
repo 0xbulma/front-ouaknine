@@ -78,7 +78,7 @@ function Contact({ data }) {
               </div>
 
               <div className={classes.btngroup}>
-                <Button href='tel:+33629653512' target='_self'>
+                <Button href='tel:+33184162035' target='_self'>
                   <span>{contactContent[locale].call}</span>
                   <PhoneIcon className={classes.phone} />
                 </Button>
