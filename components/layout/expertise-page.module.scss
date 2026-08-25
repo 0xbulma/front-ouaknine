@@ -1,0 +1,6 @@
+@use '../../styles/variables' as *;
+
+.section1 {
+  @include desktop-container;
+  margin: 0 auto;
+}

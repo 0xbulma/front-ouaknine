@@ -1,0 +1,318 @@
+@use '../../styles/variables' as *;
+
+// ---------------------------------------------------------------------------
+// Motion. Two moves, and only two — no fade-and-drift anywhere.
+//
+//   rise  — type that leads comes out from behind its own top edge
+//   draw  — everything else arrives left to right, the way a rule is ruled
+//
+// Both run on the site's single curve. Nothing animates opacity on its own,
+// which is what made the old reveals read as a slideshow rather than a page
+// setting itself.
+// ---------------------------------------------------------------------------
+@keyframes rise {
+  from {
+    transform: translateY(110%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes draw {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes rule {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+// An index and a field. The index carries all ten titles at label size and
+// stays put while the field it selects runs at display size beside it — the
+// same 12px-against-64px contrast the rest of the site is built on.
+.fields {
+  display: grid;
+  grid-template-columns: minmax(0, 17rem) minmax(0, 1fr);
+  column-gap: $space-7;
+  align-items: start;
+}
+
+// ---------------------------------------------------------------------------
+// The index
+// ---------------------------------------------------------------------------
+.rail {
+  // A sticky box is pushed up once its own bottom edge reaches the bottom of
+  // its containing block — which, at this height, is the moment the footer
+  // comes into view. Sticking a box of no height instead and letting the
+  // index overflow it keeps the index pinned for the whole of the field.
+  position: sticky;
+  top: $space-7;
+  height: 0;
+}
+
+.railinner {
+  display: flex;
+  flex-direction: column;
+  @include bordertoplight;
+}
+
+.railitem {
+  position: relative;
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr);
+  align-items: baseline;
+  padding: $space-1 0;
+  text-align: left;
+  cursor: pointer;
+  @include borderbottomlight;
+
+  animation: draw 500ms $ease both;
+  animation-delay: calc(var(--i) * 35ms);
+
+  // The rule under the row is ruled in as the field is picked out, and unruled
+  // the same way when it is dropped.
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+    height: 1px;
+    width: 100%;
+    background-color: $ink;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform $dur $ease;
+  }
+
+  &:hover::after,
+  &[aria-current='page']::after {
+    transform: scaleX(1);
+  }
+
+  &:hover,
+  &[aria-current='page'] {
+    .railindex,
+    .railtitle {
+      color: $ink;
+    }
+
+    .railtitle {
+      transform: translateX($space-1);
+    }
+  }
+}
+
+.railindex {
+  @include micro;
+  color: $rule-strong;
+  transition: color $dur $ease;
+}
+
+.railtitle {
+  @include micro;
+  letter-spacing: 0.1em;
+  line-height: 1.5;
+  color: $ink-muted;
+  transition: color $dur $ease, transform $dur $ease;
+}
+
+// ---------------------------------------------------------------------------
+// The field
+// ---------------------------------------------------------------------------
+.field {
+  scroll-margin-top: $space-7;
+
+  // The index no longer holds the row open, so the field has to — otherwise a
+  // short one would let it overflow into the footer.
+  min-height: 30rem;
+}
+
+.meta {
+  overflow: hidden;
+  margin: 0 0 $space-3 0;
+}
+
+.metainner {
+  display: inline-block;
+  @include micro;
+  color: $ink;
+  animation: rise 550ms $ease both;
+}
+
+.metatotal {
+  color: $ink-muted;
+}
+
+// The title comes out from behind its own top edge, which is the one piece of
+// motion big enough to carry a 64px Didone.
+.titlemask {
+  overflow: hidden;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+
+.title {
+  margin: 0;
+  @include serif;
+  font-size: $fs-section;
+  line-height: $lh-display;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  text-wrap: balance;
+  animation: rise 800ms $ease 60ms both;
+}
+
+.rule {
+  height: 1px;
+  margin: $space-4 0 $space-5 0;
+  background-color: $rule-strong;
+  transform-origin: left;
+  animation: rule 700ms $ease 200ms both;
+}
+
+.body {
+  display: grid;
+  grid-template-columns: repeat(9, minmax(0, 1fr));
+  gap: $space-5;
+}
+
+.description {
+  grid-column: span 6 / span 6;
+
+  // The opening paragraph carries the field on its own; the rest is detail.
+  > p:first-child {
+    font-size: 1.125rem;
+    line-height: 1.6;
+  }
+}
+
+.spe {
+  grid-column: span 3 / span 3;
+}
+
+.spetitle {
+  @include micro;
+  margin: 0 0 $space-3 0;
+  color: $ink-muted;
+  animation: draw 500ms $ease 320ms both;
+}
+
+.spelist {
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  color: $ink-muted;
+}
+
+// Paragraph by paragraph and competence by competence, each ruled in behind
+// the one before it.
+@for $i from 1 through 16 {
+  .description > *:nth-child(#{$i}) {
+    animation: draw 550ms $ease (280ms + $i * 55ms) both;
+  }
+
+  .spelist > *:nth-child(#{$i}) {
+    animation: draw 450ms $ease (380ms + $i * 45ms) both;
+  }
+}
+
+.link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: $space-1;
+  margin-top: $space-6;
+  @include micro;
+  animation: draw 550ms $ease 520ms both;
+
+  @media (hover: hover) and (pointer: fine) {
+    &::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -0.4rem;
+      height: 1px;
+      width: 100%;
+      background-color: $ink;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform $dur $ease;
+    }
+
+    &:hover::after {
+      transform: scaleX(1);
+    }
+  }
+}
+
+.arrow {
+  width: 20px;
+  height: 20px;
+  stroke-width: 1px;
+}
+
+@media (max-width: $breakpoint-lg) {
+  .fields {
+    column-gap: $space-5;
+  }
+}
+
+// Stacked: the index becomes a header for the field underneath it, and its
+// rows go back to a comfortable tap size now that its height is free.
+@media (max-width: $breakpoint-md) {
+  .fields {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: $space-6;
+  }
+
+  .field {
+    min-height: 0;
+  }
+
+  .rail {
+    position: static;
+    height: auto;
+  }
+
+  .railitem {
+    padding: $space-2 0;
+  }
+
+  .body {
+    grid-template-columns: minmax(0, 1fr);
+    gap: $space-5;
+  }
+
+  .description,
+  .spe {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .railitem,
+  .metainner,
+  .title,
+  .rule,
+  .spetitle,
+  .link,
+  // Matches the staggered rules above on specificity, so it can override them.
+  .description > *:nth-child(n),
+  .spelist > *:nth-child(n) {
+    animation: none;
+  }
+
+  .railtitle {
+    transition: color $dur $ease;
+    transform: none;
+  }
+}

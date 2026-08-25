@@ -1,15 +1,10 @@
 {
   "fr": {
     "contactLinkLabel": "Nous contacter",
-    "seeMore": "voir plus",
-    "seeLess" : "voir moins",
-    "share" : "Partager"
+    "share": "Partager"
   },
-
   "en": {
     "contactLinkLabel": "Contact us",
-    "seeMore": "see more",
-    "seeLess" : "see less",
-    "share" : "Share"
+    "share": "Share"
   }
 }

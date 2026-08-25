@@ -5,12 +5,12 @@ import useLocale from '../../hooks/useLocale';
 function HeadPage(props) {
   const locale = useLocale();
 
-  const { title, description } = props;
+  const { title, description, canonicalPath } = props;
   const { asPath, locales, query } = useRouter();
 
   const pathLocale = locale === 'en' ? '/en': '';
 
-  const path = `${process.env.NEXT_PUBLIC_HOST}${pathLocale}${asPath}`
+  const path = `${process.env.NEXT_PUBLIC_HOST}${pathLocale}${canonicalPath ?? asPath}`
 
 
   return (
