@@ -166,13 +166,6 @@ a.herofootitem:hover {
   font-size: 1rem;
 }
 
-.sectionindex {
-  @include micro;
-  color: $ink-muted;
-  display: block;
-  margin-bottom: $space-3;
-}
-
 .descinner p {
   max-width: $measure;
   color: $ink-muted;
