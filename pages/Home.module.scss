@@ -149,11 +149,8 @@ a.herofootitem:hover {
   @include desktop-container;
 }
 
-// Grayscaled so the portrait reads as part of a monochrome page rather than
-// the one colour object on it.
 .portrait {
   flex: 0 0 34%;
-  filter: grayscale(1) contrast(1.06);
 }
 
 .desc {

@@ -7,7 +7,7 @@ import HeadPage from '../components/head/head-page';
 
 import classes from './Home.module.scss';
 
-import portrait from '../public/images/_50A7988_1.jpeg';
+import portrait from '../public/images/alice-portrait-illustration.png';
 import useLocale from '../hooks/useLocale';
 import footerContent from '../content/footerContent.json';
 
