@@ -11,7 +11,7 @@
   grid-template-columns: minmax(0, 1fr) minmax(0, 0.72fr);
   gap: $space-7;
   align-items: center;
-  padding: $space-6 0 $space-7 0;
+  padding: $space-7 0 $space-7 0;
   animation: rise 0.5s $ease both;
 }
 
@@ -19,10 +19,13 @@
   min-width: 0;
 }
 
+// The wordmark is the page's title now that the banner is gone, so it carries
+// the h1 and runs at display scale.
 .wordmark {
   display: block;
   line-height: 0;
-  margin-bottom: $space-4;
+  margin: 0 0 $space-5 0;
+  max-width: 340px;
 }
 
 .tagline {
@@ -46,18 +49,6 @@
   flex: 0 0 auto;
   justify-content: center;
   padding: $space-2 $space-4;
-}
-
-.email {
-  font-family: 'Inter', sans-serif;
-  font-size: 0.8125rem;
-  letter-spacing: 0.04em;
-  color: $ink-muted;
-  transition: color $dur-fast $ease;
-
-  &:hover {
-    color: $paper;
-  }
 }
 
 .visual {
@@ -130,7 +121,7 @@
   .lede {
     grid-template-columns: 1fr;
     gap: $space-5;
-    padding: $space-5 0 $space-6 0;
+    padding: $space-6 0 $space-6 0;
   }
 
   .visual {
@@ -143,6 +134,11 @@
 }
 
 @media (max-width: $breakpoint-sm) {
+  .wordmark {
+    max-width: 240px;
+    margin-bottom: $space-4;
+  }
+
   // one practice area per line would rebuild the long list this replaced
   .skills {
     gap: $space-2 $space-3;

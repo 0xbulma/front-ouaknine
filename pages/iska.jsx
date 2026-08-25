@@ -1,7 +1,6 @@
 import Image from 'next/image';
 
 import HeadPage from '../components/head/head-page';
-import PageTitle from '../components/layout/page-title';
 import Button from '../components/ui/button';
 import useLocale from '../hooks/useLocale';
 import CONTENT from '../content/iskaContent.json';
@@ -20,21 +19,19 @@ function Iska() {
     <div>
       <HeadPage title={content.titleseo} description={content.descriptionseo} />
 
-      <PageTitle title={content.title} />
-
       <div className={classes.container}>
         <section className={classes.lede}>
           <div className={classes.ledetext}>
-            <span className={classes.wordmark}>
+            <h1 className={classes.wordmark}>
               <Image
                 src={iskaLogo}
-                alt='ISKA'
-                width={168}
-                height={68}
-                layout='fixed'
+                alt={content.title}
+                width={340}
+                height={138}
+                layout='intrinsic'
                 priority
               />
-            </span>
+            </h1>
             <p className={classes.tagline}>{content.tagline}</p>
             <div className={classes.actions}>
               <Button
@@ -45,12 +42,6 @@ function Iska() {
               >
                 {content.cta}
               </Button>
-              <a
-                className={classes.email}
-                href={`mailto:${content.email}`}
-              >
-                {content.email}
-              </a>
             </div>
           </div>
 
