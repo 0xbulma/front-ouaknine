@@ -12,12 +12,12 @@ $localewidth: 100px;
   align-items: center;
   padding: 0.5rem 0.5rem;
   width: $localewidth;
-  border: solid 1px $gray200;
+  border: solid 1px $rule;
   cursor: pointer;
   transition: all 0.15s;
 
   &:hover {
-    background-color: $gray100;
+    background-color: rgba($accent, 0.06);
   }
   &:active {
     transform: scale(0.95);
@@ -73,7 +73,7 @@ $localewidth: 100px;
   @include seriflight;
 
   &:hover {
-    background-color: $gray100;
+    background-color: rgba($accent, 0.06);
   }
   &:active {
     transform: scale(0.95);
@@ -90,8 +90,8 @@ $localewidth: 100px;
   align-items: flex-start;
   gap: 0.1rem;
   padding: 0.1rem 0.1rem;
-  background-color: $white;
-  border: solid 1px $gray200;
+  background-color: $paper-raised;
+  border: solid 1px $rule;
   width: $localewidth;
   opacity: 0;
   transition: all 0.15s;

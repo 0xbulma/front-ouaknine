@@ -1,18 +1,14 @@
 import Link from 'next/link';
-import Image from 'next/image';
-import { useInView } from 'react-intersection-observer';
 import clientApi from '../libs/clientApi';
 import RichText from '../components/ui/rich-text.jsx';
 import { ChevronDoubleDownIcon } from '@heroicons/react/outline';
 import scrollTo from '../libs/scrollTo';
 import AnimatedScale from '../components/layout/animated-scale';
 
-import { useRef, useState } from 'react';
 import HeadPage from '../components/head/head-page';
 
 import classes from './Home.module.scss';
 
-import useOffset from '../hooks/useOffset';
 import AnimatedScaleMobile from '../components/layout/animated-scale-mobile';
 
 export default function Home({ data }) {
@@ -27,51 +23,16 @@ export default function Home({ data }) {
     link2,
     tag3,
     link3,
-    white,
-    imageTitleUrl,
-    imageTitleAlt,
-    imgRatioTitle,
-    lqipTitle,
     sectionTitle,
     body,
-    imageUrl,
-    imageAlt,
-    lqip,
-    imgRatio,
   } = data;
-
-  const { ref, inView, entry } = useInView({
-    /* Optional options */
-    threshold: 0.1,
-    triggerOnce: true,
-  });
-  const scaleRef = useRef();
-  const [percentView, setPercentView] = useState(1);
-
-  useOffset(percentView, setPercentView, scaleRef, 200, 1);
 
   return (
     <div className={classes.container}>
       <HeadPage title={titleseo ? titleseo : ''} description={descriptionseo ? descriptionseo : ''} />
       <div className={classes.upper}>
-        {imageTitleUrl && <Image
-          className={classes.img}
-          src={imageTitleUrl ? `${imageTitleUrl}?w=1600` : ''}
-          alt={imageTitleAlt ? imageTitleAlt : 'Image background'}
-          objectFit={'cover'}
-          layout={'fill'}
-          objectPosition={'center'}
-          blurDataURL={lqipTitle ? lqipTitle : null}
-          placeholder={'empty'}
-          sizes='100vw'
-          priority
-          quality={30}
-        />}
-
-        <div className={classes.overlay}></div>
-
         <div className={`${classes.upperinner}`}>
-          <div className={`${classes.titlegroup} ${!white && classes.black}`}>
+          <div className={classes.titlegroup}>
             {title1 && title2 && (
               <h1>
                 <span className={classes.title}>{`${title1?.trim()} `}</span>
@@ -81,68 +42,35 @@ export default function Home({ data }) {
             <div className={classes.spegroup}>
               {tag1 && (
                 <Link href={{ pathname: '/expertise', query: { _id: link1 } }}>
-                  <a
-                    className={`${classes.spe} ${!white && classes.spe_black}`}
-                  >
-                    {tag1?.trim()}
-                  </a>
+                  <a className={classes.spe}>{tag1?.trim()}</a>
                 </Link>
               )}
               {tag2 && (
                 <Link href={{ pathname: '/expertise', query: { _id: link2 } }}>
-                  <a
-                    className={`${classes.spe} ${!white && classes.spe_black}`}
-                  >
-                    {tag2?.trim()}
-                  </a>
+                  <a className={classes.spe}>{tag2?.trim()}</a>
                 </Link>
               )}
               {tag3 && (
                 <Link href={{ pathname: '/expertise', query: { _id: link3 } }}>
-                  <a
-                    className={`${classes.spe} ${!white && classes.spe_black}`}
-                  >
-                    {tag3?.trim()}
-                  </a>
+                  <a className={classes.spe}>{tag3?.trim()}</a>
                 </Link>
               )}
             </div>
           </div>
-      
+
+          <div className={classes.heromark} aria-hidden='true'>
+            <AnimatedScale draw />
+            <AnimatedScaleMobile draw />
+          </div>
 
           <ChevronDoubleDownIcon
-            className={`${classes.arrow} ${!white && classes.arrow_black}`}
+            className={classes.arrow}
             onClick={() => scrollTo('homedesc')}
           />
-
-   
-        </div>
-      </div>
-
-      <div className={classes.separator} id='section2'>
-        <div ref={scaleRef}>
-          <AnimatedScale animate={inView} percentView={percentView} />
-          <AnimatedScaleMobile animate={inView} percentView={percentView} />
         </div>
       </div>
 
       <section className={classes.bottom} id='homedesc'>
-        <div className={`${classes.image}`} ref={ref}>
-          {imageUrl && (
-            <Image
-              src={`${imageUrl}?w=700`}
-              alt={imageAlt}
-              width={700}
-              height={700 / imgRatio}
-              objectFit={'cover'}
-              blurDataURL={lqip}
-              placeholder={'blur'}
-              sizes='(min-width: 769px) 25vw,
-              50vw'
-              quality={50}
-            />
-          )}
-        </div>
         <div className={`${classes.desc}`}>
           <div className={classes.descinner}>
             {sectionTitle && (
@@ -152,40 +80,29 @@ export default function Home({ data }) {
           </div>
         </div>
       </section>
-
-   
     </div>
   );
 }
 
 export async function getStaticProps(ctx) {
-  
+
   try {
     const locale = ctx?.locale;
 
     const content = await clientApi.fetch(
       `*[_type == "home" && language == "${locale ? locale : "en"}"]{
-        titleseo, 
-        descriptionseo, 
+        titleseo,
+        descriptionseo,
         title1,
         title2,
         tag1,
         "link1": link1->_id,
         tag2,
         "link2": link2->_id,
-        tag3, 
+        tag3,
         "link3": link3->_id,
-        white,
-        "imageTitleUrl": imageTitle.asset->url,
-        "imageTitleAlt" : imageTitle.alt,
-        "imgRatioTitle" : imageTitle.asset->metadata.dimensions.aspectRatio,
-        "lqipTitle": imageTitle.asset->metadata.lqip,
         sectionTitle,
-        body,   
-        "imageUrl": mainImage.asset->url,
-        "imageAlt" : mainImage.title,
-        "imgRatio" : mainImage.asset->metadata.dimensions.aspectRatio,
-        "lqip": mainImage.asset->metadata.lqip}`
+        body}`
     );
     return { props: { data: content?.length && content[0] }, revalidate: 10};
   } catch (err) {

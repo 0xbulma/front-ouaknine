@@ -5,7 +5,6 @@ import Phone from './phone';
 import GaScript from './ga-script';
 
 import classes from './layout.module.scss';
-import Loader from './loader';
 
 import { useContext } from 'react';
 import { CookieContextSchema } from '../../context/cookie-context';
@@ -17,7 +16,6 @@ function Layout(props) {
 
   return (
     <>
-      <Loader />
       {isAccepted && <GaScript />}
       {!doNotShow && !isOn && <Cookie />}
       {!isOn && <Phone />}

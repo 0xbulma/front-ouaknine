@@ -10,7 +10,7 @@ function Button(props) {
   }
 
   return (
-    <button className={`${classes.btn} ${props.outline && classes.outline} ${(props.white === false) && classes.outline_black}`} onClick={props.onclick} {...props}>
+    <button className={classes.btn} onClick={props.onclick} {...props}>
       {props.children}
     </button>
   );

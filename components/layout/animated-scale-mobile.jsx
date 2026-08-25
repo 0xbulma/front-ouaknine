@@ -1,5 +1,5 @@
 const AnimatedScaleMobile = props => {
-  const { percentView } = props;
+  const { percentView, draw } = props;
 
   return (
     <svg
@@ -11,14 +11,18 @@ const AnimatedScaleMobile = props => {
       y='0px'
       viewBox="0 0 844 70"
       xmlSpace='preserve'
-      className={`st3 ${false && 'svg-scale-1'}`}
+      className={`st3 ${draw ? 'svg-scale-3' : ''}`}
     >
       <path
        
-        style={{
-          strokeDashoffset: `${5259.669921875 * percentView}px`,
-          strokeDasharray: '5259.669921875px',
-        }}
+        style={
+          draw
+            ? undefined
+            : {
+                strokeDashoffset: `${5259.669921875 * percentView}px`,
+                strokeDasharray: '5259.669921875px',
+              }
+        }
         d="M-356.1,67.7C-59.3,67,677.1,61.9,685.8,61.8c8.7-0.1,12.4-0.3,15.3-0.9s5-1.7,6.2-2.6s1.4-1.6-0.7-1.5
         c-2,0.1-6.2,1.1-8.2,2.7c-1.9,1.6-1.5,3.9,2.7,5.6c4.1,1.7,12,2.8,19.1,2.6c7.1-0.2,13.3-1.5,16.3-3.3c3-1.7,2.7-3.8,1.4-5
         c-1.3-1.2-3.6-1.6-5-1.8c-1.4-0.2-1.8-0.3-1.8,0c0,0.3,0.4,1,0,2c-0.4,1-1.6,2.2-4.4,3.1s-7.3,1.5-11,0.9c-3.7-0.6-6.6-2.4-6.4-2.9

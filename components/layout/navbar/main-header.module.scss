@@ -1,11 +1,12 @@
 @use '../../../styles/variables' as *;
 
 .header {
- 
-  position: relative;
-  z-index: 1;
- background-color: rgba($white, 1);
-  backdrop-filter: blur(2px);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: rgba($paper, 0.78);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   width: 100%;
 }
 
@@ -19,7 +20,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 0rem;
+  padding: $space-2 0rem;
   @include desktop-container;
 }
 

@@ -14,7 +14,7 @@
   width: 220px;
   font-size: 1rem;
 
-  border: solid 1px $gray200;
+  border: solid 1px $rule;
   user-select: none;
   cursor: pointer;
   text-align: center;
@@ -30,7 +30,7 @@
 }
 
 .labelactive{
-  color:$gray400;
+  color: $ink-muted;
 }
 
 .toggle{
@@ -39,7 +39,7 @@
   left: 2px;
   height: calc(100% - 4px);
   width: calc(50% - 2px);
-  background-color: $gray100;
+  background-color: rgba($accent, 0.06);
   z-index: 5;
   transition: all .15s;
 }

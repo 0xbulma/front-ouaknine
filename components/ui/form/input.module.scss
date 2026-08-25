@@ -21,20 +21,20 @@
   transform: translate(9px, 15px) scale(1);
   transition: all 0.2s ease-in-out;
   font-size: 0.9rem;
-  color: $gray400;
+  color: $ink-muted;
 }
 
 .labelfocus {
   transform: translate(6px, -10px) scale(0.85);
   background-color: white;
-  color: $gray800;
+  color: $ink;
 }
 
 .input,
 .textarea {
   width: 100%;
   border-radius: 0px;
-  border: solid 1px $gray300;
+  border: solid 1px $rule;
   padding: 0.8rem 1rem;
   font-size: 1rem;
   font-family: inherit;
@@ -48,7 +48,7 @@
 
   &:focus {
     outline: none;
-    border: solid 1px $gray800;
+    border: solid 1px $accent;
   }
 
   &:-webkit-autofill,

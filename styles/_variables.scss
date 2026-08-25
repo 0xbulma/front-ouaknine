@@ -24,16 +24,16 @@ $cyan600: #0891b2;
 $cyan800: #155e75;
 
 @mixin borderlight {
-  border: solid 1px $gray200;
+  border: solid 1px $rule;
 }
 @mixin borderbottomlight {
-  border-bottom: solid 1px $gray200;
+  border-bottom: solid 1px $rule;
 }
 @mixin bordertoplight {
-  border-top: solid 1px $gray200;
+  border-top: solid 1px $rule;
 }
 @mixin borderrightlight {
-  border-right: solid 1px $gray200;
+  border-right: solid 1px $rule;
 }
 
 @mixin seriflight{
@@ -84,14 +84,54 @@ $cyan800: #155e75;
     -webkit-box-orient: vertical;
   }
 }
-// Fluid type scale — interpolates between 375px and 1440px viewports,
-// clamped at both ends so it stops growing on very wide screens.
-$fs-display: clamp(2.75rem, 1.96rem + 3.38vw, 5rem);
-$fs-display-sub: clamp(1.375rem, 1.07rem + 1.31vw, 2.25rem);
-$fs-h1: clamp(2.25rem, 1.81rem + 1.88vw, 3.5rem);
-$fs-h2: clamp(1.5rem, 1.24rem + 1.13vw, 2.25rem);
-$fs-h3: clamp(1.25rem, 1.13rem + 0.5vw, 1.5rem);
+// ---------------------------------------------------------------------------
+// Surface & ink
+// The site carries no photography, so the ground tone and a single accent do
+// the work the hero image used to. Warm off-white reads as paper; pure #fff
+// reads as unfinished once there is nothing on top of it.
+// ---------------------------------------------------------------------------
+$paper: #fbfaf8;
+$paper-raised: #ffffff;
+$ink: #1a1a18;
+$ink-muted: #5c5b56;
+$rule: #e3e0d9;
+$accent: #1f3a5f;
+$accent-hover: #2d5486;
 
-$lh-display: 1.05;
-$lh-title: 1.15;
+// ---------------------------------------------------------------------------
+// Spacing scale (8px base). Vertical rhythm is the layout now that imagery is
+// gone, so spacing comes from here rather than per-component feel.
+// ---------------------------------------------------------------------------
+$space-1: 0.5rem;
+$space-2: 1rem;
+$space-3: 1.5rem;
+$space-4: 2rem;
+$space-5: 3rem;
+$space-6: 4rem;
+$space-7: 6rem;
+$space-8: 8rem;
+
+// ---------------------------------------------------------------------------
+// Motion. One curve, two durations. Reveals are short by design: a typographic
+// page with slow choreography reads broken rather than deliberate.
+// ---------------------------------------------------------------------------
+$ease: cubic-bezier(0.22, 1, 0.36, 1);
+$dur-fast: 150ms;
+$dur: 250ms;
+$stagger: 80ms;
+
+// ---------------------------------------------------------------------------
+// Fluid type scale — interpolates between 375px and 1440px viewports, clamped
+// at both ends so it stops growing on very wide screens.
+// ---------------------------------------------------------------------------
+$fs-display: clamp(2.75rem, 1.26rem + 6.38vw, 7rem);
+$fs-display-sub: clamp(1.375rem, 0.98rem + 1.69vw, 2.5rem);
+$fs-h1: clamp(2.5rem, 1.8rem + 3vw, 4.5rem);
+$fs-h2: clamp(1.625rem, 1.32rem + 1.31vw, 2.5rem);
+$fs-h3: clamp(1.25rem, 1.07rem + 0.75vw, 1.75rem);
+
+$lh-display: 1.02;
+$lh-title: 1.1;
 $lh-heading: 1.25;
+
+$measure: 68ch;

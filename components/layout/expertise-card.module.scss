@@ -27,7 +27,7 @@
   flex-direction: column;
 
   &:nth-child(n + 2) {
-    margin-top: 1rem;
+    margin-top: $space-2;
   }
 
   &_titlegroup {
@@ -68,8 +68,12 @@
     @include serif;
 
     user-select: none;
-    transition: all 0.2s;
+    transition: color $dur-fast $ease;
     cursor: pointer;
+
+    &:hover {
+      color: $accent;
+    }
     transform: translateY(100px) translate3d(0,0,0);
   }
 
@@ -83,7 +87,7 @@
     content: '';
     flex-grow: 1;
     display: flex;
-    background-color: $gray400;
+    background-color: $rule;
     height: 1px;
     width: 70%;
     margin-top: 1rem;
@@ -99,7 +103,7 @@
   &_selected {
     content: '';
     display: block;
-    background-color: $gray400;
+    background-color: $rule;
     height: 1px;
     width: 100%;
     margin-top: 1rem;
@@ -116,7 +120,7 @@
     gap: 2rem;
     overflow: hidden;
     transition: all 0.5s ease-out;
-    padding-left: 4rem;
+    padding-left: $space-6;
   }
 
   &_description {
@@ -153,22 +157,22 @@
   }
 
   &_linkcontainer {
-    color: $gray800 !important;
+    color: $ink !important;
     margin-top: 0rem;
-    margin-bottom: 3rem;
+    margin-bottom: $space-5;
 
     @media (hover: hover) and (pointer: fine) {
       &::after {
         content: '';
         display: block;
-        background-color: $gray500;
+        background-color: $accent;
         height: 1px;
         width: 0%;
         transform: translateY(5px) translate3d(0,0,0);
         transition: all 0.2s;
       }
       &:hover {
-        color: $gray800;
+        color: $accent;
       }
 
       &:hover:after {
@@ -208,7 +212,7 @@
   margin: 1.5rem auto;
   height: 1px;
   width: 80%;
-  background-color: $gray200;
+  background-color: $rule;
   grid-column: 1 / span 5;
   // transform: translateX(50px);
 }
@@ -276,21 +280,21 @@
 
 $prevDeExp: 0s;
 $newDeExp: 0s;
-$gapDeExp: 0.4s;
+$gapDeExp: 0.06s;
 
 @for $i from 1 through 15 {
   $newDeExp: $prevDeExp + $gapDeExp;
   $prevDeExp: $newDeExp;
   @if $i == 1 {
     .animation#{($i - 1)} {
-      animation: itemanimationExp 0.8s cubic-bezier(0.33, 1, 0.68, 1);
-      animation-delay: 0.4s;
+      animation: itemanimationExp 0.45s $ease;
+      animation-delay: 0.06s;
       animation-fill-mode: backwards;
       transform: translate3d(0,0,0);
     }
   } @else {
     .animation#{($i - 1)} {
-      animation: itemanimationExp 0.8s cubic-bezier(0.33, 1, 0.68, 1);
+      animation: itemanimationExp 0.45s $ease;
       animation-delay: $newDeExp;
       animation-fill-mode: backwards;
       transform: translate3d(0,0,0);
@@ -301,10 +305,10 @@ $gapDeExp: 0.4s;
 @keyframes itemanimationExp {
   0% {
     opacity: 0;
-    transform: translateX(-10%) translate3d(0,0,0);
+    transform: translateY(10px) translate3d(0,0,0);
   }
   100% {
     opacity: 1;
-    transform: translateX(0%) translate3d(0,0,0);
+    transform: translateY(0) translate3d(0,0,0);
   }
 }

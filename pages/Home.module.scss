@@ -2,65 +2,30 @@
 
 .upper {
   position: relative;
-}
-
-.img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 0;
-}
-
-.overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  // background: linear-gradient(135deg, rgba($gray900, 0.7), rgba($gray900, 0.2));
-  background: linear-gradient(135deg, rgba($gray800, 0.7), rgba($white, 0.2));
-  // background: linear-gradient(135deg, rgba(#0e7490, .8), rgba(#0e7490, 0.1));
-
-  background-size: cover;
-  z-index: 0;
+  background-color: $paper;
+  // the scale mark is drawn from a wide viewBox; keep it from widening the page
+  overflow-x: hidden;
 }
 
 .upperinner {
   position: relative;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: flex-start;
+  flex-direction: column;
+  align-items: stretch;
   min-height: calc(100vh - 72px);
-  padding: 4rem 0;
+  padding: $space-6 0 $space-5 0;
   @include desktop-container;
 }
 
 .titlegroup {
-  flex: 1 0 100%;
   display: flex;
-  margin: auto 0;
-  margin-bottom: 0;
+  margin-top: auto;
   flex-direction: column;
-  gap: 2.5rem;
+  gap: $space-5;
   user-select: none;
-  color: $white;
-  padding: 0rem 2rem;
-  animation: opa 1.5s;
+  color: $ink;
+  padding: 0;
   z-index: 1;
-}
-
-.black {
-  color: $gray800;
-}
-
-@keyframes opa {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
 }
 
 .titlegroup h1 {
@@ -69,26 +34,36 @@
 }
 
 .title {
-  //font-family: le-monde-livre-classic-byol, serif;
   position: relative;
-  letter-spacing: 0.09em;
+  letter-spacing: 0.03em;
   font-size: $fs-display;
   line-height: $lh-display;
   font-weight: 500;
-  margin-bottom: 1rem;
+  margin-bottom: $space-2;
   display: block;
+  animation: rise 0.5s $ease both;
 }
 
 .subtitle {
   display: block;
   font-size: $fs-display-sub;
   line-height: $lh-heading;
-  letter-spacing: 0.24em;
-
+  letter-spacing: 0.18em;
+  color: $ink-muted;
   margin: 0;
   padding: 0;
-  font-weight: 300;
-  margin-bottom: 1rem;
+  font-weight: 400;
+  text-transform: uppercase;
+  animation: rise 0.5s $ease $stagger both;
+}
+
+// The scales-of-justice line drawing is the page's only ornament now that the
+// photography is gone. It sits under the title as a rule, not a decoration.
+.heromark {
+  margin-top: auto;
+  padding-top: $space-6;
+  width: 100%;
+  overflow: hidden;
 }
 
 .spegroup {
@@ -96,111 +71,73 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  gap: 1.5rem;
+  gap: $space-2;
   z-index: 1;
 }
 
 .spe {
-  padding: 0.5rem 5.4rem 0.5rem 1.8rem;
-  background-color: rgba($white, 0.1);
-  color: rgba($white, 0.8);
-  font-size: 1.1rem;
-  //font-size: 1.5vw;
-  backdrop-filter: blur(2px);
-  border: 1px solid rgba($white, 0.8);
+  padding: $space-1 $space-4 $space-1 0;
+  color: $ink;
+  font-size: 1.0625rem;
   @include serif;
   font-weight: 500;
-  transition: all 0.2s;
+  letter-spacing: 0.01em;
+  border-bottom: 1px solid $rule;
+  min-width: min(22rem, 100%);
+  transition: color $dur-fast $ease, border-color $dur-fast $ease;
   z-index: 1;
 
   &:hover {
-    transform: translate(1px, -1px);
-    background-color: rgba($white, 0.2);
-    box-shadow: 4px 4px 4px rgba($white, 0.1);
-  }
-
-  &:active {
-    background-color: rgba($white, 0.2);
-    transform: scale(0.98);
-  }
-
-  &_black {
-    border: 1px solid $gray700;
-    color: $gray700;
-    background-color: rgba($gray400, 0.1);
-
-    &:hover {
-      background-color: rgba($gray400, 0.2);
-      box-shadow: 4px 4px 4px rgba($gray700, 0.1);
-    }
-
-    &:active {
-      background-color: rgba($gray400, 0.2);
-    }
+    color: $accent;
+    border-color: $accent;
   }
 }
 
-$prevDel: 0.1s;
-$newDel: 0s;
-$gapDel: 0.6s;
 @for $i from 1 through 10 {
-  $newDel: $prevDel + $gapDel;
-  $prevDel: $newDel;
   .spe:nth-child(#{$i}) {
-    animation: appearspeleft 0.6s;
-    animation-delay: $newDel;
-    animation-fill-mode: backwards;
+    animation: rise 0.4s $ease ($stagger * ($i + 1)) both;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
 @media (max-width: $breakpoint-sm) {
   .upperinner {
     min-height: calc(100svh - 80px);
-    // padding: 2rem 0;
+    // clears the fixed phone button in the bottom-right corner
+    padding: $space-5 0 calc($space-7 + env(safe-area-inset-bottom)) 0;
   }
 
   .titlegroup {
-    margin: 0;
-    padding: 0rem 0rem;
-    // gap:3rem;
-    animation: none;
-    opacity: 1;
+    gap: $space-4;
   }
 
-  .title {
-    // text-align: end;
-    font-weight: 500;
-  }
+  // 0.18em of tracking on a 22px line runs past the container on a phone
   .subtitle {
-    // text-align: end;
-    font-weight: 500;
+    letter-spacing: 0.08em;
   }
 
   .spegroup {
-    // align-items: flex-end;
-    gap: 1.2rem;
-    margin-bottom: 1rem;
+    gap: $space-1;
+    margin-bottom: $space-2;
   }
 
   .spe {
-    padding: 0.5rem 5.4rem 0.5rem 1.2rem;
-    font-size: 1.1rem;
-    letter-spacing: 0.07rem;
-    //  backdrop-filter: blur(2px);
-    font-weight: 500;
-    animation: none !important;
-    opacity: 1;
+    font-size: 1.0625rem;
+    min-width: 100%;
   }
-}
 
-@keyframes appearspeleft {
-  from {
-    opacity: 0;
-    transform: translateX(-10%);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
+  .heromark {
+    padding-top: $space-5;
   }
 }
 
@@ -212,56 +149,26 @@ $gapDel: 0.6s;
     transform: translateY(6px);
   }
 }
-@keyframes scale {
-  from {
-    transform: scale(1);
-  }
-  to {
-    transform: scale(0.9);
-  }
-}
 
 .arrow {
-  align-self: flex-end;
-  width: 3rem;
-  height: 3rem;
+  align-self: center;
+  margin-top: $space-4;
+  width: 2.75rem;
+  height: 2.75rem;
   stroke-width: 1px;
-  // color: $gray400;
-  color: rgba($white, 0.7);
-  //background-color: rgba($white, .2);
+  color: $ink-muted;
   cursor: pointer;
   padding: 10px;
-  transition: all 0.2s ease-in;
-  // border: 1px solid transparent;
-  border: 1px solid rgba($white, 0.8);
+  transition: color $dur-fast $ease, border-color $dur-fast $ease;
+  border: 1px solid $rule;
   border-radius: 100px;
 
   &:hover {
     animation: moving 0.3s ease-in;
     animation-iteration-count: infinite;
     animation-direction: alternate;
-    background-color: rgba($white, 0.1);
-    // background-color: $white;
-    // border-color: $gray300;
-    border-radius: 100px;
-  }
-
-  &:active {
-    animation-play-state: paused;
-    animation: scale 0.2s;
-  }
-
-  &_black {
-    border: 1px solid $gray700;
-    color: $gray700;
-
-    &:hover {
-      background-color: rgba($gray400, 0.2);
-    }
-
-    &:active {
-      background-color: rgba($gray400, 0.2);
-    }
+    color: $accent;
+    border-color: $accent;
   }
 }
 
@@ -271,97 +178,49 @@ $gapDel: 0.6s;
   }
 }
 
-.separator {
-  position: relative;
-  margin: 0rem auto;
-  margin-top: 3rem;
-  margin-bottom: 0rem;
-  height: 100%;
-  width: 90%;
-  max-width: 1200px;
-}
-
-@media (max-width: $breakpoint-sm) {
-  .separator {
-    width: 100%;
-    margin-top: 1rem;
-    margin-bottom: 0rem;
-    object-fit: cover;
-    overflow: hidden;
-  }
-}
-
 .bottom {
   display: flex;
-  gap: 1rem;
   flex-direction: row;
-  padding-top: 5rem;
+  padding-top: $space-7;
   @include desktop-container;
 }
 
-@keyframes appearleft {
-  from {
-    opacity: 0;
-    transform: translateX(-15%);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-.image {
-  opacity: 1;
-  clip-path: polygon(0 0, 100% 0, 88% 100%, 0% 100%);
-  flex-shrink: 0;
-  flex-grow: 1;
-  width: 25vw;
-  height: 100%;
-}
-
-.show {
-  animation: appearleft 1.2s;
-  animation-fill-mode: forwards;
-}
-
 .desc {
-  background-color: $gray200;
+  background-color: $rule;
   padding: 1px;
   clip-path: polygon(5% 0, 100% 0, 100% 100%, 0% 100%);
+  width: 100%;
 }
 
 .descinner {
   height: 100%;
   width: 100%;
-  padding: 3rem 2rem 3rem 6rem;
-  background-color: $white;
+  padding: $space-6 $space-4 $space-6 $space-8;
+  background-color: $paper-raised;
   clip-path: polygon(5% 0, 100% 0, 100% 100%, 0% 100%);
   font-size: 1rem;
+}
+
+.descinner p {
+  max-width: $measure;
+  color: $ink-muted;
 }
 
 .bottomtitle {
   @include serif;
   margin-top: 0;
-  margin-bottom: 1.5rem;
+  margin-bottom: $space-3;
   font-size: $fs-h2;
   line-height: $lh-heading;
+  color: $ink;
 }
 
 @media (max-width: $breakpoint-md) {
   .bottom {
-    padding-top: 2rem;
+    padding-top: $space-4;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    gap: 3rem;
-  }
-
-  .image {
-    margin: 0 auto;
-    text-align: center;
-    clip-path: none;
-    width: 30%;
-    height: 100%;
   }
 
   .desc {
@@ -369,34 +228,7 @@ $gapDel: 0.6s;
   }
 
   .descinner {
-    padding: 3rem 1.5rem;
-    clip-path: none;
-  }
-}
-
-@media (max-width: $breakpoint-sm) {
-  .bottom {
-    padding-top: 2rem;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 3rem;
-  }
-
-  .image {
-    margin: 0 auto;
-    text-align: center;
-    clip-path: none;
-    width: 60%;
-    height: 100%;
-  }
-
-  .desc {
-    clip-path: none;
-  }
-
-  .descinner {
-    padding: 3rem 1.5rem;
+    padding: $space-5 $space-3;
     clip-path: none;
   }
 }

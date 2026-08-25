@@ -4,98 +4,30 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1.5rem;
-  padding: 0.6rem 1.5rem;
-  color: $gray700;
-  transition: all 0.1s;
-  transition-timing-function: ease-in;
-  background-color: $gray50;
+  gap: $space-3;
+  padding: $space-2 $space-3;
+  color: $ink;
+  background-color: transparent;
   cursor: pointer;
-  border: 1px solid $gray300;
+  border: 1px solid $rule;
   @include serif;
   font-weight: 500;
-  font-size: 1rem;
+  font-size: 1.0625rem;
+  // Colour only. The previous translate(0.5px, -0.8px) hover nudged the button
+  // under the cursor on every pointer-over.
+  transition: color $dur-fast $ease, border-color $dur-fast $ease,
+    background-color $dur-fast $ease;
 
   &:hover {
-    background-color: $gray100;
-    transform: translate(0.5px, -0.8px);
-    box-shadow: 2px 2px 2px rgba($color: #000000, $alpha: 0.04);
-  }
-
-  &:active {
-    transform: scale(0.98);
-  }
-}
-
-.outline {
-  background-color: rgba($white, 0.1);
-  color: rgba($white, 0.8);
-  font-size: 1.2rem;
-  //font-size: 1.5vw;
-  font-weight: 500;
-  border: 1px solid rgba($white, 0.8);
-  //backdrop-filter: blur(2px);
-  transition: all 0.2s;
-
-  &:hover {
-    transform: translate(1px, -1px);
-    background-color: rgba($white, 0.2);
-    box-shadow: 4px 4px 4px rgba($white, 0.1);
-  }
-
-  &:active {
-    background-color: rgba($white, 0.2);
-    transform: scale(0.98);
-  }
-
-  &_black {
-    border: 1px solid $gray700;
-    color: $gray700;
-    background-color: rgba($gray400, 0.1);
-
-    &:hover {
-      background-color: rgba($gray400, 0.2);
-      box-shadow: 4px 4px 4px rgba($gray700, 0.1);
-    }
-
-    &:active {
-      background-color: rgba($gray400, 0.2);
-    }
-  }
-}
-
-@media (maw-width: $breakpoint-sm) {
-  .btn {
-    font-weight: 700;
-  }
-
-  .outline {
-    font-weight: 700;
-  }
-}
-
-.btn2 {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1.5rem;
-  padding: 0.6rem 1.5rem;
-  color: $gray500;
-  transition: all 0.1s;
-  transition-timing-function: ease-in;
-  background-color: $gray200;
-  box-shadow: 2px 2px 4px rgba($color: #000000, $alpha: 0.1);
-  cursor: pointer;
-
-  &:hover {
-    background-color: $gray300;
-  }
-
-  &:enabled:active {
-    transform: scale(0.98);
+    color: $accent;
+    border-color: $accent;
+    background-color: rgba($accent, 0.04);
   }
 
   &:disabled {
-    background-color: $gray100;
+    color: $ink-muted;
+    border-color: $rule;
+    background-color: transparent;
+    cursor: not-allowed;
   }
 }

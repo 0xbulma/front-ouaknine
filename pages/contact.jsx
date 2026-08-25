@@ -7,15 +7,13 @@ import contactContent from '../content/contactContent.json';
 
 import useLocale from '../hooks/useLocale';
 import clientApi from '../libs/clientApi';
-import Image from 'next/image';
-import mapImage from '../public/images/maptrans.svg';
-import googlePin from '../public/images/googlemaps_icon.svg';
 import HeadPage from '../components/head/head-page';
+import footerContent from '../content/footerContent.json';
 
 import { useInView } from 'react-intersection-observer';
 
 import Button from '../components/ui/button';
-import { PhoneIcon } from '@heroicons/react/solid';
+import { PhoneIcon, LocationMarkerIcon } from '@heroicons/react/solid';
 
 import PageTitle from '../components/layout/page-title';
 import useOffset from '../hooks/useOffset';
@@ -27,12 +25,6 @@ function Contact({ data }) {
     titleseo,
     descriptionseo,
     title,
-    subtitle,
-    white,
-    imageTitleUrl,
-    imageTitleAlt,
-    imgRatioTitle,
-    lqipTitle,
     titlebox,
     titleform,
     body,
@@ -55,17 +47,7 @@ function Contact({ data }) {
     <div>
       <HeadPage title={titleseo ? titleseo : ''} description={descriptionseo ? descriptionseo : ''} />
 
-      <PageTitle
-        title={title ? title : ''}
-        subtitle={subtitle ? subtitle : ''}
-        btn={false}
-        imgUrl={imageTitleUrl ? `${imageTitleUrl}?w=1600` : null}
-        imgAlt={imageTitleAlt ? imageTitleAlt : 'Background image'}
-        imgRatio={imgRatioTitle ? imgRatioTitle : 1}
-        imgLqip={lqipTitle ? lqipTitle : null}
-        white={white ? white : false}
-        position={'top'}
-      />
+      <PageTitle title={title ? title : ''} />
       <section className={classes.container}>
         <div className={classes.grid}>
           <div className={classes.leftblock}>
@@ -89,31 +71,16 @@ function Contact({ data }) {
                     target='_blank'
                   >
                     <span>{contactContent[locale].google}</span>
-                    <Image
-                      src={googlePin}
-                      width={5.12 * 3}
-                      height={7.34 * 3}
-                      alt={googlePin}
-                    />
+                    <LocationMarkerIcon className={classes.phone} />
                   </Button>
                 </div>
               </div>
             </div>
           </div>
           <div className={classes.rightblock}>
-            <a
-              href='https://www.google.com/maps/place/Ouaknine+Alice+Avocat/@48.876648,2.3255411,14.2z/data=!4m5!3m4!1s0x0:0x51a276d4dfa05806!8m2!3d48.8775684!4d2.316890'
-              target='_blank'
-              rel='noreferrer'
-            >
-              <Image
-                src={mapImage}
-                alt='Map'
-                width={680.72}
-                height={540.14}
-                //objectFit={'cover'}
-              />
-            </a>
+            <address className={classes.addressblock}>
+              {footerContent[locale].address}
+            </address>
           </div>
         </div>
       </section>
@@ -142,10 +109,6 @@ export async function getStaticProps(ctx) {
         title,
         subtitle,
         white,
-        "imageTitleUrl": imageTitle.asset->url,
-        "imageTitleAlt" : imageTitle.alt,
-        "imgRatioTitle" : imageTitle.asset->metadata.dimensions.aspectRatio,
-        "lqipTitle": imageTitle.asset->metadata.lqip,
         titlebox,
         titleform,
         body,

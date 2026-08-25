@@ -1,11 +1,11 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import Image from 'next/image';
 
 import useLocale from '../../hooks/useLocale';
+import useTimeout from '../../hooks/useTimout';
 
 import Button from '../ui/button';
 import { CookieContextSchema } from '../../context/cookie-context';
-import { LoaderContextSchema } from '../../context/loader-context';
 import { ShieldCheckIcon, XCircleIcon } from '@heroicons/react/outline';
 
 import CookieImg from '../../public/images/cookie.svg';
@@ -17,12 +17,13 @@ function Cookie() {
   const { isAccepted, acceptCookie, denyCookie } =
     useContext(CookieContextSchema);
 
-  const { isLoading } = useContext(LoaderContextSchema);
+  const [isReady, setIsReady] = useState(false);
+  useTimeout(() => setIsReady(true), 600);
 
   const locale = useLocale();
 
   return (
-    <div className={`${classes.container} ${!isLoading && classes.show}`}>
+    <div className={`${classes.container} ${isReady && classes.show}`}>
       <div className={classes.cookie}>
         <Image src={CookieImg} layout={'fill'} objectFit={'cover'} alt='cookie' />
       </div>

@@ -9,7 +9,7 @@
 .st0 {
   opacity: 1;
   fill: none;
-  stroke: $gray300;
+  stroke: $ink-muted;
   stroke-width: 5px;
   stroke-linecap: round;
   stroke-linejoin: round;
@@ -51,8 +51,8 @@
 }
 
 .svg-scale-1 {
-  -webkit-animation: animate-svg-stroke-1 3s ease-out 0s both;
-  animation: animate-svg-stroke-1 3s ease-out 0s both;
+  -webkit-animation: animate-svg-stroke-1 1.4s $ease 0.15s both;
+  animation: animate-svg-stroke-1 1.4s $ease 0.15s both;
   animation-fill-mode:forwards;
 }
 
@@ -61,7 +61,7 @@
 .st2 {
   opacity: 1;
   fill: none;
-  stroke: $gray300;
+  stroke: $ink-muted;
   stroke-width: 1.2px;
   stroke-linecap: round;
   stroke-linejoin: round;
@@ -108,8 +108,8 @@
 }
 
 .svg-scale-2 {
-  -webkit-animation: animate-svg-stroke-2 3s ease-out 0s both;
-  animation: animate-svg-stroke-2 3s ease-out 0s both;
+  -webkit-animation: animate-svg-stroke-2 1.4s $ease 0.15s both;
+  animation: animate-svg-stroke-2 1.4s $ease 0.15s both;
   animation-fill-mode:forwards;
 }
 
@@ -117,7 +117,7 @@
 .st3 {
   opacity: 1;
   fill: none;
-  stroke: $gray300;
+  stroke: $ink-muted;
   stroke-width: 1.2px;
   stroke-linecap: round;
   stroke-linejoin: round;
@@ -164,7 +164,7 @@
 }
 
 .svg-scale-3 {
-  -webkit-animation: animate-svg-stroke-3 3s ease-out 0s both;
-  animation: animate-svg-stroke-3 3s ease-out 0s both;
+  -webkit-animation: animate-svg-stroke-3 1.4s $ease 0.15s both;
+  animation: animate-svg-stroke-3 1.4s $ease 0.15s both;
   animation-fill-mode:forwards;
 }

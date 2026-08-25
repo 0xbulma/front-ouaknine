@@ -10,7 +10,7 @@
   align-items: flex-start;
   gap: 1.5rem;
 
-  background-color: $white;
+  background-color: $paper-raised;
   padding: 1.2rem;
   box-shadow: 2px 2px 4px rgba(black, 0.1);
 
@@ -45,7 +45,7 @@
   width: 70px;
   height: 70px;
   stroke-width: 1px;
-  color: $gray400;
+  color: $ink-muted;
 }
 
 @media (max-width: $breakpoint-md) {
