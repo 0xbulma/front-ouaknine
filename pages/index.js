@@ -90,7 +90,6 @@ export default function Home({ data }) {
         </div>
         <div className={`${classes.desc}`}>
           <div className={classes.descinner}>
-            <span className={classes.sectionindex}>01</span>
             {sectionTitle && (
               <h2 className={classes.bottomtitle}>{sectionTitle?.trim()}</h2>
             )}
