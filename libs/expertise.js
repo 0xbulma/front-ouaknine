@@ -1,15 +1,9 @@
 import clientApi from './clientApi';
+import { slugify } from './slug';
 
 // The CMS has no slug field on an expertise item, so the URL is derived from
-// the title — stable for as long as the title is.
-export const expertiseSlug = title =>
-  (title ?? '')
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
+// the title, stable for as long as the title is.
+export const expertiseSlug = slugify;
 
 const EXPERTISE_QUERY = `*[_type == "expertise" && language == $locale][0]{
   titleseo,

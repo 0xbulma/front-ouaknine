@@ -6,6 +6,8 @@
     "addressRegion": "Île-de-France",
     "addressCountry": "FR"
   },
+  "geo": { "latitude": 48.8816365, "longitude": 2.3346834 },
+  "mapsUrl": "https://www.google.com/maps/place/Ouaknine+Alice+Avocate/@48.8816365,2.3346834,17z/data=!4m6!3m5!1s0x47e67bc0f2a5e2bb:0x51a276d4dfa05806!8m2!3d48.8816365!4d2.3346834!16s%2Fg%2F11hfhpp1b7",
   "phone": "+33184162035",
   "mobilePhone": "+33629653512",
 

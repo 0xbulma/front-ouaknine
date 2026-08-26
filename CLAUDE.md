@@ -76,6 +76,14 @@ Two traps that have already cost time:
   page once with `curl`, wait, *then* capture. A stale capture has more than once
   looked like a CSS bug that was already fixed.
 
+## Publications
+
+`/publications` renders the Sanity `post` documents: the firm's own writing
+(`filter: fact`, grouped into guides by the `series` field) and press mentions
+(`filter: press`). Anyone writing for it works from
+`docs/publications-editorial-brief.md`, which carries the house format, the
+déontologie constraints, the full article list and the release schedule.
+
 ## Content: two sources, know which is which
 
 **Sanity** (`libs/clientApi.js`, GROQ in each page's `getStaticProps`) holds page

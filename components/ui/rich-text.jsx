@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { PortableText } from '@portabletext/react';
 import SanityImage from './sanityImage';
 import classes from './rich-text.module.scss';
@@ -43,16 +44,26 @@ export default function RichText({ value }) {
           ),
         },
         marks: {
+          // The guide cross-links its own episodes. Those are internal, and
+          // sending a reader to a new tab to read the next one is wrong; only a
+          // link that leaves the site opens away from it.
           link: ({ children, value }) => {
-            const rel = !value?.href?.startsWith('/')
-              ? 'noreferrer noopener'
-              : undefined;
+            const href = value?.href || '/';
+            const isExternal = /^https?:\/\//i.test(href);
+
+            if (!isExternal) {
+              return (
+                <Link href={href}>
+                  <a className={classes.link}>{children}</a>
+                </Link>
+              );
+            }
+
             return (
-              // eslint-disable-next-line react/jsx-no-target-blank
               <a
                 className={classes.link}
-                href={value?.href ? value.href : '/'}
-                rel={rel}
+                href={href}
+                rel='noreferrer noopener'
                 target='_blank'
               >
                 {children}

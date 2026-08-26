@@ -1,6 +1,7 @@
 import clientApi from '../../libs/clientApi';
 import { expertiseSlug } from '../../libs/expertise';
 import EXPERTISE_PAIRS from '../../libs/expertisePairs';
+import { fetchPublications } from '../../libs/publications';
 import { withLocale } from '../../libs/localePath';
 
 const HOST =
@@ -10,7 +11,7 @@ const LOCALES = ['fr', 'en'];
 
 // No '/expertise': it renders the first field and canonicalises onto it, so
 // listing it here would ask Google to index a URL the page disowns.
-const PAGES = ['/', '/contact', '/iska', '/legal'];
+const PAGES = ['/', '/contact', '/iska', '/legal', '/publications'];
 
 const escape = value =>
   value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -72,6 +73,27 @@ export default async function handler(req, res) {
     sets = sets.concat(await expertisePairs());
   } catch (err) {
     // The static pages are still worth serving without the CMS.
+  }
+
+  // A publication shares one slug across both languages, so it is the same path
+  // in either and needs no counterpart lookup. Only the languages it was
+  // actually written in are listed.
+  try {
+    const byLocale = await Promise.all(
+      LOCALES.map(async locale => [locale, await fetchPublications(locale)])
+    );
+
+    const slugs = new Set(byLocale.flatMap(([, posts]) => posts.map(p => p.slug)));
+
+    sets = sets.concat(
+      [...slugs].map(slug =>
+        byLocale
+          .filter(([, posts]) => posts.some(p => p.slug === slug))
+          .map(([locale]) => [locale, `/publications/${slug}`])
+      )
+    );
+  } catch (err) {
+    // As above.
   }
 
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>

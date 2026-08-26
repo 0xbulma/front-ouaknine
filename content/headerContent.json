@@ -3,6 +3,7 @@
     "nav": [
       { "label": "Le Cabinet", "url": "/" },
       { "label": "Expertise", "url": "/expertise" },
+      { "label": "Publications", "url": "/publications" },
       { "label": "Contact", "url": "/contact" }
     ],
     "iska": {
@@ -16,6 +17,7 @@
     "nav": [
       { "label": "The Firm", "url": "/" },
       { "label": "Expertise", "url": "/expertise" },
+      { "label": "Publications", "url": "/publications" },
       { "label": "Contact", "url": "/contact" }
     ],
     "iska": {

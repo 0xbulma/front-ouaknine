@@ -1,0 +1,257 @@
+@use '../../styles/variables' as *;
+
+.container {
+  @include desktop-container;
+  padding: $space-6 0 $space-7 0;
+}
+
+// Same two-column shape as a field of expertise: a sticky index on the left,
+// the long text beside it. An article with no series drops the rail and the
+// text takes the row on its own.
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 17rem) minmax(0, 1fr);
+  column-gap: $space-7;
+  align-items: start;
+}
+
+.rail {
+  // A sticky box gets pushed up once its own bottom edge reaches the bottom of
+  // its containing block. Sticking a box of no height and letting the index
+  // overflow it keeps the index pinned for the whole of the article.
+  position: sticky;
+  top: $space-7;
+  height: 0;
+}
+
+.railinner {
+  display: flex;
+  flex-direction: column;
+  @include bordertoplight;
+}
+
+.railitem {
+  position: relative;
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr);
+  align-items: baseline;
+  padding: $space-1 0;
+  @include borderbottomlight;
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+    height: 1px;
+    width: 100%;
+    background-color: $ink;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform $dur $ease;
+  }
+
+  &:hover::after,
+  &[aria-current='page']::after {
+    transform: scaleX(1);
+  }
+
+  &:hover,
+  &[aria-current='page'] {
+    .railindex,
+    .railtitle {
+      color: $ink;
+    }
+  }
+}
+
+.railindex {
+  @include micro;
+  color: $rule-strong;
+  transition: color $dur $ease;
+}
+
+.railtitle {
+  @include micro;
+  letter-spacing: 0.1em;
+  line-height: 1.5;
+  color: $ink-muted;
+  transition: color $dur $ease;
+}
+
+.article {
+  min-width: 0;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-1 $space-3;
+  padding-bottom: $space-3;
+  @include borderbottomlight;
+}
+
+.metaitem {
+  @include micro;
+  color: $ink-muted;
+}
+
+.metalink {
+  @include micro;
+  color: $ink;
+  text-decoration: underline;
+  text-underline-offset: 0.3em;
+  text-decoration-color: $rule-strong;
+  transition: text-decoration-color $dur-fast $ease;
+
+  &:hover {
+    text-decoration-color: $ink;
+  }
+}
+
+.body {
+  max-width: $measure;
+  margin-top: $space-5;
+
+  h4 {
+    margin-top: $space-5;
+    margin-bottom: $space-2;
+    font-size: $fs-h3;
+    line-height: $lh-heading;
+    text-transform: none;
+    letter-spacing: -0.005em;
+    color: $ink;
+  }
+
+  p {
+    color: $ink-muted;
+    line-height: 1.7;
+  }
+
+  strong {
+    color: $ink;
+    font-weight: 500;
+  }
+}
+
+.source,
+.back {
+  display: inline-block;
+  margin-top: $space-5;
+  @include micro;
+  text-decoration: underline;
+  text-underline-offset: 0.3em;
+  text-decoration-color: $rule-strong;
+  transition: text-decoration-color $dur-fast $ease;
+
+  &:hover {
+    text-decoration-color: $ink;
+  }
+}
+
+// Who wrote it and what they are admitted to. On a page of legal advice this is
+// the part a reader and a search engine both weigh.
+.author {
+  display: flex;
+  flex-direction: column;
+  gap: $space-1;
+  margin-top: $space-6;
+  padding-top: $space-3;
+  @include bordertoplight;
+  border-top-color: $rule-strong;
+}
+
+.authorlabel {
+  @include micro;
+  color: $ink-muted;
+}
+
+.authorname {
+  @include serif;
+  font-size: $fs-h3;
+  line-height: $lh-heading;
+  text-transform: uppercase;
+}
+
+.authorrole {
+  font-size: 0.9375rem;
+  color: $ink-muted;
+}
+
+.pager {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: $space-4;
+  margin-top: $space-6;
+  padding-top: $space-3;
+  @include bordertoplight;
+}
+
+.pagerlink {
+  display: flex;
+  flex-direction: column;
+  gap: $space-1;
+  color: $ink-muted;
+  transition: color $dur-fast $ease;
+
+  &:hover {
+    color: $ink;
+  }
+}
+
+.pagernext {
+  text-align: right;
+}
+
+.pagerlabel {
+  @include micro;
+  font-size: 0.6875rem;
+  color: $rule-strong;
+}
+
+.pagertitle {
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+@media (max-width: $breakpoint-lg) {
+  .layout {
+    column-gap: $space-5;
+  }
+}
+
+@media (max-width: $breakpoint-md) {
+  .container {
+    padding: $space-5 0 $space-6 0;
+  }
+
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: $space-6;
+  }
+
+  // Stacked, the index would put five links between the title and the first
+  // sentence. An article is read before it is navigated, so the rest of the
+  // guide goes underneath it, next to the pager.
+  .article {
+    order: 1;
+  }
+
+  .rail {
+    order: 2;
+    position: static;
+    height: auto;
+  }
+
+  .railitem {
+    padding: $space-2 0;
+  }
+
+  .pager {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pagernext {
+    text-align: left;
+  }
+}

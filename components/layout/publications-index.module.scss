@@ -1,0 +1,124 @@
+@use '../../styles/variables' as *;
+
+@keyframes draw {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+.container {
+  @include desktop-container;
+  padding: $space-6 0 $space-7 0;
+}
+
+.section {
+  margin-bottom: $space-7;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+// A guide is named at section size in the display face; the episodes under it
+// stay at label size, which is the contrast the rest of the site is built on.
+.sectiontitle {
+  margin: 0 0 $space-4 0;
+  @include serif;
+  font-size: $fs-h2;
+  line-height: $lh-heading;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  @include bordertoplight;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 1fr);
+  align-items: baseline;
+  gap: $space-4;
+  padding: $space-3 0;
+  color: $ink;
+  @include borderbottomlight;
+  transition: color $dur-fast $ease, border-color $dur-fast $ease;
+
+  animation: draw 500ms $ease both;
+
+  &:hover {
+    color: $paper-raised;
+    border-color: $rule-strong;
+
+    .index,
+    .meta {
+      color: $ink;
+    }
+  }
+}
+
+.index {
+  @include micro;
+  color: $ink-muted;
+  transition: color $dur-fast $ease;
+}
+
+.value {
+  display: flex;
+  flex-direction: column;
+  gap: $space-1;
+}
+
+.title {
+  margin: 0;
+  // An h3 for structure, a row label to read. The global heading rule would put
+  // Bodoni and uppercase on it, and a 17px Didone on black is where its
+  // hairlines go.
+  font-family: inherit;
+  text-transform: none;
+  font-size: 1.0625rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  line-height: $lh-heading;
+}
+
+.meta {
+  @include micro;
+  font-size: 0.6875rem;
+  color: $ink-muted;
+  transition: color $dur-fast $ease;
+}
+
+.empty {
+  color: $ink-muted;
+}
+
+@media (max-width: $breakpoint-md) {
+  .container {
+    padding: $space-5 0 $space-6 0;
+  }
+
+  .section {
+    margin-bottom: $space-6;
+  }
+
+  .row {
+    grid-template-columns: 2.5rem minmax(0, 1fr);
+    gap: $space-2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .row {
+    animation: none;
+  }
+}

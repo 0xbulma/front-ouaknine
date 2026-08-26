@@ -16,8 +16,9 @@ const ALICE_ID = `${HOST}/#alice`;
 // `@graph` rather than three scripts, so the nodes can reference each other by
 // `@id` and Google resolves one entity instead of three loose ones.
 //
-// No `geo` block: the coordinates the site still carries point at the previous
-// office, and a wrong latitude is worse than no latitude.
+// The coordinates and the map link come from the live Google listing for the
+// business, not from the stale ones the site used to carry, so `geo` states the
+// same point Google already holds.
 function SiteSchema() {
   const { locale } = useRouter();
   const org = organizationContent[locale] ?? organizationContent.fr;
@@ -35,6 +36,8 @@ function SiteSchema() {
         telephone: footerContent.phone,
         email,
         address: { '@type': 'PostalAddress', ...footerContent.postalAddress },
+        geo: { '@type': 'GeoCoordinates', ...footerContent.geo },
+        hasMap: footerContent.mapsUrl,
         areaServed: { '@type': 'City', name: org.areaServed },
         availableLanguage: ['fr', 'en'],
         founder: { '@id': ALICE_ID },
@@ -44,6 +47,7 @@ function SiteSchema() {
           name: 'ISKA Avocats',
           url: ISKA_URL,
         },
+        sameAs: [footerContent.mapsUrl],
       },
       {
         '@type': 'Person',

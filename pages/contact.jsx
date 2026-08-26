@@ -11,8 +11,6 @@ import PageTitle from '../components/layout/page-title';
 import Image from 'next/image';
 import parisMap from '../public/images/paris-map.svg';
 
-const MAPS_URL =
-  'https://www.google.com/maps/place/Ouaknine+Alice+Avocat/@48.876648,2.3255411,14.2z/data=!4m5!3m4!1s0x0:0x51a276d4dfa05806!8m2!3d48.8775684!4d2.316890';
 
 function Contact({ data }) {
   const { titleseo, descriptionseo, title } = data;
@@ -34,7 +32,7 @@ function Contact({ data }) {
         <div className={classes.grid}>
           <a
             className={classes.map}
-            href={MAPS_URL}
+            href={footerContent.mapsUrl}
             target='_blank'
             rel='noreferrer'
             tabIndex={-1}
@@ -51,7 +49,7 @@ function Contact({ data }) {
               <dd className={classes.rowvalue}>
                 <a
                   className={classes.rowlink}
-                  href={MAPS_URL}
+                  href={footerContent.mapsUrl}
                   target='_blank'
                   rel='noreferrer'
                 >
