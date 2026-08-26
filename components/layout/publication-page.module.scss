@@ -79,18 +79,19 @@
   transition: color $dur $ease;
 }
 
-// The left column always carries something: the series index on a guide
-// episode, the article's own meta on anything else. An article outside a guide
-// has no series to index, and its own headings would not do the job either
-// (many are too short to have any worth listing), but every article has a date,
-// a length and a field. Body copy is 62ch on both page types, so the two now
-// set text at the same width in the same place.
-.gutter {
-  padding-top: $space-1;
-}
-
 .article {
   min-width: 0;
+
+  // An article outside a guide has no index beside it, so it takes the row
+  // rather than the 17rem column auto-placement would drop it into, and its
+  // text runs the full container instead of stopping at the measure.
+  &:only-child {
+    grid-column: 1 / -1;
+
+    .body {
+      max-width: none;
+    }
+  }
 }
 
 .meta {
@@ -99,15 +100,6 @@
   gap: $space-1 $space-3;
   padding-bottom: $space-3;
   @include borderbottomlight;
-}
-
-// In the gutter it is a stack rather than a row, and the rule above it lines up
-// with the one the index carries on a guide episode.
-.gutter .meta {
-  flex-direction: column;
-  gap: $space-1;
-  padding: $space-2 0 $space-3 0;
-  @include bordertoplight;
 }
 
 .metaitem {
@@ -170,9 +162,13 @@
   }
 }
 
+// Each on its own line. As inline-block siblings they ran together into
+// "Lire l'article d'origineToutes les publications", and `width: fit-content`
+// keeps the underline to the words rather than to the whole row.
 .source,
 .back {
-  display: inline-block;
+  display: block;
+  width: fit-content;
   margin-top: $space-5;
   @include micro;
   text-decoration: underline;
@@ -268,13 +264,7 @@
 
   // Stacked, the index would put five links between the title and the first
   // sentence. An article is read before it is navigated, so the rest of the
-  // guide goes underneath it, next to the pager. The meta is not navigation and
-  // stays where it belongs, above the first line.
-  .gutter {
-    order: 0;
-    padding-top: 0;
-  }
-
+  // guide goes underneath it, next to the pager.
   .article {
     order: 1;
   }

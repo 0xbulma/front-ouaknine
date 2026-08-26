@@ -95,14 +95,10 @@ function PublicationPage({ post, series, seo }) {
 
       <div className={classes.container}>
         <div className={classes.layout}>
-          {series?.length ? (
-            <SeriesRail series={series} current={post._id} copy={copy} />
-          ) : (
-            <div className={classes.gutter}>{meta}</div>
-          )}
+          <SeriesRail series={series} current={post._id} copy={copy} />
 
           <article className={classes.article}>
-            {series?.length ? meta : null}
+            {meta}
 
             <div className={classes.body}>
               <RichText value={post.body} />
