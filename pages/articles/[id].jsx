@@ -10,9 +10,24 @@ export default function LegacyArticle() {
   return null;
 }
 
+// A Sanity document id. Anything else is not a legacy URL, and this route is the
+// site's only SSR path over an unbounded, attacker-chosen path space: without a
+// shape test every request is request-time CMS I/O.
+const DOCUMENT_ID = /^[A-Za-z0-9._-]{1,64}$/;
+
 export async function getServerSideProps({ params, locale, res }) {
   const twin = otherLocale(locale);
   let resolved = null;
+
+  if (!DOCUMENT_ID.test(params.id ?? '')) {
+    res.setHeader('Cache-Control', 'public, max-age=0, s-maxage=3600');
+    return {
+      redirect: {
+        destination: withLocale(locale, '/publications'),
+        permanent: false,
+      },
+    };
+  }
 
   try {
     // In the language being read when it exists there. The press cuttings are
@@ -27,7 +42,7 @@ export async function getServerSideProps({ params, locale, res }) {
       if (there) resolved = { locale: twin, slug: there.slug };
     }
   } catch (err) {
-    console.error('legacy article getServerSideProps', params.id, err);
+    console.error('legacy article getServerSideProps', locale, params.id, err);
   }
 
   // Next does not prefix a getServerSideProps redirect with the active locale,

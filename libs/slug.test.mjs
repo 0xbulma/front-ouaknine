@@ -90,6 +90,11 @@ test('internalPath keeps a same-site link on the site', () => {
   );
   assert.equal(internalPath('/publications/x'), '/publications/x');
   assert.equal(internalPath('#top'), '#top');
+  // The bare domain, which is what an editor gets by copying it.
+  assert.equal(
+    internalPath('https://ouaknine-avocats.com/publications/x'),
+    '/publications/x'
+  );
 });
 
 test('internalPath sends everything else away', () => {
@@ -99,6 +104,15 @@ test('internalPath sends everything else away', () => {
   assert.equal(internalPath('https://www.ouaknine-avocats.com@evil.com'), null);
   assert.equal(internalPath('https://notouaknine-avocats.com/x'), null);
   assert.equal(internalPath('javascript:alert(1)'), null);
+});
+
+test('internalPath never returns a protocol-relative path', () => {
+  // `new URL` resolves `..` before pathname is read, so these arrive as
+  // "//evil.com" unless the leading slashes are collapsed.
+  for (const href of ['/..//evil.com', '/.//evil.com', '/a/../..//evil.com']) {
+    const path = internalPath(href);
+    assert.ok(path === null || !path.startsWith('//'), `${href} -> ${path}`);
+  }
 });
 
 test('isSafeExternal refuses anything it does not recognise', () => {

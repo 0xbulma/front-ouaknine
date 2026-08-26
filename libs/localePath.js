@@ -17,8 +17,16 @@ const counterpartSlug = (router, target) =>
 // A pair that falls out of date — a field renamed in the studio, which changes
 // its slug — sends the switch to the index rather than to a URL that does not
 // exist.
-const localePath = (router, target) => {
+const localePath = (router, target, availableLocales) => {
   const { pathname, query } = router;
+
+  // A page that only exists in some languages says so through the locales
+  // context. Switching to one it does not have goes to that section's index
+  // rather than to a URL that 404s: every press cutting is French only, and the
+  // editorial brief plans most new pieces the same way.
+  if (availableLocales && !availableLocales.includes(target)) {
+    return pathname.replace(/\/\[[^\]]+\]$/, '') || '/';
+  }
 
   if (pathname !== FIELD_ROUTE) return { pathname, query };
 

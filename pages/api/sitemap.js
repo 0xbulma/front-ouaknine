@@ -82,7 +82,9 @@ export default async function handler(req, res) {
   try {
     sets = sets.concat(await expertisePairs());
   } catch (err) {
-    // The static pages are still worth serving without the CMS.
+    // The static pages are still worth serving without the CMS, but twenty
+    // expertise URLs vanishing quietly is the same failure as below.
+    console.error('sitemap expertise', err);
   }
 
   // A publication shares one slug across both languages, so it is the same path

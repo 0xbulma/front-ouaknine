@@ -45,7 +45,7 @@ export async function getStaticProps({ params, locale }) {
     const [posts, translations] = await Promise.all([
       fetchPublications(locale),
       fetchPublications(twin).catch(err => {
-        console.error('publication twin locale', params.slug, err);
+        console.error('publication twin locale', twin, params.slug, err);
         return [];
       }),
     ]);
@@ -99,7 +99,7 @@ export async function getStaticProps({ params, locale }) {
     // so Next caches it over the last good render; a thrown getStaticProps makes
     // it re-set the existing page instead (response-cache/index.js). The two
     // guards above are the only definitive absences.
-    console.error('publication getStaticProps', params.slug, err);
+    console.error('publication getStaticProps', locale, params.slug, err);
     throw err;
   }
 }

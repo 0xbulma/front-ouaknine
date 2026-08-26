@@ -1,5 +1,6 @@
 {
   "fr": {
+    "title": "Publications",
     "articles": "Articles",
     "press": "Le cabinet dans la presse",
     "episode": "Épisode",
@@ -14,6 +15,7 @@
     "empty": "Aucune publication pour le moment."
   },
   "en": {
+    "title": "Publications",
     "articles": "Articles",
     "press": "The firm in the press",
     "episode": "Episode",

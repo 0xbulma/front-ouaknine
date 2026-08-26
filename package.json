@@ -15,7 +15,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint --dir pages --dir components --dir libs",
+    "lint": "next lint --dir pages --dir components --dir libs --dir hooks --dir context",
     "test": "node --test"
   },
   "dependencies": {

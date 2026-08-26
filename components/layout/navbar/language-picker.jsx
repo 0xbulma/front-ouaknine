@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useContext } from 'react';
 import useClickOutside from '../../../hooks/useClickoutside';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -9,6 +9,7 @@ import {
 
 import useLocale from '../../../hooks/useLocale';
 import localePath from '../../../libs/localePath';
+import { LocalesContextSchema } from '../../../context/locales-context';
 
 import classes from './language-picker.module.scss';
 
@@ -16,6 +17,7 @@ function LanguagePicker() {
   const [state, setState] = useState(false);
   const locale = useLocale();
   const router = useRouter();
+  const availableLocales = useContext(LocalesContextSchema);
   const dropdown = useRef();
   const capLocale = locale.charAt(0).toUpperCase() + locale.slice(1);
 
@@ -38,7 +40,7 @@ function LanguagePicker() {
         />
       </div>
       <div className={`${classes.selector} ${state && classes.selectoractive}`}>
-        <Link locale='fr' href={localePath(router, 'fr')}>
+        <Link locale='fr' href={localePath(router, 'fr', availableLocales)}>
           <a className={classes.label}>
             <CheckIcon
               className={`${classes.check} ${
@@ -49,7 +51,7 @@ function LanguagePicker() {
           </a>
         </Link>
 
-        <Link locale='en' href={localePath(router, 'en')}>
+        <Link locale='en' href={localePath(router, 'en', availableLocales)}>
           <a className={classes.label}>
             <CheckIcon
               className={`${classes.check} ${

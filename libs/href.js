@@ -5,9 +5,28 @@
 // decides, because the same decision written twice drifted: the allowlist landed
 // in the rich-text renderer and not on the sibling anchor one file over.
 
-const SITE_HOST = new URL(
-  process.env.NEXT_PUBLIC_HOST ?? 'https://www.ouaknine-avocats.com'
-).hostname;
+const FALLBACK_HOST = 'https://www.ouaknine-avocats.com';
+
+// The registrable host, without the www label, so the apex and every subdomain
+// both count as the site. Deriving it from the www URL and testing
+// `endsWith('.' + host)` matched only `*.www...`, which is nothing, and pushed
+// the bare domain an editor gets by copying it onto the external branch.
+//
+// `||` not `??`: a variable created on Vercel and left blank is an empty string,
+// not undefined. And the parse is guarded, because this runs at module scope in
+// a module every content page imports: a host without a scheme would otherwise
+// throw at import and take the whole site down, where the other readers of the
+// same variable only produce a bad canonical.
+const SITE_HOST = (() => {
+  try {
+    return new URL(process.env.NEXT_PUBLIC_HOST || FALLBACK_HOST).hostname.replace(
+      /^www\./,
+      ''
+    );
+  } catch (err) {
+    return new URL(FALLBACK_HOST).hostname.replace(/^www\./, '');
+  }
+})();
 
 // A same-origin path, or null when the link leaves the site.
 //
@@ -29,7 +48,12 @@ export const internalPath = href => {
       url.hostname === SITE_HOST ||
       url.hostname.endsWith(`.${SITE_HOST}`);
 
-    return internal ? `${url.pathname}${url.search}${url.hash}` : null;
+    if (!internal) return null;
+
+    // `new URL` resolves `..` before pathname is read, so "/..//evil.com" arrives
+    // here as the protocol-relative "//evil.com". Collapsing the leading slashes
+    // keeps this function's promise: what it returns is a path on this site.
+    return `${url.pathname.replace(/^\/+/, '/')}${url.search}${url.hash}`;
   } catch (err) {
     return null;
   }

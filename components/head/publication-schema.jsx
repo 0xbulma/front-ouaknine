@@ -6,6 +6,7 @@ import { ALICE_ID, CABINET_ID } from './site-schema';
 
 import { plainText } from '../../libs/expertise';
 import { isPress } from '../../libs/publications';
+import { isSafeExternal } from '../../libs/href';
 import { expertiseSlugIn, withLocale } from '../../libs/localePath';
 import headerContent from '../../content/headerContent.json';
 
@@ -58,7 +59,8 @@ function PublicationSchema({ post, title, series }) {
           ...(post.author
             ? { author: { '@type': 'Organization', name: post.author } }
             : {}),
-          ...(post.source ? { sameAs: post.source } : {}),
+          // Gated like the anchor on the page: one decision about `source`.
+          ...(isSafeExternal(post.source) ? { sameAs: post.source } : {}),
         }
       : { author: { '@id': ALICE_ID }, publisher: { '@id': CABINET_ID } }),
     ...(fieldSlug
