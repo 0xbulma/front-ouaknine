@@ -13,24 +13,41 @@ publications, contact, ISKA, legal, plus a 404.
 | | |
 |---|---|
 | Framework | Next.js 12, **pages router** (not App Router) |
+| Language | **TypeScript**, `strict` + `noUncheckedIndexedAccess`. No `.js` left outside `next.config.js` |
 | Styling | SCSS modules + a global token file. No Tailwind, no CSS-in-JS |
 | Content | Sanity for page copy, local JSON for UI strings |
+| Tests | **Vitest** (`vitest.config.mts`), node environment, globals on |
 | Package manager | **yarn** (`yarn.lock` is committed; there is no `packageManager` field) |
 | Node | 24.x per `engines` |
 
 ```bash
 yarn install --frozen-lockfile
-yarn dev      # next dev
-yarn build    # next build
-yarn lint     # next lint
-yarn test     # node --test
+yarn dev        # next dev
+yarn build      # next build
+yarn lint       # next lint
+yarn typecheck  # tsc --noEmit
+yarn test       # vitest run
+yarn test:watch # vitest
 ```
 
-Run `yarn lint`, `yarn test` and `yarn build` before calling anything done, and
-know what each one does and does not cover.
+Run `yarn lint`, `yarn typecheck`, `yarn test` and `yarn build` before calling
+anything done, and know what each one does and does not cover.
 
-**There is no typecheck.** No TypeScript, no `tsconfig.json`, so `next build`
-checks nothing beyond compiling.
+**`tsconfig.json` is partly Next's.** `next dev` and `next build` rewrite it on
+every run to enforce the options they need (`moduleResolution: node`,
+`allowJs`, `isolatedModules`, `jsx: preserve`, `noEmit`). Do not fight that: set
+anything else beside it and it survives. Two deliberate divergences from the
+usual house config: `moduleResolution` is `node`, not `bundler`, because Next 12
+insists; and `verbatimModuleSyntax` is off, because `@portabletext/react@1`
+ships `.d.ts` files that re-export its own `.tsx` sources, and those sources
+fail the rule inside `node_modules` where no suppression can reach them.
+`import type` is still the convention, it is just not enforced by the compiler.
+
+**A stray `next dev` clobbers `yarn build`.** Both write `./.next`, so a dev
+server left running in the workspace overwrites the static export while you are
+curling `next start` — the symptom is a 500 on `/404` with
+`MissingStaticPage … .next/server/pages/fr/404.html`. Stop it, `rm -rf .next`,
+rebuild.
 
 **`next lint` walks only what it is told to.** Its default directory list is
 `pages`, `components`, `lib`, `src`. This repo's is `libs` (plural), so for a
@@ -38,23 +55,30 @@ long time nothing in it was linted at all; the `lint` script now passes
 `--dir pages --dir components --dir libs --dir hooks --dir context`. Adding a
 top-level directory means adding it there too.
 
-**`yarn test` covers the pure derivations.** `libs/slug.js`, `libs/href.js` and
-`libs/publication-fields.js` turn a title into every URL, hreflang and `@id` on
+**`yarn test` covers the pure derivations.** `libs/slug.ts`, `libs/href.ts` and
+`libs/publication-fields.ts` turn a title into every URL, hreflang and `@id` on
 the site, and decide whether a CMS-authored link is same-site or hostile; they
 fail silently into a 404 or an unsafe anchor, and one of them already broke
-once. The agent surface adds the negotiation (`libs/accept.mjs`), the routing
-decision (`libs/middleware-route.mjs`), the markdown rendering, the page list,
-the URL spelling and llms.txt. Node's own runner, no dependencies, no config.
+once. The agent surface adds the negotiation (`libs/accept.ts`), the routing
+decision (`libs/middleware-route.ts`), the markdown rendering, the page list,
+the URL spelling and llms.txt.
 
-Node 24 detects module syntax, so a `.mjs` test imports a plain `.js` module
-fine — the extension is not what makes something testable. What does is not
-importing the Sanity client or React, and writing the import with its extension
-(`'./slug.js'`, not `'./slug'`, which only webpack resolves). A bare
-`import x from './foo.json'` still needs `with { type: 'json' }` under Node,
-which is why `libs/agent-context.js` keeps the JSON imports and
-`libs/site-pages.mjs` stays pure.
+What makes a module testable is not importing the Sanity client or React —
+Vite resolves extensionless imports and JSON imports, so nothing needs an
+extension in its specifier or an import attribute. `libs/site.ts` reads
+`NEXT_PUBLIC_HOST` at module scope, so the tests that exercise a bad value
+re-import it under `vi.stubEnv` + `vi.resetModules()` rather than spawning a
+subprocess.
 
-The JSON-LD has no unit test; it lives in JSX components and is checked with
+**`libs/types.ts` is the shared vocabulary** — the CMS document shapes, Portable
+Text, the publication projections, the agent-facing context. Copy types are
+derived from the content files with `typeof import('../content/x.json')` rather
+than restated, so a renamed key is a type error at the component that reads it.
+Where a type is looser than the data really is (an optional label the JSON
+always carries), `libs/site-pages.test.ts` is the guarantee: it reads the real
+files and asserts every key is filled.
+
+The JSON-LD has no unit test; it lives in TSX components and is checked with
 curl. Components and routes have none either — check those with curl against
 `yarn build && yarn start`. There is no end-to-end suite.
 
@@ -70,20 +94,22 @@ worktree) so new workspaces inherit it via Files to copy.
 
 If you do not have it and need to see a visual change, stub the client:
 
-```js
-// libs/clientApi.js — TEMPORARY, revert before committing
-const block = (k, t) => ({ _type: 'block', _key: k, style: 'normal',
-  children: [{ _type: 'span', _key: k + 's', text: t, marks: [] }] });
+```ts
+// libs/clientApi.ts — TEMPORARY, revert before committing.
+// The stub does not implement SanityClient, so `yarn typecheck` will fail on
+// this file for as long as it is in place. That is the reminder to revert it.
+const block = (k: string, t: string) => ({ _type: 'block', _key: k, style: 'normal',
+  children: [{ _type: 'span', _key: `${k}s`, text: t, marks: [] }] });
 const HOME = { title1: 'Alice Ouaknine', title2: 'Barreaux de Paris et de Californie',
   tag1: '…', link1: 'e1', sectionTitle: 'Le cabinet', body: [block('b1', '…')] };
-// The queries in libs/page-content.js and libs/expertise.js project `[0]`, so
+// The queries in libs/page-content.ts and libs/expertise.ts project `[0]`, so
 // a fetch resolves to a document or to null — not to an array.
-const clientApi = { fetch: async q => (q.includes('"home"') ? HOME : null) };
+const clientApi = { fetch: async (q: string) => (q.includes('"home"') ? HOME : null) };
 export default clientApi;
 ```
 
-**Always restore `libs/clientApi.js` before committing** and confirm with
-`git diff --stat libs/clientApi.js` that it is empty. Fixture copy is invented,
+**Always restore `libs/clientApi.ts` before committing** and confirm with
+`git diff --stat libs/clientApi.ts` that it is empty. Fixture copy is invented,
 so anything sensitive to real string lengths — the 144px hero especially —
 still needs checking against the Vercel preview.
 
@@ -122,12 +148,12 @@ déontologie constraints, the full article list and the release schedule.
 
 ## Content: two sources, know which is which
 
-**Sanity** (`libs/clientApi.js`) holds page copy — titles, body rich text, the
+**Sanity** (`libs/clientApi.ts`) holds page copy — titles, body rich text, the
 expertise list. Editable by the client. No page component contains GROQ: the
-queries live in `libs/page-content.js` and `libs/expertise.js`, which every
+queries live in `libs/page-content.ts` and `libs/expertise.ts`, which every
 page's `getStaticProps` and the markdown route both call, so the two
 representations of a page cannot drift. The one other query is inline in
-`pages/api/sitemap.js`, which asks the CMS only which field slugs exist today.
+`pages/api/sitemap.ts`, which asks the CMS only which field slugs exist today.
 
 **`content/*.json`** holds UI strings and contact facts, keyed by locale.
 `footerContent.json` is the canonical store for the address, phone, mobile,
@@ -144,34 +170,36 @@ should be cleaned up there:
 `body` (contact), `white`, `subtitle`.
 
 The portrait is a **hardcoded local import**
-(`components/layout/firm-section.jsx`, the block the home page and `/about`
+(`components/layout/firm-section.tsx`, the block the home page and `/about`
 share), not CMS driven — swapping it needs a developer.
 
 ## The agent surface
 
 Every page answers in HTML to a browser and in markdown to an agent, from the
-same URL. `middleware.js` is the whole routing shim:
+same URL. `middleware.ts` is the whole routing shim:
 
 | Request | Response |
 |---|---|
-| `Accept: text/markdown` on any page | `200 text/markdown`, rewritten to `pages/api/markdown.js` |
+| `Accept: text/markdown` on any page | `200 text/markdown`, rewritten to `pages/api/markdown.ts` |
 | `/contact.md`, `/en/contact.md`, `/index.md` | the same, whatever the Accept header says |
 | anything that resolves to markdown carrying a query string — a `.md` URL, `/llms.txt`, or any page under `Accept: text/markdown` | `308` to the same path without it, so `?bust=n` cannot mint a CDN key per visit. The HTML branch keeps its query, where a campaign parameter is legitimate |
-| `Accept` that rules out both types | `406` from `pages/api/not-acceptable.js` |
+| `Accept` that rules out both types | `406` from `pages/api/not-acceptable.ts` |
 | a method other than `GET` or `HEAD` on a generated route | `405`. No CDN caches a non-GET, so it would otherwise reach the CMS on every request |
 | anything else | the HTML page, plus `Vary: Accept` and a `Link: rel="alternate"` |
 | a path that does not exist | `404` either way, and the markdown body lists the site |
-| `/llms.txt`, `/en/llms.txt` | generated by `pages/api/llms.js`, routed by the middleware |
-| `/sitemap.xml` | generated by `pages/api/sitemap.js`, routed by a `next.config.js` rewrite. Never reaches the middleware, so it bounds its own key space: an unexpected parameter is a `404`, not a `308` |
+| `/llms.txt`, `/en/llms.txt` | generated by `pages/api/llms.ts`, routed by the middleware |
+| `/sitemap.xml` | generated by `pages/api/sitemap.ts`, routed by a `next.config.js` rewrite. Never reaches the middleware, so it bounds its own key space: an unexpected parameter is a `404`, not a `308` |
 
 Rules worth keeping:
 
-- **The middleware decision is in `libs/middleware-route.mjs`**, not in
-  `middleware.js`, which only turns the returned tag into a `NextResponse`.
-  `node --test` cannot import a middleware file, and what keeps breaking is the
+- **The middleware decision is in `libs/middleware-route.ts`**, not in
+  `middleware.ts`, which only turns the returned tag into a `NextResponse`.
+  the suite cannot import a middleware file, and what keeps breaking is the
   branch *ordering* and which branch sets `Vary` — one table-driven test covers
-  both.
-- **Parse the Accept header, never `includes('markdown')`.** `libs/accept.mjs`
+  both. The decision is a tagged union (`pass` / `rewrite` / `redirect`), so the
+  test narrows through a small helper per branch rather than reading a field off
+  the wrong variant.
+- **Parse the Accept header, never `includes('markdown')`.** `libs/accept.ts`
   implements RFC 9110 §12.5.1 (q-values, specificity, `q=0`); its tests are the
   table published at acceptmarkdown.com. A real Chrome header contains `*/*` and
   must resolve to HTML.
@@ -186,7 +214,7 @@ Rules worth keeping:
   parameters middleware sets on it.
 - **The CDN keys on the incoming URL, not the rewritten one**, so keeping the
   query out of the rewrite is not what bounds the key space — the `redirect()`
-  branch in `libs/middleware-route.mjs` is. A markdown request carrying a query is 308'd onto the bare path, which
+  branch in `libs/middleware-route.ts` is. A markdown request carrying a query is 308'd onto the bare path, which
   collapses `?bust=n` onto one cacheable URL. It has to re-attach the locale:
   `nextUrl.pathname` arrives stripped, so building the target from it alone
   permanently redirects the English edition of a page to the French one.
@@ -195,21 +223,21 @@ Rules worth keeping:
   all, because it has a French and an English edition and only middleware knows
   which was asked for.
 - The markdown of a page and its HTML come from the same fetchers
-  (`libs/page-content.js`, `libs/expertise.js`), so they cannot drift.
-- **Every URL the site publishes comes from `libs/site-url.mjs`** (`HOST`,
+  (`libs/page-content.ts`, `libs/expertise.ts`), so they cannot drift.
+- **Every URL the site publishes comes from `libs/site-url.ts`** (`HOST`,
   `withLocale`, `pageUrl`, `markdownSibling`, `markdownUrl`, `routePath`): a
   canonical, an hreflang, a sitemap entry and a markdown sibling all have to
   agree, so there is one definition of how French goes unprefixed and English
   carries `/en`.
-- **A new page has to be registered in four places**: `libs/site-pages.mjs`
+- **A new page has to be registered in four places**: `libs/site-pages.ts`
   (the list llms.txt and the `## Pages` section of every page's markdown
-  publish), `pages/api/sitemap.js`
+  publish), `pages/api/sitemap.ts`
   (`PAGES`), `content/404Content.json` (`links`) and the `render` match in
-  `pages/api/markdown.js`. `content/agentContent.json` needs its note.
+  `pages/api/markdown.ts`. `content/agentContent.json` needs its note.
   `/publications` is the worked example: its index and every post answer in
   markdown, an episode carrying the rest of its guide the way the page does.
-- The JSON-LD lives in `components/head/site-schema.jsx` (published once per
-  page from the layout) and `expertise-schema.jsx`, fed by
+- The JSON-LD lives in `components/head/site-schema.tsx` (published once per
+  page from the layout) and `expertise-schema.tsx`, fed by
   `content/organizationContent.json` and `content/footerContent.json`. Contact
   facts have one home; do not retype the address into a schema block.
 - `content/agentContent.json` holds the agent-facing copy: the llms.txt summary,
@@ -326,11 +354,12 @@ call button). Adding a fourth should need a reason.
   `phone` / `mobilePhone` are dial-safe, and the displayed strings live in
   `fr.address` / `en.address` for the landline and `fr.mobile` / `en.mobile`
   for the mobile. llms.txt hands agents the dial-safe form.
-- New pure logic goes in `libs/*.mjs` with a colocated `*.test.mjs`. Anything
-  that needs React, the Sanity client, or a bare `import … from '*.json'` stays
-  in `.js` / `.jsx` and is verified with curl or a screenshot — webpack resolves
-  a bare JSON import, Node ESM would need `with { type: 'json' }`, which is why
-  `libs/agent-context.js` is `.js` and keeps `libs/site-pages.mjs` pure.
+- New pure logic goes in `libs/*.ts` with a colocated `*.test.ts`, and its
+  shared types in `libs/types.ts`. Anything that needs React or the Sanity
+  client is verified with curl or a screenshot instead — Vitest could import it,
+  but there is no component or route test in the suite and none is expected.
+- Import specifiers carry no extension (`'./slug'`), and type-only imports use
+  `import type`.
 
 ## Known debt
 
@@ -342,6 +371,13 @@ call button). Adding a fourth should need a reason.
   asset on the site. SVGO would likely halve it.
 - Legacy tokens (`$white`, `$gray*`, `$cyan*`) still sit in `_variables.scss`;
   `$green600` and `$amber600` are genuinely used by form status icons.
+- `content/publicationsContent.json` carries no `description`, so the markdown
+  representation of `/publications` publishes a title and its lists with no
+  blockquote lead. Every other page has one.
+- `libs/types.ts` describes the CMS documents by hand rather than parsing them.
+  The GROQ projections are the contract, and nothing validates that a document
+  matches the type at the boundary; a studio schema change is caught by a
+  screenshot, not by the compiler.
 
 > When auditing for unused tokens, note that macOS ships **BSD grep**, which does
 > not honour `\b`. A `grep -r '\$token\b'` sweep silently matches nothing and
