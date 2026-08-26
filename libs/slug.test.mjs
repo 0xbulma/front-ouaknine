@@ -104,6 +104,9 @@ test('internalPath sends everything else away', () => {
   assert.equal(internalPath('https://www.ouaknine-avocats.com@evil.com'), null);
   assert.equal(internalPath('https://notouaknine-avocats.com/x'), null);
   assert.equal(internalPath('javascript:alert(1)'), null);
+  // A real subdomain is somewhere else. internalPath returns a bare path, so
+  // calling it internal would silently land the reader on the apex.
+  assert.equal(internalPath('https://blog.ouaknine-avocats.com/x'), null);
 });
 
 test('internalPath never returns a protocol-relative path', () => {

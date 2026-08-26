@@ -1,3 +1,5 @@
+import { SITE_HOSTS } from './site.js';
+
 // Where a CMS-authored link actually goes.
 //
 // Link marks and the `source` field are free text an editor fills, so they are
@@ -5,28 +7,6 @@
 // decides, because the same decision written twice drifted: the allowlist landed
 // in the rich-text renderer and not on the sibling anchor one file over.
 
-const FALLBACK_HOST = 'https://www.ouaknine-avocats.com';
-
-// The registrable host, without the www label, so the apex and every subdomain
-// both count as the site. Deriving it from the www URL and testing
-// `endsWith('.' + host)` matched only `*.www...`, which is nothing, and pushed
-// the bare domain an editor gets by copying it onto the external branch.
-//
-// `||` not `??`: a variable created on Vercel and left blank is an empty string,
-// not undefined. And the parse is guarded, because this runs at module scope in
-// a module every content page imports: a host without a scheme would otherwise
-// throw at import and take the whole site down, where the other readers of the
-// same variable only produce a bad canonical.
-const SITE_HOST = (() => {
-  try {
-    return new URL(process.env.NEXT_PUBLIC_HOST || FALLBACK_HOST).hostname.replace(
-      /^www\./,
-      ''
-    );
-  } catch (err) {
-    return new URL(FALLBACK_HOST).hostname.replace(/^www\./, '');
-  }
-})();
 
 // A same-origin path, or null when the link leaves the site.
 //
@@ -41,12 +21,12 @@ export const internalPath = href => {
   try {
     const url = new URL(clean, 'https://internal.invalid');
 
-    // Compared against the parsed hostname, so userinfo ("https://site@evil.com")
-    // and a lookalike suffix ("notouaknine-avocats.com") both fail.
+    // Exact hosts, not a suffix. Compared against the parsed hostname, so
+    // userinfo ("https://site@evil.com") and a lookalike ("notouaknine-…") both
+    // fail; and a real subdomain like blog.ouaknine-avocats.com is somewhere
+    // else, so calling it internal would drop its host and land on the apex.
     const internal =
-      url.hostname === 'internal.invalid' ||
-      url.hostname === SITE_HOST ||
-      url.hostname.endsWith(`.${SITE_HOST}`);
+      url.hostname === 'internal.invalid' || SITE_HOSTS.includes(url.hostname);
 
     if (!internal) return null;
 

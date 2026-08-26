@@ -35,8 +35,8 @@ checks nothing beyond compiling.
 **`next lint` walks only what it is told to.** Its default directory list is
 `pages`, `components`, `lib`, `src`. This repo's is `libs` (plural), so for a
 long time nothing in it was linted at all; the `lint` script now passes
-`--dir pages --dir components --dir libs`. Adding a top-level directory means
-adding it there too.
+`--dir pages --dir components --dir libs --dir hooks --dir context`. Adding a
+top-level directory means adding it there too.
 
 **`yarn test` covers the pure derivations** in `libs/slug.js`, `libs/href.js` and
 `libs/publication-fields.js`: the functions that turn a title into every URL,

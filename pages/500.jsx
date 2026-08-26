@@ -9,10 +9,12 @@ import classes from './404.module.scss';
 // lands and it should look like the rest of the site.
 function Page500() {
   const locale = useLocale();
+  // Guarded: this is the page that renders after something else has thrown.
+  const copy = CONTENT[locale] ?? CONTENT.fr;
 
   return (
     <div className={classes.container}>
-      <h1 className={classes.title}>{CONTENT[locale].body}</h1>
+      <h1 className={classes.title}>{copy.body}</h1>
     </div>
   );
 }

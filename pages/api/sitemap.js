@@ -3,9 +3,9 @@ import { expertiseSlug } from '../../libs/expertise';
 import EXPERTISE_PAIRS from '../../libs/expertisePairs';
 import { fetchPublications } from '../../libs/publications';
 import { withLocale } from '../../libs/localePath';
+import { SITE_URL } from '../../libs/site';
 
-const HOST =
-  process.env.NEXT_PUBLIC_HOST ?? 'https://www.ouaknine-avocats.com';
+const HOST = SITE_URL;
 
 const LOCALES = ['fr', 'en'];
 

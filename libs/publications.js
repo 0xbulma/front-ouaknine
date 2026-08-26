@@ -20,12 +20,11 @@ const LOCALES = ['fr', 'en'];
 // two the site has rather than trusted from the route.
 const safeLocale = locale => (LOCALES.includes(locale) ? locale : 'fr');
 
-// One projection, with the body opt-in. Two near-identical copies drifted the
-// moment a field was added to one and not the other, and the body is the whole
-// document: projecting it into a list serialises every publication's full text
-// into the page's __NEXT_DATA__, which measured 227 kB on the index for content
-// it never renders.
-const projection = (locale, { body = false } = {}) => {
+// Everything but the prose. The body is the whole document, and projecting it
+// into a list serialised every publication's full text into the page's
+// __NEXT_DATA__: 227 kB on the index for content it never renders. The one page
+// that renders prose fetches it separately, by id, in `fetchPublicationBody`.
+const projection = locale => {
   const l = safeLocale(locale);
   const o = otherLocale(l);
 
@@ -40,7 +39,7 @@ const projection = (locale, { body = false } = {}) => {
     "episode": episode,
     "field": relatedExpertise->title,
     "title": coalesce(content${l}.title${l}, content${o}.title${o}),
-    "hasBody": defined(content${l}.body${l}),${body ? `\n    "body": content${l}.body${l},` : ''}
+    "hasBody": defined(content${l}.body${l}),
     "readingTime": round(length(pt::text(content${l}.body${l})) / 5 / 180)
   }`;
 };
