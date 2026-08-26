@@ -16,7 +16,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint --dir pages --dir components --dir libs --dir hooks --dir context",
-    "test": "node --test"
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@heroicons/react": "1.0.6",
@@ -41,8 +43,13 @@
     "vivus": "0.4.6"
   },
   "devDependencies": {
+    "@types/node": "24.13.3",
+    "@types/react": "18.3.31",
+    "@types/react-dom": "18.3.7",
     "eslint": "8.21.0",
     "eslint-config-next": "12.2.4",
-    "sass": "1.54.3"
+    "sass": "1.54.3",
+    "typescript": "5.9.3",
+    "vitest": "4.1.11"
   }
 }
