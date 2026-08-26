@@ -10,24 +10,22 @@
 // at module scope by every page that renders CMS prose: a value without a scheme
 // would otherwise throw at import and take the site down rather than produce one
 // bad canonical.
-const FALLBACK = 'https://www.ouaknine-avocats.com';
+const FALLBACK = "https://www.ouaknine-avocats.com";
 
 const parse = (value: string): URL => {
-  try {
-    const url = new URL(value);
+	try {
+		const url = new URL(value);
 
-    // Parseable is not enough. A non-special scheme parses perfectly well and
-    // yields the literal string "null" as its origin and an empty hostname, so
-    // the guard would pass and every canonical would read `null/contact`. Worse,
-    // an empty host is what every non-special scheme parses to, so a `javascript:`
-    // link would start resolving as a same-site path and walk straight past the
-    // external allowlist.
-    return url.protocol === 'https:' || url.protocol === 'http:'
-      ? url
-      : new URL(FALLBACK);
-  } catch {
-    return new URL(FALLBACK);
-  }
+		// Parseable is not enough. A non-special scheme parses perfectly well and
+		// yields the literal string "null" as its origin and an empty hostname, so
+		// the guard would pass and every canonical would read `null/contact`. Worse,
+		// an empty host is what every non-special scheme parses to, so a `javascript:`
+		// link would start resolving as a same-site path and walk straight past the
+		// external allowlist.
+		return url.protocol === "https:" || url.protocol === "http:" ? url : new URL(FALLBACK);
+	} catch {
+		return new URL(FALLBACK);
+	}
 };
 
 const url = parse(process.env.NEXT_PUBLIC_HOST || FALLBACK);
@@ -43,6 +41,6 @@ export const SITE_URL = url.origin;
 // Only these two. A link to any other subdomain is somewhere else, and
 // `internalPath` returns a bare path, so calling one internal would move the
 // reader to the apex without saying so.
-const apex = url.hostname.replace(/^www\./, '');
+const apex = url.hostname.replace(/^www\./, "");
 
 export const SITE_HOSTS: readonly string[] = [apex, `www.${apex}`];

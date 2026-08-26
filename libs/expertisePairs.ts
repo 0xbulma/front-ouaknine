@@ -10,22 +10,22 @@
 //
 // [French, English], in that order: `sideOf` in libs/localePath.ts indexes it.
 const EXPERTISE_PAIRS: readonly (readonly [string, string])[] = [
-  ['droit-penal-general', 'criminal-law'],
-  ['droit-penal-des-affaires', 'white-collar-crime'],
-  ['enquetes-internes', 'internal-investigations'],
-  ['cyber-criminalite', 'cyber-crime'],
-  [
-    'defense-des-ressortissants-americains-et-des-etrangers-anglophones',
-    'defense-of-american-citizens-and-foreigners',
-  ],
-  ['droit-de-la-presse', 'press-and-media-law'],
-  ['droit-penal-du-travail', 'criminal-employment-law'],
-  [
-    'droit-penal-de-la-concurrence-et-de-la-consommation',
-    'competition-criminal-law-and-consumer-affairs',
-  ],
-  ['droit-penal-de-la-sante', 'criminal-law-and-public-health'],
-  ['droit-penal-international', 'international-criminal-law'],
+	["droit-penal-general", "criminal-law"],
+	["droit-penal-des-affaires", "white-collar-crime"],
+	["enquetes-internes", "internal-investigations"],
+	["cyber-criminalite", "cyber-crime"],
+	[
+		"defense-des-ressortissants-americains-et-des-etrangers-anglophones",
+		"defense-of-american-citizens-and-foreigners",
+	],
+	["droit-de-la-presse", "press-and-media-law"],
+	["droit-penal-du-travail", "criminal-employment-law"],
+	[
+		"droit-penal-de-la-concurrence-et-de-la-consommation",
+		"competition-criminal-law-and-consumer-affairs",
+	],
+	["droit-penal-de-la-sante", "criminal-law-and-public-health"],
+	["droit-penal-international", "international-criminal-law"],
 ];
 
 export default EXPERTISE_PAIRS;

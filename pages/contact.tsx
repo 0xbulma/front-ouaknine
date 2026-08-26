@@ -1,104 +1,96 @@
-import Image from 'next/image';
+import Image from "next/image";
+import HeadPage from "../components/head/head-page";
+import PageTitle from "../components/layout/page-title";
+import contactContent from "../content/contactContent.json";
+import footerContent from "../content/footerContent.json";
+import useLocale from "../hooks/useLocale";
+import { splitAddress } from "../libs/address";
+import { fetchContact } from "../libs/page-content";
+import { staticPageProps } from "../libs/static-page-props";
+import type { ContactDocument } from "../libs/types";
+import parisMap from "../public/images/paris-map.svg";
 
-import contactContent from '../content/contactContent.json';
-import footerContent from '../content/footerContent.json';
-
-import useLocale from '../hooks/useLocale';
-import { splitAddress } from '../libs/address';
-import { fetchContact } from '../libs/page-content';
-import { staticPageProps } from '../libs/static-page-props';
-import type { ContactDocument } from '../libs/types';
-
-import HeadPage from '../components/head/head-page';
-import PageTitle from '../components/layout/page-title';
-import parisMap from '../public/images/paris-map.svg';
-
-import classes from './contact.module.scss';
+import classes from "./contact.module.scss";
 
 function Contact({ data }: { data: ContactDocument }) {
-  const { titleseo, descriptionseo, title } = data;
-  const locale = useLocale();
-  // The stored line carries its own prefix ("Tél. : ", "Tel: "), which would
-  // repeat the label above it; splitAddress strips it, and the markdown
-  // representation of this page derives the same two values the same way.
-  const { street: addressLine, phone: phoneNumber } = splitAddress(
-    footerContent[locale].address
-  );
-  const email = footerContent[locale].email;
-  const mobile = footerContent[locale].mobile;
+	const { titleseo, descriptionseo, title } = data;
+	const locale = useLocale();
+	// The stored line carries its own prefix ("Tél. : ", "Tel: "), which would
+	// repeat the label above it; splitAddress strips it, and the markdown
+	// representation of this page derives the same two values the same way.
+	const { street: addressLine, phone: phoneNumber } = splitAddress(footerContent[locale].address);
+	const email = footerContent[locale].email;
+	const mobile = footerContent[locale].mobile;
 
-  return (
-    <div>
-      <HeadPage title={titleseo ?? ''} description={descriptionseo ?? ''} />
+	return (
+		<div>
+			<HeadPage title={titleseo ?? ""} description={descriptionseo ?? ""} />
 
-      <PageTitle title={title ?? ''} />
+			<PageTitle title={title ?? ""} />
 
-      <section className={classes.container}>
-        <div className={classes.grid}>
-          <a
-            className={classes.map}
-            href={footerContent.mapsUrl}
-            target='_blank'
-            rel='noreferrer'
-            tabIndex={-1}
-            aria-hidden='true'
-          >
-            <Image src={parisMap} alt='' layout='responsive' />
-          </a>
+			<section className={classes.container}>
+				<div className={classes.grid}>
+					<a
+						className={classes.map}
+						href={footerContent.mapsUrl}
+						target="_blank"
+						rel="noreferrer"
+						tabIndex={-1}
+						aria-hidden="true"
+					>
+						<Image src={parisMap} alt="" layout="responsive" />
+					</a>
 
-          <dl className={classes.details}>
-            <div className={classes.row}>
-              <dt className={classes.rowlabel}>{contactContent[locale].addressLabel}</dt>
-              <dd className={classes.rowvalue}>
-                <a
-                  className={classes.rowlink}
-                  href={footerContent.mapsUrl}
-                  target='_blank'
-                  rel='noreferrer'
-                >
-                  {addressLine}
-                </a>
-              </dd>
-            </div>
+					<dl className={classes.details}>
+						<div className={classes.row}>
+							<dt className={classes.rowlabel}>{contactContent[locale].addressLabel}</dt>
+							<dd className={classes.rowvalue}>
+								<a
+									className={classes.rowlink}
+									href={footerContent.mapsUrl}
+									target="_blank"
+									rel="noreferrer"
+								>
+									{addressLine}
+								</a>
+							</dd>
+						</div>
 
-            <div className={classes.row}>
-              <dt className={classes.rowlabel}>{contactContent[locale].phoneLabel}</dt>
-              <dd className={classes.rowvalue}>
-                <a className={classes.rowlink} href={`tel:${footerContent.phone}`}>
-                  {phoneNumber}
-                </a>
-              </dd>
-            </div>
+						<div className={classes.row}>
+							<dt className={classes.rowlabel}>{contactContent[locale].phoneLabel}</dt>
+							<dd className={classes.rowvalue}>
+								<a className={classes.rowlink} href={`tel:${footerContent.phone}`}>
+									{phoneNumber}
+								</a>
+							</dd>
+						</div>
 
-            {mobile && (
-              <div className={classes.row}>
-                <dt className={classes.rowlabel}>{contactContent[locale].mobileLabel}</dt>
-                <dd className={classes.rowvalue}>
-                  <a
-                    className={classes.rowlink}
-                    href={`tel:${footerContent.mobilePhone}`}
-                  >
-                    {mobile}
-                  </a>
-                </dd>
-              </div>
-            )}
+						{mobile ? (
+							<div className={classes.row}>
+								<dt className={classes.rowlabel}>{contactContent[locale].mobileLabel}</dt>
+								<dd className={classes.rowvalue}>
+									<a className={classes.rowlink} href={`tel:${footerContent.mobilePhone}`}>
+										{mobile}
+									</a>
+								</dd>
+							</div>
+						) : null}
 
-            <div className={classes.row}>
-              <dt className={classes.rowlabel}>{contactContent[locale].emailLabel}</dt>
-              <dd className={classes.rowvalue}>
-                <a className={classes.rowlink} href={`mailto:${email}`}>
-                  {email}
-                </a>
-              </dd>
-            </div>
-          </dl>
-        </div>
-      </section>
-    </div>
-  );
+						<div className={classes.row}>
+							<dt className={classes.rowlabel}>{contactContent[locale].emailLabel}</dt>
+							<dd className={classes.rowvalue}>
+								<a className={classes.rowlink} href={`mailto:${email}`}>
+									{email}
+								</a>
+							</dd>
+						</div>
+					</dl>
+				</div>
+			</section>
+		</div>
+	);
 }
 
-export const getStaticProps = staticPageProps(fetchContact, '/contact');
+export const getStaticProps = staticPageProps(fetchContact, "/contact");
 
 export default Contact;

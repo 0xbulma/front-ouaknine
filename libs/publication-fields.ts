@@ -1,22 +1,21 @@
-import { slugify } from './slug';
+import { slugify } from "./slug";
 import type {
-  Locale,
-  PressPost,
-  PublicationDocument,
-  PublicationGroup,
-  PublicationGroups,
-  PublicationMeta,
-  SeriesEntry,
-  TitleParts,
-  TitledPost,
-} from './types';
+	Locale,
+	PressPost,
+	PublicationDocument,
+	PublicationGroup,
+	PublicationGroups,
+	PublicationMeta,
+	SeriesEntry,
+	TitledPost,
+	TitleParts,
+} from "./types";
 
 // The pure half of the publications module: everything that derives a value
 // from a document without asking the CMS for anything. It lives apart from the
 // fetchers so it can be loaded, and checked, without building a Sanity client.
 
-export const otherLocale = (locale: string | undefined): Locale =>
-  locale === 'fr' ? 'en' : 'fr';
+export const otherLocale = (locale: string | undefined): Locale => (locale === "fr" ? "en" : "fr");
 
 // Whether the practice wrote this or was written about. `filter` is the field
 // the studio sets, and it is the answer when it is set; but it can be left
@@ -28,7 +27,7 @@ export const otherLocale = (locale: string | undefined): Locale =>
 // the author. Defaulting the other way publishes her as the author of Le Monde's
 // copy.
 export const isPress = (post: PressPost | null | undefined): boolean =>
-  post?.filter === 'press' || Boolean(post?.source);
+	post?.filter === "press" || Boolean(post?.source);
 
 // One slug for both languages, from the explicit field when the studio carries
 // one and from the French title otherwise. Deriving it from each locale's own
@@ -39,52 +38,51 @@ export const isPress = (post: PressPost | null | undefined): boolean =>
 // Derived in JS rather than stored, which is why a lookup by slug has to match
 // against a fetched list instead of filtering in GROQ.
 const publicationSlug = (post: PublicationDocument): string =>
-  slugify(post.slug) || slugify(post.title) || post._id;
+	slugify(post.slug) || slugify(post.title) || post._id;
 
 export const withSlug = (post: PublicationDocument): PublicationMeta => ({
-  ...post,
-  slug: publicationSlug(post),
+	...post,
+	slug: publicationSlug(post),
 });
 
 // Formatting in the runtime's own zone renders one day on the server and another
 // in the browser for any evening timestamp: a hydration mismatch and a date off
 // by one. The practice is in Paris, so that is the zone the date means.
 export const formatDate = (
-  iso: string | null | undefined,
-  locale: string | undefined,
-  options?: Intl.DateTimeFormatOptions
+	iso: string | null | undefined,
+	locale: string | undefined,
+	options?: Intl.DateTimeFormatOptions,
 ): string =>
-  new Date(iso ?? '').toLocaleDateString(locale === 'en' ? 'en-GB' : 'fr-FR', {
-    timeZone: 'Europe/Paris',
-    ...options,
-  });
+	new Date(iso ?? "").toLocaleDateString(locale === "en" ? "en-GB" : "fr-FR", {
+		timeZone: "Europe/Paris",
+		...options,
+	});
 
 // Until the studio carries series and episode as fields, an episode title holds
 // them in prose: "Guide de survie en garde à vue - Épisode 2 : Connaître …".
 //
 // The pattern is deliberately narrow. A standalone article whose title merely
 // contains a dash must come back whole rather than cut in half.
-const EPISODE =
-  /^(.+?)\s*[–—-]\s*(?:Épisodes?|Episodes?|Ep\.?)\s*(\d+)\s*[:.]?\s*(.*)$/i;
+const EPISODE = /^(.+?)\s*[–—-]\s*(?:Épisodes?|Episodes?|Ep\.?)\s*(\d+)\s*[:.]?\s*(.*)$/i;
 
 // The fields win when the studio carries them, but the title is still stripped:
 // a document keeps its full "<Guide> - Épisode 1 : <subtitle>" title, so trusting
 // the field alone would put the series name back into the heading the moment an
 // editor filled the field the editorial brief asks them to fill.
 export const splitTitle = (post: TitledPost | null | undefined): TitleParts => {
-  const raw = post?.title ?? '';
-  const match = EPISODE.exec(raw);
+	const raw = post?.title ?? "";
+	const match = EPISODE.exec(raw);
 
-  // An episode with no subtitle after the number would otherwise leave an empty
-  // heading and a title tag reading " | Cabinet Ouaknine".
-  const title = match ? match[3]?.trim() || raw : raw;
-  const episode = match ? Number(match[2]) : null;
+	// An episode with no subtitle after the number would otherwise leave an empty
+	// heading and a title tag reading " | Cabinet Ouaknine".
+	const title = match ? match[3]?.trim() || raw : raw;
+	const episode = match ? Number(match[2]) : null;
 
-  if (post?.series) {
-    return { series: post.series, episode: post.episode ?? episode, title };
-  }
+	if (post?.series) {
+		return { series: post.series, episode: post.episode ?? episode, title };
+	}
 
-  return { series: match?.[1]?.trim() ?? null, episode, title };
+	return { series: match?.[1]?.trim() ?? null, episode, title };
 };
 
 // The episodes of one guide, in reading order, so an episode can render its own
@@ -94,46 +92,45 @@ export const splitTitle = (post: TitledPost | null | undefined): TitleParts => {
 // leaves `episode` empty gives every episode a null number, and without it the
 // guide would list in reverse.
 export const seriesOf = <T extends TitledPost & { publishedAt?: string | null }>(
-  posts: T[],
-  series: string
+	posts: T[],
+	series: string,
 ): SeriesEntry<T>[] =>
-  posts
-    .map(post => ({ post, ...splitTitle(post) }))
-    .filter(entry => entry.series && entry.series === series)
-    .sort(
-      (a, b) =>
-        (a.episode ?? 0) - (b.episode ?? 0) ||
-        new Date(a.post.publishedAt ?? 0).getTime() -
-          new Date(b.post.publishedAt ?? 0).getTime()
-    );
+	posts
+		.map((post) => ({ post, ...splitTitle(post) }))
+		.filter((entry) => entry.series && entry.series === series)
+		.sort(
+			(a, b) =>
+				(a.episode ?? 0) - (b.episode ?? 0) ||
+				new Date(a.post.publishedAt ?? 0).getTime() - new Date(b.post.publishedAt ?? 0).getTime(),
+		);
 
 // Three surfaces on the index: the guides, grouped; the standalone articles;
 // and what the press has written.
 export const groupPublications = (posts: PublicationMeta[]): PublicationGroups => {
-  const written = posts.filter(post => !isPress(post));
+	const written = posts.filter((post) => !isPress(post));
 
-  const guides: PublicationGroup[] = [];
-  const articles: PublicationMeta[] = [];
+	const guides: PublicationGroup[] = [];
+	const articles: PublicationMeta[] = [];
 
-  written.forEach(post => {
-    const { series } = splitTitle(post);
-    if (!series) {
-      articles.push(post);
-      return;
-    }
+	written.forEach((post) => {
+		const { series } = splitTitle(post);
+		if (!series) {
+			articles.push(post);
+			return;
+		}
 
-    const guide = guides.find(entry => entry.series === series);
-    if (guide) {
-      guide.episodes.push(post);
-      return;
-    }
+		const guide = guides.find((entry) => entry.series === series);
+		if (guide) {
+			guide.episodes.push(post);
+			return;
+		}
 
-    guides.push({ series, episodes: [post] });
-  });
+		guides.push({ series, episodes: [post] });
+	});
 
-  guides.forEach(guide => {
-    guide.episodes = seriesOf(guide.episodes, guide.series).map(e => e.post);
-  });
+	guides.forEach((guide) => {
+		guide.episodes = seriesOf(guide.episodes, guide.series).map((e) => e.post);
+	});
 
-  return { guides, articles, press: posts.filter(isPress) };
+	return { guides, articles, press: posts.filter(isPress) };
 };

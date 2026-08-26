@@ -17,21 +17,71 @@ publications, contact, ISKA, legal, plus a 404.
 | Styling | SCSS modules + a global token file. No Tailwind, no CSS-in-JS |
 | Content | Sanity for page copy, local JSON for UI strings |
 | Tests | **Vitest** (`vitest.config.mts`), node environment, globals on |
+| Lint + format | **Biome** (`biome.json`) for both, plus `next lint` for the `@next/next` rules only |
 | Package manager | **yarn** (`yarn.lock` is committed; there is no `packageManager` field) |
 | Node | 24.x per `engines` |
+| CI | `.github/workflows/ci.yml` runs the four checks on every PR |
 
 ```bash
 yarn install --frozen-lockfile
-yarn dev        # next dev
-yarn build      # next build
-yarn lint       # next lint
-yarn typecheck  # tsc --noEmit
-yarn test       # vitest run
-yarn test:watch # vitest
+yarn dev          # next dev
+yarn build        # next build
+yarn verify       # biome:check + lint + typecheck + test, what CI runs
+yarn biome:check  # biome check .        (lint + format, no writes)
+yarn biome:fix    # biome check --write .
+yarn lint         # next lint
+yarn typecheck    # tsc --noEmit
+yarn test         # vitest run
+yarn test:watch   # vitest
 ```
 
-Run `yarn lint`, `yarn typecheck`, `yarn test` and `yarn build` before calling
-anything done, and know what each one does and does not cover.
+`yarn verify` before calling anything done, then `yarn build`, and know what each
+one does and does not cover. CI runs the first four; the build is Vercel's job,
+because it needs `NEXT_PUBLIC_SANITY_ID` and hits the CMS for every page.
+
+## Two linters, on purpose
+
+**Biome owns formatting and the general rules.** `biome.json` is the config from
+the `dupondai/app-boilerplate` repo, so the two codebases format identically:
+tabs at width 2, 100 columns, double quotes, trailing commas, imports organised.
+The `no-type-assertion.grit` plugin is ported with it and is what enforces the
+no-`as` rule.
+
+Five of that config's rules are turned off or loosened here, because they target
+a stack this repo does not have:
+
+| Rule | Why |
+|---|---|
+| `useValidAnchor`, `useAnchorContent`, `useAriaPropsSupportedByRole` | Next 12's legacy `<Link>` injects `href` onto its `<a>` child at runtime, so every anchor on this site reads as hrefless to a static analyser |
+| `noRestrictedImports`, `noReactForwardRef` | They exist for React 19 + the compiler. This is React 18, and `hooks/useTimout.ts` needs `useCallback` |
+| `useSortedClasses` | No Tailwind |
+| `useMaxParams` | Raised from 2 to 3 |
+
+`noStaticElementInteractions` and `useKeyWithClickEvents` stay on: they are what
+caught the language pickers being keyboard-inaccessible. The four remaining
+`<Link><a onClick>` sites carry a one-line `biome-ignore` each rather than a
+blanket exemption.
+
+**Biome does not format SCSS.** `styles/` and every `*.module.scss` keep the
+2-space, single-quote house style; only `.ts`/`.tsx` are on tabs. Do not try to
+run Biome over them.
+
+**ESLint survives only for `@next/next`.** `.eslintrc.json` extends
+`plugin:@next/next/core-web-vitals` and nothing else, with the parser spelled out
+because `eslint-config-next` is gone. Those 21 rules have no Biome equivalent and
+several matter here: `no-html-link-for-pages` in a pages-router app,
+`google-font-display` / `google-font-preconnect` because `_document.tsx`
+hand-loads Google Fonts, `inline-script-id` and `next-script-for-ga` for the gtag
+snippet, `no-duplicate-head`. Suppressions are `biome-ignore`, not
+`eslint-disable`, everywhere except those rules.
+
+A Biome suppression must be **one line** and sit **immediately above** the line
+it suppresses. A two-line comment silently does nothing and reports as
+`suppressions/unused`. Several rules can share one comment:
+`// biome-ignore lint/a11y/ruleA lint/a11y/ruleB: reason`.
+
+`biome.json` is strict JSON with the `.json` extension, so it takes no comments.
+Reasons live here instead.
 
 **`tsconfig.json` is partly Next's.** `next dev` and `next build` rewrite it on
 every run to enforce the options they need (`moduleResolution: node`,
@@ -354,6 +404,8 @@ call button). Adding a fourth should need a reason.
   `phone` / `mobilePhone` are dial-safe, and the displayed strings live in
   `fr.address` / `en.address` for the landline and `fr.mobile` / `en.mobile`
   for the mobile. llms.txt hands agents the dial-safe form.
+- Formatting is Biome's, not yours: run `yarn biome:fix` rather than matching
+  the surrounding style by hand. SCSS is the exception, see above.
 - New pure logic goes in `libs/*.ts` with a colocated `*.test.ts`, and its
   shared types in `libs/types.ts`. Anything that needs React or the Sanity
   client is verified with curl or a screenshot instead — Vitest could import it,
@@ -363,9 +415,9 @@ call button). Adding a fourth should need a reason.
 
 ## Known debt
 
-- **Ten unused dependencies**: `sib-api-v3-sdk`, `nodemailer`, `validator`,
-  `axios`, `react-lottie`, `vivus`, `styled-components`, `bezier-easing`, `qs`,
-  `sharp`. Removing them touches the lockfile and has not been done.
+- `sharp` was removed with the other eleven unreferenced dependencies. Next 12
+  picks it up implicitly for image optimisation when it is present; on Vercel the
+  platform supplies it, so this only matters if the site is ever self-hosted.
 - `public/images/_50A7988_1.jpeg` (5.3MB) and `logodraft.svg` are unreferenced.
 - `public/images/paris-map.svg` is 810KB raw / ~254KB gzipped — the heaviest
   asset on the site. SVGO would likely halve it.

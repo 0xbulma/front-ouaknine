@@ -1,0 +1,136 @@
+{
+	"$schema": "https://biomejs.dev/schemas/2.5.3/schema.json",
+	"plugins": ["./biome-plugins/no-type-assertion.grit"],
+	"vcs": {
+		"enabled": true,
+		"clientKind": "git",
+		"useIgnoreFile": true
+	},
+	"files": {
+		"includes": [
+			"components/**/*.tsx",
+			"context/**/*.tsx",
+			"hooks/**/*.ts",
+			"libs/**/*.ts",
+			"pages/**/*.ts",
+			"pages/**/*.tsx",
+			"types/**/*.d.ts",
+			"middleware.ts",
+			"vitest.config.mts"
+		]
+	},
+	"formatter": {
+		"enabled": true,
+		"indentStyle": "tab",
+		"indentWidth": 2,
+		"lineWidth": 100
+	},
+	"assist": {
+		"actions": {
+			"source": {
+				"organizeImports": "on"
+			}
+		}
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"preset": "recommended",
+			"a11y": {
+				"useValidAnchor": "off",
+				"useAnchorContent": "off",
+				"useAriaPropsSupportedByRole": "off"
+			},
+			"complexity": {
+				"noExcessiveCognitiveComplexity": "warn",
+				"noExcessiveLinesPerFunction": {
+					"level": "error",
+					"options": {
+						"maxLines": 80,
+						"skipBlankLines": true
+					}
+				},
+				"useMaxParams": {
+					"level": "error",
+					"options": {
+						"max": 3
+					}
+				}
+			},
+			"correctness": {
+				"noUnusedImports": "error",
+				"noUnusedVariables": "error",
+				"useExhaustiveDependencies": "warn"
+			},
+			"style": {
+				"noEnum": "error",
+				"noNonNullAssertion": "error",
+				"noParameterAssign": "error",
+				"noNestedTernary": "warn",
+				"noUselessElse": "error",
+				"useConsistentArrayType": {
+					"level": "warn",
+					"options": {
+						"syntax": "shorthand"
+					}
+				},
+				"useNamingConvention": {
+					"level": "error",
+					"options": {
+						"strictCase": false,
+						"conventions": [
+							{
+								"selector": { "kind": "function" },
+								"formats": ["camelCase", "PascalCase", "CONSTANT_CASE"]
+							},
+							{
+								"selector": { "kind": "typeLike" },
+								"formats": ["PascalCase"]
+							},
+							{
+								"selector": { "kind": "const" },
+								"match": "_*(.+?)_*",
+								"formats": ["camelCase", "PascalCase", "CONSTANT_CASE"]
+							},
+							{
+								"selector": { "kind": "objectLiteralMember" },
+								"match": "[\\$_]*(.+?)_*",
+								"formats": ["camelCase", "PascalCase", "CONSTANT_CASE", "snake_case"]
+							}
+						]
+					}
+				},
+				"useSelfClosingElements": "error"
+			},
+			"suspicious": {
+				"noExplicitAny": "error",
+				"noLeakedRender": "error",
+				"noShadow": "error"
+			},
+			"nursery": {
+				"noFloatingPromises": "error",
+				"noMisusedPromises": "error",
+				"useExhaustiveSwitchCases": "error"
+			}
+		}
+	},
+	"overrides": [
+		{
+			"includes": ["**/*.test.ts", "**/*.test.tsx"],
+			"linter": {
+				"rules": {
+					"complexity": {
+						"noExcessiveLinesPerFunction": "off"
+					}
+				}
+			}
+		}
+	],
+	"javascript": {
+		"formatter": {
+			"quoteStyle": "double",
+			"semicolons": "always",
+			"trailingCommas": "all"
+		}
+	}
+}

@@ -97,6 +97,10 @@ p {
 button {
   background-color: transparent;
   border-width: 0;
+  // Not inherited by default: a button left unstyled paints `buttontext`, which
+  // is near-black on this ground. Every control that should be a <button> for
+  // the keyboard can now be one without carrying its own colour.
+  color: inherit;
   font-family: inherit;
   font-size: inherit;
   font-style: inherit;

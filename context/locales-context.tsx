@@ -1,5 +1,5 @@
-import { createContext } from 'react';
-import type { ReactNode } from 'react';
+import type { ReactNode } from "react";
+import { createContext } from "react";
 
 // Which languages the page on screen actually exists in.
 //
@@ -13,17 +13,13 @@ import type { ReactNode } from 'react';
 export const LocalesContextSchema = createContext<readonly string[] | null>(null);
 
 function LocalesContext({
-  value,
-  children,
+	value,
+	children,
 }: {
-  value: readonly string[] | null;
-  children: ReactNode;
+	value: readonly string[] | null;
+	children: ReactNode;
 }) {
-  return (
-    <LocalesContextSchema.Provider value={value}>
-      {children}
-    </LocalesContextSchema.Provider>
-  );
+	return <LocalesContextSchema.Provider value={value}>{children}</LocalesContextSchema.Provider>;
 }
 
 export default LocalesContext;
