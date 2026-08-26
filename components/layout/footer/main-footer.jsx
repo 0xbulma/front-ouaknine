@@ -65,7 +65,7 @@ function MainFooter() {
             />
           </a>
           <a
-            href='https://www.google.com/maps/place/Ouaknine+Alice+Avocat/@48.8775684,2.3168902,15z/data=!4m5!3m4!1s0x0:0x51a276d4dfa05806!8m2!3d48.8775684!4d2.3168902'
+            href={CONTENT.mapsUrl}
             target='_blank'
             rel='noreferrer'
             alt='Google Alice Ouaknine'

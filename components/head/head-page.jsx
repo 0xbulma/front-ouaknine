@@ -3,10 +3,11 @@ import { useRouter } from 'next/router';
 
 import { localeHref } from '../../libs/localePath';
 
-// A missing env var would otherwise publish `undefined/expertise/...` as a
-// canonical, which is invisible in review and expensive in the index.
-export const HOST =
-  process.env.NEXT_PUBLIC_HOST ?? 'https://www.ouaknine-avocats.com';
+import { SITE_URL } from '../../libs/site';
+
+// Re-exported: this was the third copy of the same expression, and the copies
+// disagreed about whether a blank env var counts as missing.
+export const HOST = SITE_URL;
 
 const OG_LOCALE = { fr: 'fr_FR', en: 'en_US' };
 

@@ -14,14 +14,13 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
 
-  // The articles section was removed with the redesign. Sixteen of its URLs
-  // were still earning search traffic, so they are sent on rather than left to
-  // 404: the two list pages to the practice areas that replaced them, every
-  // article to the home page. Locale prefixes are matched by Next itself.
+  // The articles section is now /publications. Its list pages redirect here;
+  // an individual article is resolved by pages/articles/[id].jsx, which looks
+  // the post up and sends it to its own slug. Locale prefixes are matched by
+  // Next itself.
   async redirects() {
     return [
-      { source: '/articles', destination: '/expertise', permanent: true },
-      { source: '/articles/:id', destination: '/', permanent: true },
+      { source: '/articles', destination: '/publications', permanent: true },
     ];
   },
 

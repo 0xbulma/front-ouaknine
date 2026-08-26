@@ -1,4 +1,5 @@
 import EXPERTISE_PAIRS from './expertisePairs';
+import { slugify } from './slug';
 
 const SIDE = { fr: 0, en: 1 };
 
@@ -16,8 +17,16 @@ const counterpartSlug = (router, target) =>
 // A pair that falls out of date — a field renamed in the studio, which changes
 // its slug — sends the switch to the index rather than to a URL that does not
 // exist.
-const localePath = (router, target) => {
+const localePath = (router, target, availableLocales) => {
   const { pathname, query } = router;
+
+  // A page that only exists in some languages says so through the locales
+  // context. Switching to one it does not have goes to that section's index
+  // rather than to a URL that 404s: every press cutting is French only, and the
+  // editorial brief plans most new pieces the same way.
+  if (availableLocales && !availableLocales.includes(target)) {
+    return pathname.replace(/\/\[[^\]]+\]$/, '') || '/';
+  }
 
   if (pathname !== FIELD_ROUTE) return { pathname, query };
 
@@ -30,6 +39,18 @@ const localePath = (router, target) => {
 // `/` in French and `/en` in English.
 export const withLocale = (locale, path) =>
   locale === 'fr' ? path : `/${locale}${path === '/' ? '' : path}`;
+
+// A publication references one field of expertise, and the two languages are
+// separate Sanity documents with unrelated slugs. Resolve that reference to the
+// field's slug in the language being read; null when the pair has no counterpart,
+// so the caller can drop the link rather than publish one that 404s.
+export const expertiseSlugIn = (title, locale) => {
+  const slug = slugify(title);
+  if (!slug) return null;
+
+  const pair = EXPERTISE_PAIRS.find(slugs => slugs.includes(slug));
+  return pair?.[SIDE[locale]] ?? null;
+};
 
 // Both public paths for a field of expertise, from either side's slug. The
 // landing page renders the first field and needs to present itself as that

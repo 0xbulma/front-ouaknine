@@ -1,12 +1,14 @@
 import classes from './language-picker-mobile.module.scss';
 import useLocale from '../../../hooks/useLocale';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import localePath from '../../../libs/localePath';
+import { LocalesContextSchema } from '../../../context/locales-context';
 
 function LanguagePickerMobile(props) {
   const locale = useLocale();
   const router = useRouter();
+  const availableLocales = useContext(LocalesContextSchema);
   const [state, setState] = useState(locale);
 
   const { pathname, asPath, query } = router;
@@ -18,7 +20,7 @@ function LanguagePickerMobile(props) {
   // the other language has to be asked for by hand.
   useEffect(() => {
     // router.prefetch only takes a string, unlike router.push below.
-    const target = localePath(router, other);
+    const target = localePath(router, other, availableLocales);
     router.prefetch(typeof target === 'string' ? target : pathname, undefined, {
       locale: other,
     });
@@ -27,7 +29,7 @@ function LanguagePickerMobile(props) {
 
   const toggleHandler = loc => {
     setState(l => loc);
-    const target = localePath(router, loc);
+    const target = localePath(router, loc, availableLocales);
 
     router.push(target, typeof target === 'string' ? undefined : asPath, {
       locale: loc,

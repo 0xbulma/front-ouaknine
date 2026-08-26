@@ -1,0 +1,32 @@
+{
+  "fr": {
+    "title": "Publications",
+    "articles": "Articles",
+    "press": "Le cabinet dans la presse",
+    "episode": "Épisode",
+    "readingTime": "min de lecture",
+    "series": "Guide",
+    "author": "Écrit par",
+    "authorRole": "Avocate aux barreaux de Paris et de Californie",
+    "source": "Lire l'article d'origine",
+    "previous": "Épisode précédent",
+    "next": "Épisode suivant",
+    "backToIndex": "Toutes les publications",
+    "empty": "Aucune publication pour le moment."
+  },
+  "en": {
+    "title": "Publications",
+    "articles": "Articles",
+    "press": "The firm in the press",
+    "episode": "Episode",
+    "readingTime": "min read",
+    "series": "Guide",
+    "author": "Written by",
+    "authorRole": "Attorney at the Paris and California bars",
+    "source": "Read the original article",
+    "previous": "Previous episode",
+    "next": "Next episode",
+    "backToIndex": "All publications",
+    "empty": "No publications yet."
+  }
+}
