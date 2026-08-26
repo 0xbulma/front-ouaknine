@@ -1,5 +1,6 @@
 import EXPERTISE_PAIRS from './expertisePairs';
 import { slugify } from './slug';
+import { withLocale } from './site-url.mjs';
 
 const SIDE = { fr: 0, en: 1 };
 
@@ -34,11 +35,10 @@ const localePath = (router, target, availableLocales) => {
   return counterpart ? `/expertise/${counterpart}` : '/expertise';
 };
 
-// The public path a route has in a given language. French is the default
-// locale and carries no prefix, so its path is the bare route; the home page is
-// `/` in French and `/en` in English.
-export const withLocale = (locale, path) =>
-  locale === 'fr' ? path : `/${locale}${path === '/' ? '' : path}`;
+// `withLocale` is defined in libs/site-url.mjs, beside the other URL spellings
+// the markdown surface derives from it, and re-exported here for the callers
+// that already reach for it through this module.
+export { withLocale };
 
 // A publication references one field of expertise, and the two languages are
 // separate Sanity documents with unrelated slugs. Resolve that reference to the

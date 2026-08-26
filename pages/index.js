@@ -1,13 +1,13 @@
 import Link from 'next/link';
-import Image from 'next/image';
-import clientApi from '../libs/clientApi';
-import RichText from '../components/ui/rich-text.jsx';
+import { splitAddress } from '../libs/address.mjs';
+import { fetchHome } from '../libs/page-content';
+import { staticPageProps } from '../libs/static-page-props.mjs';
 
 import HeadPage from '../components/head/head-page';
+import FirmSection from '../components/layout/firm-section';
 
 import classes from './Home.module.scss';
 
-import portrait from '../public/images/alice-portrait-illustration.png';
 import useLocale from '../hooks/useLocale';
 import footerContent from '../content/footerContent.json';
 import { expertiseSlug } from '../libs/expertise';
@@ -29,7 +29,9 @@ export default function Home({ data }) {
   } = data;
 
   const locale = useLocale();
-  const [addressLine, phoneLine] = footerContent[locale].address.split('\n');
+  const { street: addressLine, phone: phoneLine } = splitAddress(
+    footerContent[locale].address
+  );
 
   const tags = [
     { label: tag1, link: link1 },
@@ -73,58 +75,15 @@ export default function Home({ data }) {
         </div>
       </div>
 
-      <section className={classes.bottom} id='homedesc'>
-        <div className={classes.portrait}>
-          <Image
-            src={portrait}
-            alt={
-              title1 && title2
-                ? `${title1.trim()} - ${title2.trim()}`
-                : 'Alice Ouaknine'
-            }
-            layout='responsive'
-            sizes='(min-width: 992px) 34vw, 78vw'
-            placeholder='blur'
-            quality={72}
-          />
-        </div>
-        <div className={`${classes.desc}`}>
-          <div className={classes.descinner}>
-            {sectionTitle && (
-              <h2 className={classes.bottomtitle}>{sectionTitle?.trim()}</h2>
-            )}
-            {body && <RichText value={body} />}
-          </div>
-        </div>
-      </section>
+      <FirmSection
+        sectionTitle={sectionTitle}
+        body={body}
+        imageAlt={
+          title1 && title2 ? `${title1.trim()} - ${title2.trim()}` : 'Alice Ouaknine'
+        }
+      />
     </div>
   );
 }
 
-export async function getStaticProps(ctx) {
-
-  try {
-    const locale = ctx?.locale;
-
-    const content = await clientApi.fetch(
-      `*[_type == "home" && language == "${locale ? locale : "en"}"]{
-        titleseo,
-        descriptionseo,
-        title1,
-        title2,
-        tag1,
-        "link1": link1->title,
-        tag2,
-        "link2": link2->title,
-        tag3,
-        "link3": link3->title,
-        sectionTitle,
-        body}`
-    );
-    return { props: { data: content?.length && content[0] }, revalidate: 10};
-  } catch (err) {
-    return {
-      notFound: true,
-    };
-  }
-}
+export const getStaticProps = staticPageProps(fetchHome, '/');

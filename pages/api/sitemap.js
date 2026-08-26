@@ -2,16 +2,12 @@ import clientApi from '../../libs/clientApi';
 import { expertiseSlug } from '../../libs/expertise';
 import EXPERTISE_PAIRS from '../../libs/expertisePairs';
 import { fetchPublications } from '../../libs/publications';
-import { withLocale } from '../../libs/localePath';
-import { SITE_URL } from '../../libs/site';
-
-const HOST = SITE_URL;
-
-const LOCALES = ['fr', 'en'];
+import { methodNotAllowed } from '../../libs/query-guard.mjs';
+import { HOST, LOCALES, withLocale } from '../../libs/site-url.mjs';
 
 // No '/expertise': it renders the first field and canonicalises onto it, so
 // listing it here would ask Google to index a URL the page disowns.
-const PAGES = ['/', '/contact', '/iska', '/legal', '/publications'];
+const PAGES = ['/', '/about', '/contact', '/iska', '/legal', '/publications'];
 
 const escape = value =>
   value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -73,7 +69,21 @@ const entry = (locale, path, alternates, lastmod) => `
     <lastmod>${lastmod}</lastmod>
   </url>`;
 
+// No `unexpectedQuery` guard here, unlike the two routes middleware rewrites
+// to. `/sitemap.xml` is a next.config.js rewrite, and on Vercel the platform's
+// routing layer adds its own parameters to the destination — a strict guard
+// answered 404 for the sitemap in preview while passing locally, where
+// `next start` performs the rewrite in-process and adds nothing. Losing the
+// sitemap is far worse than the `?bust=n` amplification the guard prevented.
 export default async function handler(req, res) {
+  if (methodNotAllowed(req.method)) {
+    res.statusCode = 405;
+    res.setHeader('Allow', 'GET, HEAD');
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.end('');
+    return;
+  }
+
   const lastmod = new Date().toISOString().slice(0, 10);
 
   // Every page but a field of expertise is the same path in both languages.

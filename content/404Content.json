@@ -1,9 +1,37 @@
 {
   "fr": {
-    "body": "Désolé, cette page n'existe pas - Erreur 404 "
+    "titleseo": "Page introuvable | Alice Ouaknine, avocat à Paris",
+    "body": "Désolé, cette page n'existe pas - Erreur 404 ",
+    "lead": "Voici les pages du site.",
+    "navLabel": "Pages du site",
+    "links": [
+      { "label": "Accueil", "url": "/" },
+      { "label": "À propos", "url": "/about" },
+      { "label": "Expertise", "url": "/expertise" },
+      { "label": "Publications", "url": "/publications" },
+      { "label": "Contact", "url": "/contact" },
+      { "label": "Réseau ISKA", "url": "/iska" },
+      { "label": "Mentions légales", "url": "/legal" },
+      { "label": "Plan du site", "url": "/sitemap.xml", "file": true },
+      { "label": "llms.txt", "url": "/llms.txt", "file": true, "localized": true }
+    ]
   },
 
   "en": {
-    "body": "Sorry, this page does not exist - Error 404"
+    "titleseo": "Page not found | Alice Ouaknine, attorney in Paris",
+    "body": "Sorry, this page does not exist - Error 404",
+    "lead": "Here are the pages of this site.",
+    "navLabel": "Site pages",
+    "links": [
+      { "label": "Home", "url": "/" },
+      { "label": "About", "url": "/about" },
+      { "label": "Expertise", "url": "/expertise" },
+      { "label": "Publications", "url": "/publications" },
+      { "label": "Contact", "url": "/contact" },
+      { "label": "ISKA network", "url": "/iska" },
+      { "label": "Legal terms", "url": "/legal" },
+      { "label": "Sitemap", "url": "/sitemap.xml", "file": true },
+      { "label": "llms.txt", "url": "/llms.txt", "file": true, "localized": true }
+    ]
   }
 }

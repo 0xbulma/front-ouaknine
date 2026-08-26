@@ -1,5 +1,6 @@
 import ExpertisePage from '../../components/layout/expertise-page';
-import { expertiseSlug, fetchExpertise, plainText } from '../../libs/expertise';
+import { fetchExpertise, plainText } from '../../libs/expertise';
+import { staticPageProps } from '../../libs/static-page-props.mjs';
 import organizationContent from '../../content/organizationContent.json';
 
 export default ExpertisePage;
@@ -15,7 +16,7 @@ export async function getStaticPaths({ locales }) {
 
     const paths = docs.flatMap(({ locale, content }) =>
       (content?.expertiseList ?? []).map(item => ({
-        params: { slug: expertiseSlug(item.title) },
+        params: { slug: item.slug },
         locale,
       }))
     );
@@ -27,32 +28,28 @@ export async function getStaticPaths({ locales }) {
   }
 }
 
-export async function getStaticProps({ params, locale }) {
-  try {
-    const content = await fetchExpertise(locale);
-    const field = (content?.expertiseList ?? []).find(
-      item => expertiseSlug(item.title) === params.slug
+export const getStaticProps = staticPageProps(
+  fetchExpertise,
+  ctx => `/expertise/${ctx?.params?.slug}`,
+  (content, ctx) => {
+    const { slug } = ctx.params;
+    const field = (content.expertiseList ?? []).find(
+      item => item.slug === slug
     );
-
-    if (!field) return { notFound: true, revalidate: 10 };
+    if (!field) return null;
 
     // The field leads, then the practice and the city. Every commercial query
     // in Search Console pairs a field with "paris"; the section label the title
     // used to carry ("Practice Areas") matched none of them.
-    const org = organizationContent[locale] ?? organizationContent.fr;
+    const org = organizationContent[ctx.locale] ?? organizationContent.fr;
 
     return {
-      props: {
-        data: content,
-        slug: params.slug,
-        seo: {
-          title: `${field.title.trim()} | ${org.name}, ${org.areaServed}`,
-          description: plainText(field.description),
-        },
+      data: content,
+      slug,
+      seo: {
+        title: `${field.title.trim()} | ${org.name}, ${org.areaServed}`,
+        description: plainText(field.description),
       },
-      revalidate: 10,
     };
-  } catch (err) {
-    return { notFound: true };
   }
-}
+);

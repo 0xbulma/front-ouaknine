@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { ArrowSmRightIcon } from '@heroicons/react/outline';
 
 import RichText from '../ui/rich-text';
-import { expertiseSlug } from '../../libs/expertise';
 
 import classes from './expertise-fields.module.scss';
 
@@ -17,7 +16,7 @@ function ExpertiseFields({ items, label, linkLabel, current }) {
   const fieldRef = useRef(null);
   const landed = useRef(false);
 
-  const active = items.findIndex(item => expertiseSlug(item.title) === current);
+  const active = items.findIndex(item => item.slug === current);
   const field = items[active >= 0 ? active : 0];
 
   // Every field is read from its own first line: whichever one is arrived at,
@@ -45,7 +44,7 @@ function ExpertiseFields({ items, label, linkLabel, current }) {
       <div className={classes.rail}>
         <nav className={classes.railinner} aria-label={label}>
           {items.map((item, index) => {
-            const slug = expertiseSlug(item.title);
+            const slug = item.slug;
             const isActive = index === active;
 
             return (

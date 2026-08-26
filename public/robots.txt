@@ -1,6 +1,10 @@
 User-agent: *
 Allow: /
 
-# /api/sitemap is the only API route and it serves this file, so nothing under
-# /api is disallowed, so the previously submitted /api/sitemap URL keeps working.
+# /api holds the generated representations (the sitemap, llms.txt, the markdown
+# edition of every page, the 406), all reached through rewrites, so nothing under
+# /api is disallowed and the previously submitted /api/sitemap URL keeps working.
 Sitemap: https://www.ouaknine-avocats.com/sitemap.xml
+
+# Written for agents: what this site is for, and where each page lives.
+# https://www.ouaknine-avocats.com/llms.txt

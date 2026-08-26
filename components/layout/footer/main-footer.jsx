@@ -33,9 +33,8 @@ function MainFooter() {
 
         <div className={classes.links}>
           <Link href='/'><a className={classes.link}>{CONTENT[locale].link1}</a></Link>
-          <span>|</span>
+          <Link href='/about'><a className={classes.link}>{CONTENT[locale].link4}</a></Link>
           <Link href='/legal'><a className={classes.link}>{CONTENT[locale].link2}</a></Link>
-          <span>|</span>
           <a
             href='https://cabinet-ouaknine.sanity.studio/desk'
             target='_blank'
