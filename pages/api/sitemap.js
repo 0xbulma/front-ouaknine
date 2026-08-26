@@ -2,7 +2,7 @@ import clientApi from '../../libs/clientApi';
 import { expertiseSlug } from '../../libs/expertise';
 import EXPERTISE_PAIRS from '../../libs/expertisePairs';
 import { fetchPublications } from '../../libs/publications';
-import { methodNotAllowed, unexpectedQuery } from '../../libs/query-guard.mjs';
+import { methodNotAllowed } from '../../libs/query-guard.mjs';
 import { HOST, LOCALES, withLocale } from '../../libs/site-url.mjs';
 
 // No '/expertise': it renders the first field and canonicalises onto it, so
@@ -69,20 +69,16 @@ const entry = (locale, path, alternates, lastmod) => `
     <lastmod>${lastmod}</lastmod>
   </url>`;
 
+// No `unexpectedQuery` guard here, unlike the two routes middleware rewrites
+// to. `/sitemap.xml` is a next.config.js rewrite, and on Vercel the platform's
+// routing layer adds its own parameters to the destination — a strict guard
+// answered 404 for the sitemap in preview while passing locally, where
+// `next start` performs the rewrite in-process and adds nothing. Losing the
+// sitemap is far worse than the `?bust=n` amplification the guard prevented.
 export default async function handler(req, res) {
   if (methodNotAllowed(req.method)) {
     res.statusCode = 405;
     res.setHeader('Allow', 'GET, HEAD');
-    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
-    res.end('');
-    return;
-  }
-
-  // The rewrite carries a query string through from /sitemap.xml, and the CDN
-  // keys on it, so `?bust=n` would mint a fresh key and a fresh CMS query each
-  // time. This route takes no parameters at all.
-  if (unexpectedQuery(req.query, [])) {
-    res.statusCode = 404;
     res.setHeader('Content-Type', 'text/plain; charset=utf-8');
     res.end('');
     return;
