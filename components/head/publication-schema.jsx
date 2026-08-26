@@ -2,14 +2,12 @@ import { useRouter } from 'next/router';
 
 import JsonLd from './json-ld';
 import { HOST } from './head-page';
-import { CABINET_ID } from './site-schema';
+import { ALICE_ID, CABINET_ID } from './site-schema';
 
-import { expertiseSlug, plainText } from '../../libs/expertise';
+import { plainText } from '../../libs/expertise';
 import { isPress } from '../../libs/publications';
-import { withLocale } from '../../libs/localePath';
+import { expertiseSlugIn, withLocale } from '../../libs/localePath';
 import headerContent from '../../content/headerContent.json';
-
-const ALICE_ID = `${HOST}/#alice`;
 
 const localeUrl = (locale, path) => `${HOST}${withLocale(locale, path)}`;
 
@@ -26,6 +24,10 @@ function PublicationSchema({ post, title, series }) {
 
   const url = localeUrl(locale, `/publications/${post.slug}`);
   const press = isPress(post);
+
+  // Same single-locale reference the on-page link resolves: pointing `about` at
+  // the other language's slug would leave a dangling @id in the graph.
+  const fieldSlug = expertiseSlugIn(post.field, locale);
 
   const crumb = (name, path, position) => ({
     '@type': 'ListItem',
@@ -50,13 +52,10 @@ function PublicationSchema({ post, title, series }) {
     ...(press
       ? { mentions: { '@id': CABINET_ID }, ...(post.source ? { sameAs: post.source } : {}) }
       : { author: { '@id': ALICE_ID } }),
-    ...(post.field
+    ...(fieldSlug
       ? {
           about: {
-            '@id': `${localeUrl(
-              locale,
-              `/expertise/${expertiseSlug(post.field)}`
-            )}#service`,
+            '@id': `${localeUrl(locale, `/expertise/${fieldSlug}`)}#service`,
           },
         }
       : {}),

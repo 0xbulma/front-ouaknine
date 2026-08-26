@@ -10,7 +10,7 @@ const ISKA_URL = 'https://www.iska-avocats.fr';
 const LINKEDIN_URL = 'https://fr.linkedin.com/in/alice-ouaknine-23a4186b';
 
 export const CABINET_ID = `${HOST}/#cabinet`;
-const ALICE_ID = `${HOST}/#alice`;
+export const ALICE_ID = `${HOST}/#alice`;
 
 // The practice's identity, published once per page from the layout. A single
 // `@graph` rather than three scripts, so the nodes can reference each other by

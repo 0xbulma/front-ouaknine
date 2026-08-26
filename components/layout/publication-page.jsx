@@ -5,21 +5,14 @@ import PublicationSchema from '../head/publication-schema';
 import PageTitle from './page-title';
 import RichText from '../ui/rich-text';
 
-import { isPress, splitTitle } from '../../libs/publications';
-import { expertiseSlug } from '../../libs/expertise';
+import { formatDate, isPress, splitTitle } from '../../libs/publications';
+import { expertiseSlugIn } from '../../libs/localePath';
 import useLocale from '../../hooks/useLocale';
 import CONTENT from '../../content/publicationsContent.json';
 
 import classes from './publication-page.module.scss';
 
 const pad = n => String(n).padStart(2, '0');
-
-const formatDate = (iso, locale) =>
-  new Date(iso).toLocaleDateString(locale === 'en' ? 'en-GB' : 'fr-FR', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
 
 // The guide's own cross-links, as navigation rather than as prose. The rail is
 // the one from the fields of expertise: a sticky index of no height, so it stays
@@ -51,6 +44,11 @@ function PublicationPage({ post, series, seo }) {
   const copy = CONTENT[locale] ?? CONTENT.fr;
   const { series: seriesName, episode, title } = splitTitle(post);
 
+  // relatedExpertise points at one language's document. Under the other locale
+  // the derived slug names a page that is not served, so the link is resolved
+  // through the pairs and dropped when the field has no counterpart.
+  const fieldSlug = expertiseSlugIn(post.field, locale);
+
   const position = series?.findIndex(e => e.post._id === post._id) ?? -1;
   const previous = position > 0 ? series[position - 1] : null;
   const next =
@@ -67,15 +65,19 @@ function PublicationPage({ post, series, seo }) {
         </span>
       )}
       <span className={classes.metaitem}>
-        {formatDate(post.publishedAt, locale)}
+        {formatDate(post.publishedAt, locale, {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        })}
       </span>
       {post.readingTime > 0 && (
         <span className={classes.metaitem}>
           {post.readingTime} {copy.readingTime}
         </span>
       )}
-      {post.field && (
-        <Link href={`/expertise/${expertiseSlug(post.field)}`}>
+      {fieldSlug && (
+        <Link href={`/expertise/${fieldSlug}`}>
           <a className={classes.metalink}>{post.field}</a>
         </Link>
       )}
@@ -95,13 +97,11 @@ function PublicationPage({ post, series, seo }) {
 
       <div className={classes.container}>
         <div className={classes.layout}>
-          <SeriesRail series={series} current={post._id} copy={copy} />
-
           <article className={classes.article}>
             {meta}
 
             <div className={classes.body}>
-              <RichText value={post.body} />
+              <RichText value={post.body} headingLevel='h2' />
             </div>
 
             {post.source && (
@@ -152,6 +152,8 @@ function PublicationPage({ post, series, seo }) {
               <a className={classes.back}>{copy.backToIndex}</a>
             </Link>
           </article>
+
+          <SeriesRail series={series} current={post._id} copy={copy} />
         </div>
       </div>
     </div>

@@ -8,13 +8,22 @@ export const otherLocale = locale => (locale === 'fr' ? 'en' : 'fr');
 // Portable text lives at content<locale>.body<locale>, which GROQ cannot reach
 // through a parameter, so the locale is interpolated. It is checked against the
 // two the site has rather than trusted from the route.
-const projection = locale => {
-  const l = LOCALES.includes(locale) ? locale : 'fr';
+const safeLocale = locale => (LOCALES.includes(locale) ? locale : 'fr');
+
+// Everything but the body. This is what a list needs, and a list is most of what
+// the section does: the index renders ten rows, the series rail renders links,
+// the sitemap renders slugs. Projecting the body into any of them serialises the
+// full text of every publication into the page's __NEXT_DATA__, which measured
+// 227 kB on the index for content it never renders.
+//
+// `hasBody` stands in for the body in the one place a list still needs it: a
+// piece is listed in a language only when it was written in that language.
+const metaProjection = locale => {
+  const l = safeLocale(locale);
   const o = otherLocale(l);
 
   return `{
     _id,
-    language,
     filter,
     author,
     source,
@@ -24,6 +33,28 @@ const projection = locale => {
     "episode": episode,
     "field": relatedExpertise->title,
     "title": coalesce(content${l}.title${l}, content${o}.title${o}),
+    "hasBody": defined(content${l}.body${l}),
+    "readingTime": round(length(pt::text(content${l}.body${l})) / 5 / 180)
+  }`;
+};
+
+// The one caller that actually renders prose asks for it explicitly.
+const bodyProjection = locale => {
+  const l = safeLocale(locale);
+  const o = otherLocale(l);
+
+  return `{
+    _id,
+    filter,
+    author,
+    source,
+    publishedAt,
+    "slug": coalesce(slug.current, contentfr.titlefr, contenten.titleen),
+    "series": series,
+    "episode": episode,
+    "field": relatedExpertise->title,
+    "title": coalesce(content${l}.title${l}, content${o}.title${o}),
+    "hasBody": defined(content${l}.body${l}),
     "body": content${l}.body${l},
     "readingTime": round(length(pt::text(content${l}.body${l})) / 5 / 180)
   }`;
@@ -44,9 +75,9 @@ export const isPress = post => post?.filter === 'press' || Boolean(post?.source)
 
 // Only what the reader can actually read. A French press cutting has no English
 // body, and listing it on the English site would be a link to an empty page.
-const readable = post => Boolean(post?.body?.length);
+const readable = post => Boolean(post?.hasBody);
 
-export const fetchPublications = async locale => {
+const fetchWith = async (projection, locale) => {
   const posts = await clientApi.fetch(
     `*[${PUBLISHED}] | order(publishedAt desc) ${projection(locale)}`
   );
@@ -54,10 +85,43 @@ export const fetchPublications = async locale => {
   return (posts ?? []).filter(readable).map(withSlug);
 };
 
+// Every publication in a language, without the prose. For lists, rails, sitemaps
+// and membership checks.
+export const fetchPublications = locale => fetchWith(metaProjection, locale);
+
+// One publication, prose included. Fetched by slug rather than filtered out of
+// the whole corpus, so an unknown slug costs one query and not a full download.
 export const fetchPublication = async (locale, slug) => {
-  const posts = await fetchPublications(locale);
+  const posts = await fetchWith(bodyProjection, locale);
   return posts.find(post => post.slug === slug) ?? null;
 };
+
+// The publication a legacy /articles/<id> URL was addressing. Looked up by id
+// directly: that path space is unbounded and attacker-chosen, so it must not
+// pull the corpus once per unknown id.
+export const fetchPublicationById = async id => {
+  const post = await clientApi.fetch(
+    `*[_type == "post" && _id == $id][0]{
+      "slug": coalesce(slug.current, contentfr.titlefr, contenten.titleen),
+      publishedAt
+    }`,
+    { id }
+  );
+
+  if (!post?.slug) return null;
+  if (post.publishedAt && new Date(post.publishedAt) > new Date()) return null;
+
+  return { slug: slugify(post.slug) };
+};
+
+// Formatting in the runtime's own zone renders one day on the server and another
+// in the browser for any evening timestamp: a hydration mismatch and a date off
+// by one. The practice is in Paris, so that is the zone the date means.
+export const formatDate = (iso, locale, options) =>
+  new Date(iso).toLocaleDateString(locale === 'en' ? 'en-GB' : 'fr-FR', {
+    timeZone: 'Europe/Paris',
+    ...options,
+  });
 
 // One slug for both languages, from the explicit field when the studio carries
 // one and from the French title otherwise. Deriving it from each locale's own
@@ -77,21 +141,29 @@ const withSlug = post => ({ ...post, slug: publicationSlug(post) });
 const EPISODE = /^(.+?)\s*[–—-]\s*(?:Épisodes?|Episodes?|Ep\.?)\s*(\d+)\s*[:.]?\s*(.*)$/i;
 
 export const splitTitle = post => {
+  const raw = post?.title ?? '';
+  const match = EPISODE.exec(raw);
+
+  // The fields win when the studio carries them, but the title still has to be
+  // stripped: a document keeps its full "<Guide> - Épisode 1 : <subtitle>"
+  // title, so trusting the field alone would put the series name back into the
+  // heading the moment an editor filled the field the brief asks them to fill.
   if (post?.series) {
     return {
       series: post.series,
-      episode: post.episode ?? null,
-      title: post.title ?? '',
+      episode: post.episode ?? (match ? Number(match[2]) : null),
+      title: (match ? match[3].trim() : raw) || raw,
     };
   }
 
-  const match = EPISODE.exec(post?.title ?? '');
-  if (!match) return { series: null, episode: null, title: post?.title ?? '' };
+  if (!match) return { series: null, episode: null, title: raw };
 
+  // An episode with no subtitle after the number would otherwise leave an empty
+  // heading and a title tag reading " | Cabinet Ouaknine".
   return {
     series: match[1].trim(),
     episode: Number(match[2]),
-    title: match[3].trim(),
+    title: match[3].trim() || raw,
   };
 };
 

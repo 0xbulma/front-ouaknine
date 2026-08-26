@@ -29,6 +29,9 @@ export async function getStaticProps({ locale }) {
       revalidate: 60,
     };
   } catch (err) {
-    return { notFound: true };
+    // Without a revalidate window Next caches the 404 until the next deploy, and
+    // this route is both a nav item and a sitemap entry.
+    console.error('publications index getStaticProps', err);
+    return { notFound: true, revalidate: 60 };
   }
 }

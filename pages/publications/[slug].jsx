@@ -1,5 +1,6 @@
 import PublicationPage from '../../components/layout/publication-page';
 import {
+  fetchPublication,
   fetchPublications,
   otherLocale,
   seriesOf,
@@ -35,12 +36,14 @@ export async function getStaticProps({ params, locale }) {
   try {
     const twin = otherLocale(locale);
 
-    const [posts, translations] = await Promise.all([
+    // Only this page renders prose, so only this page asks for it. The list and
+    // the twin-locale check take the body-free projection: carrying bodies into
+    // them put the whole guide's text into the page's __NEXT_DATA__.
+    const [post, posts, translations] = await Promise.all([
+      fetchPublication(locale, params.slug),
       fetchPublications(locale),
       fetchPublications(twin),
     ]);
-
-    const post = posts.find(entry => entry.slug === params.slug);
 
     if (!post) return { notFound: true, revalidate: 60 };
 
@@ -56,10 +59,20 @@ export async function getStaticProps({ params, locale }) {
       alternates[twin] = withLocale(twin, path);
     }
 
+    // The rail and the pager render a number, a title and a link. Handing them
+    // whole documents would serialise every episode of the guide into the page.
+    const episodes = series
+      ? seriesOf(posts, series).map(entry => ({
+          post: { _id: entry.post._id, slug: entry.post.slug },
+          episode: entry.episode,
+          title: entry.title,
+        }))
+      : null;
+
     return {
       props: {
         post,
-        series: series ? seriesOf(posts, series) : null,
+        series: episodes,
         seo: {
           title: `${title} | ${org.name}`,
           description: plainText(post.body),
@@ -69,6 +82,9 @@ export async function getStaticProps({ params, locale }) {
       revalidate: 60,
     };
   } catch (err) {
-    return { notFound: true };
+    // A transient CMS failure must not cache a 404 for a live publication until
+    // the next deploy; the deliberate not-found above already carries a window.
+    console.error('publication getStaticProps', params.slug, err);
+    return { notFound: true, revalidate: 60 };
   }
 }

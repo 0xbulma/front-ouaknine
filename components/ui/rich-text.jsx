@@ -1,9 +1,26 @@
+import { createElement } from 'react';
 import Link from 'next/link';
 import { PortableText } from '@portabletext/react';
 import SanityImage from './sanityImage';
 import classes from './rich-text.module.scss';
 
-export default function RichText({ value }) {
+// `headingLevel` collapses every heading a document carries onto one tag. The
+// publications surface needs it: the guide writes h4 throughout and a press
+// cutting opens on the outlet's own h2, so without it the accessibility tree
+// exposes a gapped, inconsistent hierarchy under the page h1 while the stylesheet
+// renders them all alike.
+const headingOverrides = level =>
+  level
+    ? Object.fromEntries(
+        ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].map(style => [
+          style,
+          // eslint-disable-next-line react/display-name
+          ({ children }) => createElement(level, null, children),
+        ])
+      )
+    : {};
+
+export default function RichText({ value, headingLevel }) {
   return (
     <PortableText
       value={value}
@@ -11,6 +28,7 @@ export default function RichText({ value }) {
       }}
       components={{
         block: {
+          ...headingOverrides(headingLevel),
           // Ex. 1: customizing common block types
           normal: ({ children }) => {
             if (!children[0]) {
@@ -49,15 +67,23 @@ export default function RichText({ value }) {
           // link that leaves the site opens away from it.
           link: ({ children, value }) => {
             const href = value?.href || '/';
-            const isExternal = /^https?:\/\//i.test(href);
 
-            if (!isExternal) {
+            // An allowlist, not a scheme test. Treating "not http(s)" as
+            // internal handed `javascript:` and `data:` URLs straight to an
+            // anchor, and link marks are authored in the CMS.
+            const isInternal =
+              (href.startsWith('/') && !href.startsWith('//')) ||
+              href.startsWith('#');
+
+            if (isInternal) {
               return (
                 <Link href={href}>
                   <a className={classes.link}>{children}</a>
                 </Link>
               );
             }
+
+            if (!/^(https?|mailto|tel):/i.test(href)) return <>{children}</>;
 
             return (
               <a

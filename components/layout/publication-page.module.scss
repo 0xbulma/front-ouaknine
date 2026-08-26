@@ -16,6 +16,12 @@
 }
 
 .rail {
+  // Placed rather than ordered. The article comes first in the markup so the
+  // reading and tab order match what is on screen at every width; `order` would
+  // have put the rail first in the DOM and last on the page.
+  grid-column: 1;
+  grid-row: 1;
+
   // A sticky box gets pushed up once its own bottom edge reaches the bottom of
   // its containing block. Sticking a box of no height and letting the index
   // overflow it keeps the index pinned for the whole of the article.
@@ -80,6 +86,8 @@
 }
 
 .article {
+  grid-column: 2;
+  grid-row: 1;
   min-width: 0;
 
   // An article outside a guide has no index beside it, so it takes the row
@@ -135,6 +143,7 @@
     margin-top: 0;
   }
 
+  h1,
   h2,
   h3,
   h4,
@@ -199,8 +208,10 @@
 }
 
 .authorname {
-  @include serif;
+  // Not @include serif: this runs at 20-28px, and the two-family split puts
+  // Bodoni above ~40px only. The sibling index file makes the same call.
   font-size: $fs-h3;
+  font-weight: 500;
   line-height: $lh-heading;
   text-transform: uppercase;
 }
@@ -237,8 +248,10 @@
 
 .pagerlabel {
   @include micro;
+  // $rule-strong is a hairline token; as text on $bg it measures 2.06:1 against
+  // a 4.5:1 minimum, and declaring a colour here also stopped the label taking
+  // the parent's hover. Inheriting fixes both.
   font-size: 0.6875rem;
-  color: $rule-strong;
 }
 
 .pagertitle {
@@ -264,13 +277,16 @@
 
   // Stacked, the index would put five links between the title and the first
   // sentence. An article is read before it is navigated, so the rest of the
-  // guide goes underneath it, next to the pager.
+  // guide goes underneath it, next to the pager, which is also the order it
+  // already has in the markup.
   .article {
-    order: 1;
+    grid-column: 1;
+    grid-row: 1;
   }
 
   .rail {
-    order: 2;
+    grid-column: 1;
+    grid-row: 2;
     position: static;
     height: auto;
   }

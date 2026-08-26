@@ -53,7 +53,11 @@
   @include borderbottomlight;
   transition: color $dur-fast $ease, border-color $dur-fast $ease;
 
-  animation: draw 500ms $ease both;
+  // `backwards`, not `both`: `both` leaves the final `clip-path: inset(0 0 0 0)`
+  // applied for good, and a clip-path clips the whole rendering of the element,
+  // including the :focus-visible outline globals.scss draws outside its border
+  // box. Every row here is a link, so `both` means no keyboard focus ring.
+  animation: draw 500ms $ease backwards;
 
   &:hover {
     color: $paper-raised;

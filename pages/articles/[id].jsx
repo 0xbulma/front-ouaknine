@@ -1,4 +1,5 @@
-import { fetchPublications } from '../../libs/publications';
+import { fetchPublicationById } from '../../libs/publications';
+import { withLocale } from '../../libs/localePath';
 
 // The articles section used to address a post by its Sanity id. Sixteen of those
 // URLs were still earning search traffic when the section was removed, and PR
@@ -10,17 +11,32 @@ export default function LegacyArticle() {
 }
 
 export async function getServerSideProps({ params, locale, res }) {
-  let destination = '/publications';
+  let post = null;
 
   try {
-    const posts = await fetchPublications(locale);
-    const post = posts.find(entry => entry._id === params.id);
-    if (post) destination = `/publications/${post.slug}`;
+    post = await fetchPublicationById(params.id);
   } catch (err) {
-    // The index is a good enough landing when the CMS is unreachable.
+    // Fall through to the index; the redirect below stays temporary so the real
+    // destination is still reachable once the CMS answers again.
   }
 
-  res.setHeader('Cache-Control', 'public, max-age=0, s-maxage=3600');
+  // Next does not prefix a getServerSideProps redirect with the active locale,
+  // so an unprefixed path sends every /en/articles/<id> to the French page. The
+  // English half of the guide is the most-seen URL the site has, and permanent
+  // is the one kind of mistake a browser and a search engine both keep.
+  const destination = withLocale(
+    locale,
+    post ? `/publications/${post.slug}` : '/publications'
+  );
 
-  return { redirect: { destination, permanent: true } };
+  // Only a resolved post earns a permanent redirect. A CMS failure or an id that
+  // is not published yet gets a temporary one, so the URL can still find its own
+  // page later rather than being pinned to the index for good.
+  const permanent = Boolean(post);
+
+  if (permanent) {
+    res.setHeader('Cache-Control', 'public, max-age=0, s-maxage=3600');
+  }
+
+  return { redirect: { destination, permanent } };
 }

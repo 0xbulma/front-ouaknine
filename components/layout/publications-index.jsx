@@ -2,19 +2,18 @@ import Link from 'next/link';
 
 import HeadPage from '../head/head-page';
 import PageTitle from './page-title';
-import { groupPublications, isPress, splitTitle } from '../../libs/publications';
+import {
+  formatDate,
+  groupPublications,
+  isPress,
+  splitTitle,
+} from '../../libs/publications';
 import useLocale from '../../hooks/useLocale';
 import CONTENT from '../../content/publicationsContent.json';
 
 import classes from './publications-index.module.scss';
 
 const pad = n => String(n).padStart(2, '0');
-
-const formatDate = (iso, locale) =>
-  new Date(iso).toLocaleDateString(locale === 'en' ? 'en-GB' : 'fr-FR', {
-    year: 'numeric',
-    month: 'long',
-  });
 
 // One row shape for everything on this page, the same one the home practice
 // list uses: a micro-caps number in the gutter, the title beside it, a hairline
@@ -30,7 +29,10 @@ function Row({ post, index, locale, copy }) {
           <span className={classes.value}>
             <h3 className={classes.title}>{title}</h3>
             <span className={classes.meta}>
-              {formatDate(post.publishedAt, locale)}
+              {formatDate(post.publishedAt, locale, {
+                year: 'numeric',
+                month: 'long',
+              })}
               {isPress(post) && post.author
                 ? ` — ${post.author}`
                 : post.readingTime

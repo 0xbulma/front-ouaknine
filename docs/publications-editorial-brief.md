@@ -18,12 +18,31 @@ words. The pages that rank on page one for these terms are an order of magnitude
 larger. No technical fix moves position 61 while the site has nothing to read.
 
 One thing on this domain has ranked on page one: the *Guide de survie en garde à
-vue*, five bilingual episodes written by Alice Ouaknine. Episode 1 alone pulled
-**12,791 impressions at position 6.7**, more impressions than the home page at a
-third of the position. The whole guide is 4,602 French words, more than twice the
-entire expertise section.
+vue*, five bilingual episodes written by Alice Ouaknine. The whole guide is 4,602
+French words, more than twice the entire expertise section.
 
-That guide is the model. This brief is that model written down.
+Read the numbers carefully, because they carry two different lessons.
+
+| | Clicks | Impressions | Position |
+|---|---|---|---|
+| French guide, all five episodes | 3 | 112 | 6.3 to 7.5 |
+| English episode 1 alone | 59 | 12,791 | 6.7 |
+
+**The format ranks.** Every episode sits on page one in both languages. That is
+the part to copy: the structure in section 3, and above all the "En pratique"
+half that no directory writes.
+
+**The French titles match nothing anyone types.** Not one query in twelve months
+of Search Console contains the word "guide". The French episodes rank at position
+6 on searches that barely exist, because they are titled for the series
+("Connaître ses droits") rather than for the question a reader asks
+("Combien de temps peut durer une garde à vue ?"). The English episode won its
+12,791 impressions by accident of matching a real query, `garde a vue in english`,
+and that traffic converted to almost nothing, which is why section 8 tells you not
+to translate for its own sake.
+
+So: keep the format, and title every piece for the search, not for the series.
+Section 6 is not optional polish; it is the half of this the guide got wrong.
 
 ---
 
@@ -231,21 +250,25 @@ Documents are of type `post`. Fill:
 | `contentfr.bodyfr` | French body |
 | `contenten.titleen` / `contenten.bodyen` | Only for pieces marked `*` in the list |
 | `slug` | One slug, shared by both languages. Set it deliberately; if left empty it is derived from the French title |
-| `series` | The guide name, exactly the same string on every episode of that guide |
-| `episode` | Number, for ordering |
+| `series` | **Pending the studio schema change (see the timetable).** The guide name, exactly the same string on every episode of that guide |
+| `episode` | **Pending the studio schema change.** Number, for ordering |
 | `relatedExpertise` | Reference to the practice area. Drives the on-page link and the structured data |
-| `author` | `Alice Ouaknine` |
+| `author` | `Alice Ouaknine` on the firm's own writing. On a press mention, the outlet or the journalist: the index prints this beside the date as the byline |
 | `publishedAt` | Publication date. Update it when the piece is revised |
 | `filter` | `fact` for the firm's own writing, `press` for a press mention |
-| `source` | Press mentions only: the URL of the original article |
+| `source` | Press mentions only: the URL of the original article. Filling it marks the document as a press mention whatever `filter` says, so a reference link for the firm's own writing belongs in the body, not here |
 
-`language` stays `all` for anything with both a French and an English body,
-otherwise `fr`.
+**What decides whether a piece appears in a language is whether that language's
+body is filled**, nothing else. `language` is a legacy field the publications
+section does not read; leave it as you find it.
 
-**Series names must match exactly.** The existing guide is stored under three
-different spellings ("Guide de survie en garde à vue", "Guide de survie à la
-garde à vue en France", and a variant of "Episode" without the accent), which is
-why the `series` field now exists. One string, copied, every time.
+**Until `series` and `episode` exist, the title carries them.** Write an episode
+title as `<Guide> - Épisode <n> : <subtitle>`; that is the shape the code parses
+to group a guide and to set the page heading. Use one spelling of the guide name
+every time: the existing guide is stored under three ("Guide de survie en garde à
+vue", "Guide de survie à la garde à vue en France", and a variant of "Episode"
+without the accent), which is what the fields will fix. When they land, the same
+exact-string rule applies to the field.
 
 ---
 
