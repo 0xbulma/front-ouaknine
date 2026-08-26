@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
+import { execFileSync } from 'node:child_process';
 
 import { slugify } from './slug.js';
 import { splitTitle, seriesOf, isPress } from './publication-fields.js';
@@ -126,4 +127,48 @@ test('isSafeExternal refuses anything it does not recognise', () => {
   assert.equal(isSafeExternal('data:text/html,x'), false);
   assert.equal(isSafeExternal(null), false);
   assert.equal(isSafeExternal(undefined), false);
+});
+
+// libs/site.js owns the origin behind every canonical, hreflang, sitemap loc and
+// @id, and it reads the environment at module scope — so this runs in a
+// subprocess with the variable set. Both cases below used to pass the guard: one
+// throws, the other parses to an opaque origin and is the silent half.
+test('a bad NEXT_PUBLIC_HOST falls back instead of poisoning every URL', () => {
+  const probe = `
+    import { SITE_URL, SITE_HOSTS } from './libs/site.js';
+    import { internalPath } from './libs/href.js';
+    process.stdout.write(JSON.stringify({
+      SITE_URL,
+      SITE_HOSTS,
+      js: internalPath('javascript:alert(1)'),
+    }));
+  `;
+
+  for (const bad of ['', 'ouaknine-avocats.com', 'mailto:a@b.c', 'javascript:1']) {
+    const out = execFileSync(process.execPath, ['--input-type=module', '-e', probe], {
+      env: { ...process.env, NEXT_PUBLIC_HOST: bad },
+      encoding: 'utf8',
+    });
+
+    const { SITE_URL, SITE_HOSTS, js } = JSON.parse(out);
+    assert.equal(SITE_URL, 'https://www.ouaknine-avocats.com', `SITE_URL for ${bad}`);
+    assert.deepEqual(SITE_HOSTS, ['ouaknine-avocats.com', 'www.ouaknine-avocats.com']);
+    assert.equal(js, null, `javascript: href must never be internal (${bad})`);
+  }
+});
+
+test('SITE_HOSTS is the same pair whichever spelling the env var uses', () => {
+  const probe = `
+    import { SITE_HOSTS } from './libs/site.js';
+    process.stdout.write(JSON.stringify(SITE_HOSTS));
+  `;
+
+  const pairs = ['https://ouaknine-avocats.com', 'https://www.ouaknine-avocats.com'].map(host =>
+    execFileSync(process.execPath, ['--input-type=module', '-e', probe], {
+      env: { ...process.env, NEXT_PUBLIC_HOST: host },
+      encoding: 'utf8',
+    })
+  );
+
+  assert.equal(pairs[0], pairs[1]);
 });

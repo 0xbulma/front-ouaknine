@@ -14,7 +14,17 @@ const FALLBACK = 'https://www.ouaknine-avocats.com';
 
 const parse = value => {
   try {
-    return new URL(value);
+    const url = new URL(value);
+
+    // Parseable is not enough. A non-special scheme parses perfectly well and
+    // yields the literal string "null" as its origin and an empty hostname, so
+    // the guard would pass and every canonical would read `null/contact`. Worse,
+    // an empty host is what every non-special scheme parses to, so a `javascript:`
+    // link would start resolving as a same-site path and walk straight past the
+    // external allowlist.
+    return url.protocol === 'https:' || url.protocol === 'http:'
+      ? url
+      : new URL(FALLBACK);
   } catch (err) {
     return new URL(FALLBACK);
   }
@@ -25,7 +35,14 @@ const url = parse(process.env.NEXT_PUBLIC_HOST || FALLBACK);
 // No trailing slash: every consumer concatenates a path onto it.
 export const SITE_URL = url.origin;
 
-// The two hosts this origin actually serves. A link to any other subdomain is
-// somewhere else, and `internalPath` returns a bare path, so calling one of them
-// internal would silently move the reader to the apex.
-export const SITE_HOSTS = [url.hostname, url.hostname.replace(/^www\./, '')];
+// The two spellings of this origin. Built from the apex rather than from
+// whichever form the env var happens to use, so the pair is the same either way:
+// deriving it as [hostname, hostname-without-www] gave two identical entries
+// when the var was already the apex, and quietly made every www URL external.
+//
+// Only these two. A link to any other subdomain is somewhere else, and
+// `internalPath` returns a bare path, so calling one internal would move the
+// reader to the apex without saying so.
+const apex = url.hostname.replace(/^www\./, '');
+
+export const SITE_HOSTS = [apex, `www.${apex}`];
