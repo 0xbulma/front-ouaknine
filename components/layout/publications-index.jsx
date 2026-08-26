@@ -46,11 +46,29 @@ function Row({ post, index, locale, copy }) {
   );
 }
 
-function Section({ label, children }) {
+// The three surfaces differ only in their heading and in where their row numbers
+// come from: a guide numbers by episode, the other two by position in the list.
+const byPosition = (post, index) => index + 1;
+
+const byEpisode = (post, index) => splitTitle(post).episode ?? index + 1;
+
+function Section({ label, posts, index = byPosition, locale, copy }) {
+  if (!posts.length) return null;
+
   return (
     <section className={classes.section}>
       <h2 className={classes.sectiontitle}>{label}</h2>
-      {children}
+      <ul className={classes.list}>
+        {posts.map((post, i) => (
+          <Row
+            key={post._id}
+            post={post}
+            index={index(post, i)}
+            locale={locale}
+            copy={copy}
+          />
+        ))}
+      </ul>
     </section>
   );
 }
@@ -67,52 +85,24 @@ function PublicationsIndex({ data, posts, seo }) {
 
       <div className={classes.container}>
         {guides.map(guide => (
-          <Section key={guide.series} label={guide.series}>
-            <ul className={classes.list}>
-              {guide.episodes.map((post, i) => (
-                <Row
-                  key={post._id}
-                  post={post}
-                  index={splitTitle(post).episode ?? i + 1}
-                  locale={locale}
-                  copy={copy}
-                />
-              ))}
-            </ul>
-          </Section>
+          <Section
+            key={guide.series}
+            label={guide.series}
+            posts={guide.episodes}
+            index={byEpisode}
+            locale={locale}
+            copy={copy}
+          />
         ))}
 
-        {articles.length > 0 && (
-          <Section label={copy.articles}>
-            <ul className={classes.list}>
-              {articles.map((post, i) => (
-                <Row
-                  key={post._id}
-                  post={post}
-                  index={i + 1}
-                  locale={locale}
-                  copy={copy}
-                />
-              ))}
-            </ul>
-          </Section>
-        )}
+        <Section
+          label={copy.articles}
+          posts={articles}
+          locale={locale}
+          copy={copy}
+        />
 
-        {press.length > 0 && (
-          <Section label={copy.press}>
-            <ul className={classes.list}>
-              {press.map((post, i) => (
-                <Row
-                  key={post._id}
-                  post={post}
-                  index={i + 1}
-                  locale={locale}
-                  copy={copy}
-                />
-              ))}
-            </ul>
-          </Section>
-        )}
+        <Section label={copy.press} posts={press} locale={locale} copy={copy} />
 
         {guides.length === 0 && articles.length === 0 && press.length === 0 && (
           <p className={classes.empty}>{copy.empty}</p>
