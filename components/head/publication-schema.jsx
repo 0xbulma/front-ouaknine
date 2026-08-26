@@ -5,6 +5,7 @@ import { HOST } from './head-page';
 import { CABINET_ID } from './site-schema';
 
 import { expertiseSlug, plainText } from '../../libs/expertise';
+import { isPress } from '../../libs/publications';
 import { withLocale } from '../../libs/localePath';
 import headerContent from '../../content/headerContent.json';
 
@@ -24,7 +25,7 @@ function PublicationSchema({ post, title, series }) {
   const label = url => nav.find(link => link.url === url)?.label;
 
   const url = localeUrl(locale, `/publications/${post.slug}`);
-  const isPress = post.filter === 'press';
+  const press = isPress(post);
 
   const crumb = (name, path, position) => ({
     '@type': 'ListItem',
@@ -34,7 +35,7 @@ function PublicationSchema({ post, title, series }) {
   });
 
   const article = {
-    '@type': isPress ? 'NewsArticle' : 'Article',
+    '@type': press ? 'NewsArticle' : 'Article',
     '@id': `${url}#article`,
     headline: title,
     name: post.title,
@@ -46,7 +47,7 @@ function PublicationSchema({ post, title, series }) {
     publisher: { '@id': CABINET_ID },
     isAccessibleForFree: true,
     ...(series ? { isPartOf: { '@type': 'CreativeWorkSeries', name: series } } : {}),
-    ...(isPress
+    ...(press
       ? { mentions: { '@id': CABINET_ID }, ...(post.source ? { sameAs: post.source } : {}) }
       : { author: { '@id': ALICE_ID } }),
     ...(post.field

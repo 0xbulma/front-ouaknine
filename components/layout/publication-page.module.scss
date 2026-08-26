@@ -84,10 +84,14 @@
 
   // An article outside a guide has no rail, so it is the only thing in the row.
   // Left to auto-placement it lands in the 17rem index column and sets its text
-  // at a quarter of the width; it takes the whole row instead. `.body` still
-  // caps at the measure, so the line length does not change.
+  // at a quarter of the width, so it takes the whole row instead.
+  //
+  // Capped at the measure with it: body copy stops at 62ch either way, and a
+  // row of hairlines running on for another 600px past the last word reads as
+  // text that failed to fill rather than as a column.
   &:only-child {
     grid-column: 1 / -1;
+    max-width: $measure;
   }
 }
 

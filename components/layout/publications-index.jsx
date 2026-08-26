@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 import HeadPage from '../head/head-page';
 import PageTitle from './page-title';
-import { groupPublications, splitTitle } from '../../libs/publications';
+import { groupPublications, isPress, splitTitle } from '../../libs/publications';
 import useLocale from '../../hooks/useLocale';
 import CONTENT from '../../content/publicationsContent.json';
 
@@ -31,7 +31,7 @@ function Row({ post, index, locale, copy }) {
             <h3 className={classes.title}>{title}</h3>
             <span className={classes.meta}>
               {formatDate(post.publishedAt, locale)}
-              {post.filter === 'press' && post.author
+              {isPress(post) && post.author
                 ? ` — ${post.author}`
                 : post.readingTime
                 ? ` — ${post.readingTime} ${copy.readingTime}`

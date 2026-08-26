@@ -5,7 +5,7 @@ import PublicationSchema from '../head/publication-schema';
 import PageTitle from './page-title';
 import RichText from '../ui/rich-text';
 
-import { splitTitle } from '../../libs/publications';
+import { isPress, splitTitle } from '../../libs/publications';
 import { expertiseSlug } from '../../libs/expertise';
 import useLocale from '../../hooks/useLocale';
 import CONTENT from '../../content/publicationsContent.json';
@@ -111,7 +111,7 @@ function PublicationPage({ post, series, seo }) {
               </a>
             )}
 
-            {post.filter !== 'press' && post.author && (
+            {!isPress(post) && post.author && (
               <div className={classes.author}>
                 <span className={classes.authorlabel}>{copy.author}</span>
                 <span className={classes.authorname}>{post.author}</span>

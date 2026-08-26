@@ -31,6 +31,17 @@ const projection = locale => {
 
 const PUBLISHED = '_type == "post" && dateTime(publishedAt) < dateTime(now())';
 
+// Whether the practice wrote this or was written about. `filter` is the field
+// the studio sets, and it is the answer when it is set; but it can be left
+// empty, and a document carrying the URL of someone else's article is not the
+// practice's own writing whatever the field says.
+//
+// Worth being sure about: this decides the section on the index, whether the
+// author block appears, and whether the structured data names Alice Ouaknine as
+// the author. Defaulting the other way publishes her as the author of Le Monde's
+// copy.
+export const isPress = post => post?.filter === 'press' || Boolean(post?.source);
+
 // Only what the reader can actually read. A French press cutting has no English
 // body, and listing it on the English site would be a link to an empty page.
 const readable = post => Boolean(post?.body?.length);
@@ -95,7 +106,7 @@ export const seriesOf = (posts, series) =>
 // Three surfaces on the index: the guides, grouped; the standalone articles;
 // and what the press has written. `filter` already carries the last distinction.
 export const groupPublications = posts => {
-  const written = posts.filter(post => post.filter !== 'press');
+  const written = posts.filter(post => !isPress(post));
 
   const guides = [];
   const articles = [];
@@ -114,5 +125,5 @@ export const groupPublications = posts => {
     guide.episodes = seriesOf(guide.episodes, guide.series).map(e => e.post);
   });
 
-  return { guides, articles, press: posts.filter(p => p.filter === 'press') };
+  return { guides, articles, press: posts.filter(isPress) };
 };
