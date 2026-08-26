@@ -13,9 +13,14 @@ import {
   iskaMarkdown,
   legalMarkdown,
   notFoundMarkdown,
+  publicationMarkdown,
+  publicationsIndexMarkdown,
   unavailableMarkdown,
 } from '../../libs/page-markdown.mjs';
 import { fetchContact, fetchHome, fetchLegal } from '../../libs/page-content';
+import { groupPublications, seriesOf, splitTitle } from '../../libs/publication-fields';
+import { fetchPublicationBody, fetchPublications } from '../../libs/publications';
+import publicationsContent from '../../content/publicationsContent.json';
 import { routePath } from '../../libs/site-url.mjs';
 
 // The text/markdown representation of every page. Reached through the
@@ -50,6 +55,32 @@ const renderDoc = async (fetcher, markdown, ctx) => {
   return data ? markdown(data, ctx) : null;
 };
 
+// The index and one publication share a fetch: the body-free list is what the
+// index renders and what resolves a slug to the id the body query needs.
+const renderPublications = async (slug, ctx) => {
+  const posts = await fetchPublications(ctx.locale);
+  if (posts.length === 0) return null;
+
+  if (!slug) {
+    const copy = publicationsContent[ctx.locale] ?? publicationsContent.fr;
+    return publicationsIndexMarkdown(
+      { title: copy.title, descriptionseo: copy.description },
+      { ...ctx, groups: groupPublications(posts) }
+    );
+  }
+
+  const post = posts.find(item => item.slug === slug);
+  if (!post) return null;
+
+  const { series, title } = splitTitle(post);
+  const body = await fetchPublicationBody(ctx.locale, post._id);
+
+  return publicationMarkdown(
+    { ...post, title, series },
+    { ...ctx, body, series: series ? seriesOf(posts, series).map(e => e.post) : [] }
+  );
+};
+
 const render = async (path, ctx) => {
   if (path === '/') return renderDoc(fetchHome, homeMarkdown, ctx);
   if (path === '/about') {
@@ -63,6 +94,10 @@ const render = async (path, ctx) => {
   if (path === '/iska') return iskaMarkdown(iskaContent[ctx.locale], ctx);
 
   if (path === '/expertise') return renderExpertise(null, ctx);
+  if (path === '/publications') return renderPublications(null, ctx);
+
+  const publication = path.match(/^\/publications\/([^/]+)$/);
+  if (publication) return renderPublications(publication[1], ctx);
 
   const field = path.match(/^\/expertise\/([^/]+)$/);
   if (field) return renderExpertise(field[1], ctx);

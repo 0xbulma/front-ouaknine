@@ -6,6 +6,8 @@ import { sitePages } from './site-pages.mjs';
 
 const labels = {
   homeNote: 'accueil',
+  publicationsLabel: 'Publications',
+  publicationsNote: 'les écrits du cabinet',
   aboutLabel: 'Le cabinet',
   aboutNote: 'le cabinet',
   expertiseNote: 'compétences',
@@ -25,6 +27,7 @@ const labelsWithFallbacks = {
   footerLead: 'Cabinet Ouaknine',
   expertiseLabel: 'Expertise',
   contactLabel: 'Contact',
+  publicationsLabel: 'Publications',
 };
 
 const args = { labels, nav, iskaTitle: 'Réseau ISKA', legalLabel: 'Mentions Légales' };
@@ -34,7 +37,7 @@ test('every public page is listed once, with a label, a note and an absolute URL
 
   assert.deepEqual(
     pages.map(page => page.path),
-    ['/', '/about', '/expertise', '/contact', '/iska', '/legal']
+    ['/', '/about', '/expertise', '/publications', '/contact', '/iska', '/legal']
   );
 
   for (const page of pages) {
@@ -49,7 +52,7 @@ test('the English edition carries the /en prefix on every entry', () => {
 
   assert.equal(pages[0].url, `${HOST}/en`);
   assert.equal(pages[1].url, `${HOST}/en/about`);
-  assert.equal(pages[5].url, `${HOST}/en/legal`);
+  assert.equal(pages[6].url, `${HOST}/en/legal`);
 });
 
 test('nav labels are resolved by url, so reordering the nav cannot relabel a page', () => {
@@ -73,7 +76,7 @@ test('a nav missing an entry falls back rather than throwing', () => {
     nav: [{ label: 'Le Cabinet', url: '/' }],
   });
 
-  assert.equal(pages.length, 6);
+  assert.equal(pages.length, 7);
   assert.equal(pages.find(page => page.path === '/expertise').label, 'Expertise');
   assert.equal(pages.find(page => page.path === '/contact').label, 'Contact');
 });
@@ -118,7 +121,9 @@ test('the real agent copy fills every label and note, in both languages', async 
     for (const key of [
       'summary', 'whenToUse', 'whenToUseLead', 'whenToUseNote', 'pages',
       'sitemapNote', 'englishNote', 'otherLocaleLabel', 'expertiseLabel',
-      'contactLabel', 'notFoundTitle', 'notFoundBody', 'unavailableTitle',
+      'contactLabel', 'publicationsLabel', 'publicationsNote',
+      'publicationsArticles', 'publicationsPress',
+      'notFoundTitle', 'notFoundBody', 'unavailableTitle',
       'unavailableBody', 'footerLead',
     ]) {
       assert.equal(typeof labels[key], 'string', `${locale} ${key}`);

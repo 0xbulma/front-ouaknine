@@ -206,6 +206,8 @@ Rules worth keeping:
   publish), `pages/api/sitemap.js`
   (`PAGES`), `content/404Content.json` (`links`) and the `render` match in
   `pages/api/markdown.js`. `content/agentContent.json` needs its note.
+  `/publications` is the worked example: its index and every post answer in
+  markdown, an episode carrying the rest of its guide the way the page does.
 - The JSON-LD lives in `components/head/site-schema.jsx` (published once per
   page from the layout) and `expertise-schema.jsx`, fed by
   `content/organizationContent.json` and `content/footerContent.json`. Contact

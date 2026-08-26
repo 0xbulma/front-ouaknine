@@ -119,6 +119,52 @@ export const iskaMarkdown = (content, ctx) =>
     ],
   });
 
+// The publications index: the guides grouped by series, the standalone
+// articles, then what the press has written. `groups` is what
+// `groupPublications` returns, already shaped by the caller.
+export const publicationsIndexMarkdown = (data, ctx) => {
+  const { guides = [], articles = [], press = [] } = ctx.groups ?? {};
+
+  const link = post => ({
+    label: post.title?.trim(),
+    url: pageUrl(ctx.locale, `/publications/${post.slug}`),
+  });
+
+  return document(ctx, {
+    path: '/publications',
+    title: data.title?.trim() ?? '',
+    lead: data.descriptionseo,
+    sections: [
+      ...guides.map(guide =>
+        section(guide.series, linkList(guide.episodes.map(link)))
+      ),
+      section(ctx.labels.publicationsArticles, linkList(articles.map(link))),
+      section(ctx.labels.publicationsPress, linkList(press.map(link))),
+    ],
+  });
+};
+
+// One publication. An episode carries the rest of its guide beneath it, the way
+// the page does, so an agent reading one part can reach the others.
+export const publicationMarkdown = (post, ctx) =>
+  document(ctx, {
+    path: `/publications/${post.slug}`,
+    title: post.title?.trim() ?? '',
+    lead: post.source ? `${ctx.labels.publicationsPress} — ${post.source}` : '',
+    sections: [
+      toMarkdown(ctx.body),
+      section(
+        ctx.series?.length > 1 ? post.series : '',
+        linkList(
+          (ctx.series ?? []).map(item => ({
+            label: item.title?.trim(),
+            url: pageUrl(ctx.locale, `/publications/${item.slug}`),
+          }))
+        )
+      ),
+    ],
+  });
+
 // Served with a 503: the page exists, the CMS behind it does not answer. Kept
 // apart from the 404 document, whose body says the URL is wrong — an agent
 // reading that during an outage would drop the URL from its index.

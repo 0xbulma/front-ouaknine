@@ -27,7 +27,11 @@
     "contactLabel": "Contact",
     "unavailableTitle": "Site temporairement indisponible",
     "unavailableBody": "Cette page existe, mais le contenu ne peut pas être chargé pour le moment. Réessayez dans quelques minutes plutôt que de considérer l’URL comme invalide.",
-    "otherLocaleLabel": "English"
+    "otherLocaleLabel": "English",
+    "publicationsLabel": "Publications",
+    "publicationsNote": "les écrits du cabinet, dont le Guide de survie en garde à vue, et les articles de presse qui le citent",
+    "publicationsArticles": "Articles",
+    "publicationsPress": "Dans la presse"
   },
   "en": {
     "summary": "Criminal defence law firm at 17 rue de Douai, Paris 9e. Alice Ouaknine is admitted to the Paris and California bars and practises in both French and English.",
@@ -57,6 +61,10 @@
     "contactLabel": "Contact",
     "unavailableTitle": "Temporarily unavailable",
     "unavailableBody": "This page exists, but its content cannot be loaded right now. Retry in a few minutes rather than treating the URL as invalid.",
-    "otherLocaleLabel": "Français"
+    "otherLocaleLabel": "Français",
+    "publicationsLabel": "Publications",
+    "publicationsNote": "the firm’s own writing, including the police-custody survival guide, and the press articles that quote it",
+    "publicationsArticles": "Articles",
+    "publicationsPress": "In the press"
   }
 }

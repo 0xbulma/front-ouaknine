@@ -16,6 +16,7 @@ export const sitePages = (locale, { labels, nav, iskaTitle, legalLabel }) => {
     { label: navLabel('/', labels.footerLead), path: '/', note: labels.homeNote },
     { label: labels.aboutLabel, path: '/about', note: labels.aboutNote },
     { label: navLabel('/expertise', labels.expertiseLabel), path: '/expertise', note: labels.expertiseNote },
+    { label: navLabel('/publications', labels.publicationsLabel), path: '/publications', note: labels.publicationsNote },
     { label: navLabel('/contact', labels.contactLabel), path: '/contact', note: labels.contactNote },
     { label: iskaTitle, path: '/iska', note: labels.iskaNote },
     { label: legalLabel, path: '/legal', note: labels.legalNote },
