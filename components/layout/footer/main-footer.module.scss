@@ -30,10 +30,17 @@
 
 .links {
   display: flex;
+  // Four entries do not fit on one line at 375px, so the row wraps rather than
+  // shrinking the labels. Space separates them, not a glyph: a `|` drawn either
+  // as its own flex item or as generated content lands at a line edge on every
+  // phone width, and an orphaned rule reads as a mistake on a page made of
+  // nothing but type, rules and space. Generated content also joins the link's
+  // accessible name, so the pipes were being announced.
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   font-size: 0.9rem;
-  gap: 1rem;
+  gap: $space-3;
   color: $ink-muted;
   transition: all .4s;
 }

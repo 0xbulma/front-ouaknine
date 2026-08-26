@@ -1,14 +1,11 @@
 import { useRouter } from 'next/router';
 
 import JsonLd from './json-ld';
-import { HOST } from './head-page';
 import { CABINET_ID } from './site-schema';
 
-import { expertiseSlug, plainText } from '../../libs/expertise';
-import { withLocale } from '../../libs/localePath';
+import { plainText } from '../../libs/expertise';
+import { pageUrl } from '../../libs/site-url.mjs';
 import headerContent from '../../content/headerContent.json';
-
-const localeUrl = (locale, path) => `${HOST}${withLocale(locale, path)}`;
 
 // A field of expertise is a Service the practice provides, not a loose page.
 // `current` marks the one being read, so the field pages describe themselves
@@ -19,16 +16,16 @@ function ExpertiseSchema({ items, current }) {
   const sectionName = nav.find(link => link.url === '/expertise')?.label ?? 'Expertise';
 
   const field = current
-    ? items.find(item => expertiseSlug(item.title) === current)
+    ? items.find(item => item.slug === current)
     : null;
 
   const service = item => ({
     '@type': 'Service',
-    '@id': `${localeUrl(locale, `/expertise/${expertiseSlug(item.title)}`)}#service`,
+    '@id': `${pageUrl(locale, `/expertise/${item.slug}`)}#service`,
     name: item.title?.trim(),
     description: plainText(item.description, 300),
     serviceType: item.title?.trim(),
-    url: localeUrl(locale, `/expertise/${expertiseSlug(item.title)}`),
+    url: pageUrl(locale, `/expertise/${item.slug}`),
     provider: { '@id': CABINET_ID },
     areaServed: { '@type': 'City', name: 'Paris' },
     availableLanguage: ['fr', 'en'],
@@ -38,7 +35,7 @@ function ExpertiseSchema({ items, current }) {
     '@type': 'ListItem',
     position,
     name,
-    item: localeUrl(locale, path),
+    item: pageUrl(locale, path),
   });
 
   const breadcrumb = {

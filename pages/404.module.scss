@@ -3,12 +3,55 @@
 .container{
   @include desktop-container;
   display: flex;
-  align-items: center;
+  flex-direction: column;
   justify-content: center;
-  height: calc(100vh - 80px);
+  min-height: calc(100vh - 80px);
+  padding: $space-6 0;
+
+  // `100vh` on a phone measures the URL-bar-expanded viewport, so a centred
+  // block taller than the visible area sits partly off-screen.
+  @media (max-width: $breakpoint-sm){
+    min-height: calc(100svh - 80px);
+  }
 }
 
 .title{
   font-size: $fs-h2;
   line-height: $lh-heading;
+  margin: 0;
+}
+
+.lead{
+  @include micro;
+  color: $ink-muted;
+  margin: $space-4 0 0 0;
+}
+
+// The same row shape as the practice list on the home page and the contact
+// details: the value at reading size, a rule beneath, colour on hover and
+// nothing else. Not `micro` — that is the gutter label's style, and it would
+// also uppercase `llms.txt` into a filename that does not exist.
+.nav{
+  width: 100%;
+}
+
+.list{
+  width: 100%;
+  margin: $space-4 0 0 0;
+  border-top: 1px solid $rule;
+}
+
+.link{
+  font-size: 1.0625rem;
+  letter-spacing: 0.01em;
+  display: block;
+  padding: $space-2 0;
+  color: $ink;
+  border-bottom: 1px solid $rule;
+  transition: color $dur-fast $ease, border-color $dur-fast $ease;
+
+  &:hover{
+    color: $paper-raised;
+    border-color: $rule-strong;
+  }
 }

@@ -1,5 +1,6 @@
 import RichText from '../components/ui/rich-text';
-import clientApi from '../libs/clientApi';
+import { fetchLegal } from '../libs/page-content';
+import { staticPageProps } from '../libs/static-page-props.mjs';
 import classes from './legal.module.scss';
 import useLocale from '../hooks/useLocale';
 
@@ -34,19 +35,6 @@ function Legal({ data }) {
   );
 }
 
-export async function getStaticProps(ctx) {
-  const locale = ctx.locale;
-
-  try {
-    const content = await clientApi.fetch(
-      `*[_type == "legal" && language == "${locale}"]`
-    );
-    return { props: { data: content?.length && content[0] }, revalidate: 10  };
-  } catch (err) {
-    return {
-      notFound: true,
-    }
-  }
-}
+export const getStaticProps = staticPageProps(fetchLegal, '/legal');
 
 export default Legal;

@@ -7,8 +7,8 @@ that look small are usually design decisions.
 ## The project
 
 Marketing site for **Alice Ouaknine**, a criminal-law practice in Paris (17 rue
-de Douai, 75009). Bilingual `fr` / `en`. Six pages: home, expertise,
-publications, contact, iska, legal, plus a 404.
+de Douai, 75009). Bilingual `fr` / `en`. Seven pages: home, about, expertise,
+publications, contact, ISKA, legal, plus a 404.
 
 | | |
 |---|---|
@@ -38,12 +38,25 @@ long time nothing in it was linted at all; the `lint` script now passes
 `--dir pages --dir components --dir libs --dir hooks --dir context`. Adding a
 top-level directory means adding it there too.
 
-**`yarn test` covers the pure derivations** in `libs/slug.js`, `libs/href.js` and
-`libs/publication-fields.js`: the functions that turn a title into every URL,
-hreflang and `@id` on the site, and that decide whether a CMS-authored link is
-same-site or hostile. They fail silently into a 404 or an unsafe anchor, and one
-of them already broke once. Node's own runner, no dependencies, no config. There
-is no component or end-to-end suite.
+**`yarn test` covers the pure derivations.** `libs/slug.js`, `libs/href.js` and
+`libs/publication-fields.js` turn a title into every URL, hreflang and `@id` on
+the site, and decide whether a CMS-authored link is same-site or hostile; they
+fail silently into a 404 or an unsafe anchor, and one of them already broke
+once. The agent surface adds the negotiation (`libs/accept.mjs`), the routing
+decision (`libs/middleware-route.mjs`), the markdown rendering, the page list,
+the URL spelling and llms.txt. Node's own runner, no dependencies, no config.
+
+Node 24 detects module syntax, so a `.mjs` test imports a plain `.js` module
+fine — the extension is not what makes something testable. What does is not
+importing the Sanity client or React, and writing the import with its extension
+(`'./slug.js'`, not `'./slug'`, which only webpack resolves). A bare
+`import x from './foo.json'` still needs `with { type: 'json' }` under Node,
+which is why `libs/agent-context.js` keeps the JSON imports and
+`libs/site-pages.mjs` stays pure.
+
+The JSON-LD has no unit test; it lives in JSX components and is checked with
+curl. Components and routes have none either — check those with curl against
+`yarn build && yarn start`. There is no end-to-end suite.
 
 ## Local development: read this before you try to run it
 
@@ -63,7 +76,9 @@ const block = (k, t) => ({ _type: 'block', _key: k, style: 'normal',
   children: [{ _type: 'span', _key: k + 's', text: t, marks: [] }] });
 const HOME = { title1: 'Alice Ouaknine', title2: 'Barreaux de Paris et de Californie',
   tag1: '…', link1: 'e1', sectionTitle: 'Le cabinet', body: [block('b1', '…')] };
-const clientApi = { fetch: async q => (q.includes('"home"') ? [HOME] : []) };
+// The queries in libs/page-content.js and libs/expertise.js project `[0]`, so
+// a fetch resolves to a document or to null — not to an array.
+const clientApi = { fetch: async q => (q.includes('"home"') ? HOME : null) };
 export default clientApi;
 ```
 
@@ -107,8 +122,12 @@ déontologie constraints, the full article list and the release schedule.
 
 ## Content: two sources, know which is which
 
-**Sanity** (`libs/clientApi.js`, GROQ in each page's `getStaticProps`) holds page
-copy — titles, body rich text, the expertise list. Editable by the client.
+**Sanity** (`libs/clientApi.js`) holds page copy — titles, body rich text, the
+expertise list. Editable by the client. No page component contains GROQ: the
+queries live in `libs/page-content.js` and `libs/expertise.js`, which every
+page's `getStaticProps` and the markdown route both call, so the two
+representations of a page cannot drift. The one other query is inline in
+`pages/api/sitemap.js`, which asks the CMS only which field slugs exist today.
 
 **`content/*.json`** holds UI strings and contact facts, keyed by locale.
 `footerContent.json` is the canonical store for the address, phone, mobile,
@@ -124,8 +143,76 @@ should be cleaned up there:
 `mainImage`, `imageTitle` (all pages), `titleform`, `subform`, `titlebox`,
 `body` (contact), `white`, `subtitle`.
 
-The home portrait is a **hardcoded local import** (`pages/index.js`), not CMS
-driven — swapping it needs a developer.
+The portrait is a **hardcoded local import**
+(`components/layout/firm-section.jsx`, the block the home page and `/about`
+share), not CMS driven — swapping it needs a developer.
+
+## The agent surface
+
+Every page answers in HTML to a browser and in markdown to an agent, from the
+same URL. `middleware.js` is the whole routing shim:
+
+| Request | Response |
+|---|---|
+| `Accept: text/markdown` on any page | `200 text/markdown`, rewritten to `pages/api/markdown.js` |
+| `/contact.md`, `/en/contact.md`, `/index.md` | the same, whatever the Accept header says |
+| anything that resolves to markdown carrying a query string — a `.md` URL, `/llms.txt`, or any page under `Accept: text/markdown` | `308` to the same path without it, so `?bust=n` cannot mint a CDN key per visit. The HTML branch keeps its query, where a campaign parameter is legitimate |
+| `Accept` that rules out both types | `406` from `pages/api/not-acceptable.js` |
+| a method other than `GET` or `HEAD` on a generated route | `405`. No CDN caches a non-GET, so it would otherwise reach the CMS on every request |
+| anything else | the HTML page, plus `Vary: Accept` and a `Link: rel="alternate"` |
+| a path that does not exist | `404` either way, and the markdown body lists the site |
+| `/llms.txt`, `/en/llms.txt` | generated by `pages/api/llms.js`, routed by the middleware |
+| `/sitemap.xml` | generated by `pages/api/sitemap.js`, routed by a `next.config.js` rewrite. Never reaches the middleware, so it bounds its own key space: an unexpected parameter is a `404`, not a `308` |
+
+Rules worth keeping:
+
+- **The middleware decision is in `libs/middleware-route.mjs`**, not in
+  `middleware.js`, which only turns the returned tag into a `NextResponse`.
+  `node --test` cannot import a middleware file, and what keeps breaking is the
+  branch *ordering* and which branch sets `Vary` — one table-driven test covers
+  both.
+- **Parse the Accept header, never `includes('markdown')`.** `libs/accept.mjs`
+  implements RFC 9110 §12.5.1 (q-values, specificity, `q=0`); its tests are the
+  table published at acceptmarkdown.com. A real Chrome header contains `*/*` and
+  must resolve to HTML.
+- **`Vary: Accept` on both branches.** Without it a CDN serves whichever variant
+  it cached first to everyone.
+- **Middleware cannot return a body** in Next 12; that is a build error, not a
+  warning. Anything with a body is an API route it rewrites to.
+- **Rewrites to an API route are built from `req.nextUrl.origin`** plus the
+  route path, not from `nextUrl.clone()`, which carries the locale and would
+  produce `/en/api/…`. The destination is the origin plus a constant route
+  path, so nothing from the incoming URL reaches the route except the
+  parameters middleware sets on it.
+- **The CDN keys on the incoming URL, not the rewritten one**, so keeping the
+  query out of the rewrite is not what bounds the key space — the `redirect()`
+  branch in `libs/middleware-route.mjs` is. A markdown request carrying a query is 308'd onto the bare path, which
+  collapses `?bust=n` onto one cacheable URL. It has to re-attach the locale:
+  `nextUrl.pathname` arrives stripped, so building the target from it alone
+  permanently redirects the English edition of a page to the French one.
+- `locale: false` on a `next.config.js` rewrite silently stops it matching under
+  i18n. `/sitemap.xml` is one rewrite without it; `/llms.txt` cannot be one at
+  all, because it has a French and an English edition and only middleware knows
+  which was asked for.
+- The markdown of a page and its HTML come from the same fetchers
+  (`libs/page-content.js`, `libs/expertise.js`), so they cannot drift.
+- **Every URL the site publishes comes from `libs/site-url.mjs`** (`HOST`,
+  `withLocale`, `pageUrl`, `markdownSibling`, `markdownUrl`, `routePath`): a
+  canonical, an hreflang, a sitemap entry and a markdown sibling all have to
+  agree, so there is one definition of how French goes unprefixed and English
+  carries `/en`.
+- **A new page has to be registered in four places**: `libs/site-pages.mjs`
+  (the list llms.txt and the `## Pages` section of every page's markdown
+  publish), `pages/api/sitemap.js`
+  (`PAGES`), `content/404Content.json` (`links`) and the `render` match in
+  `pages/api/markdown.js`. `content/agentContent.json` needs its note.
+- The JSON-LD lives in `components/head/site-schema.jsx` (published once per
+  page from the layout) and `expertise-schema.jsx`, fed by
+  `content/organizationContent.json` and `content/footerContent.json`. Contact
+  facts have one home; do not retype the address into a schema block.
+- `content/agentContent.json` holds the agent-facing copy: the llms.txt summary,
+  the "when to use" guidance, the per-page notes. It is the one file to edit when
+  that wording changes.
 
 ## Design system
 
@@ -232,8 +319,16 @@ call button). Adding a fourth should need a reason.
 - Breakpoints: `$breakpoint-sm` 768, `$breakpoint-md` 992, `$breakpoint-lg` 1200.
 - Header is `position: sticky`; anchor targets need `scroll-margin-top`.
 - French copy: use typographic apostrophes and respect the `(0)` trunk prefix in
-  phone numbers — it is displayed but must be stripped from `tel:` hrefs, or the
-  number will not dial.
+  phone numbers. It is displayed but must be stripped from `tel:` hrefs, or the
+  number will not dial, so `content/footerContent.json` stores both forms:
+  `phone` / `mobilePhone` are dial-safe, and the displayed strings live in
+  `fr.address` / `en.address` for the landline and `fr.mobile` / `en.mobile`
+  for the mobile. llms.txt hands agents the dial-safe form.
+- New pure logic goes in `libs/*.mjs` with a colocated `*.test.mjs`. Anything
+  that needs React, the Sanity client, or a bare `import … from '*.json'` stays
+  in `.js` / `.jsx` and is verified with curl or a screenshot — webpack resolves
+  a bare JSON import, Node ESM would need `with { type: 'json' }`, which is why
+  `libs/agent-context.js` is `.js` and keeps `libs/site-pages.mjs` pure.
 
 ## Known debt
 

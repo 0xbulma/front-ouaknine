@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 
 import JsonLd from './json-ld';
-import { HOST } from './head-page';
+import { HOST } from '../../libs/site-url.mjs';
 
 import footerContent from '../../content/footerContent.json';
 import organizationContent from '../../content/organizationContent.json';
@@ -28,7 +28,10 @@ function SiteSchema() {
     '@context': 'https://schema.org',
     '@graph': [
       {
-        '@type': ['LegalService', 'Attorney'],
+        // Attorney is a LocalBusiness and so an Organization already; the
+        // third member says so outright, for the readers that match on the
+        // literal type rather than resolving the hierarchy.
+        '@type': ['LegalService', 'Attorney', 'Organization'],
         '@id': CABINET_ID,
         name: org.name,
         description: org.description,
@@ -39,6 +42,16 @@ function SiteSchema() {
         geo: { '@type': 'GeoCoordinates', ...footerContent.geo },
         hasMap: footerContent.mapsUrl,
         areaServed: { '@type': 'City', name: org.areaServed },
+        // The same two facts as above, in the shape an assistant asked "how do
+        // I reach this firm" looks for.
+        contactPoint: {
+          '@type': 'ContactPoint',
+          contactType: 'customer service',
+          telephone: footerContent.phone,
+          email,
+          areaServed: footerContent.postalAddress.addressCountry,
+          availableLanguage: ['French', 'English'],
+        },
         availableLanguage: ['fr', 'en'],
         founder: { '@id': ALICE_ID },
         employee: { '@id': ALICE_ID },

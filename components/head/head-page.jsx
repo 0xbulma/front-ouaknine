@@ -2,18 +2,17 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 
 import { localeHref } from '../../libs/localePath';
+import { HOST, markdownSibling } from '../../libs/site-url.mjs';
 
-import { SITE_URL } from '../../libs/site';
-
-// Re-exported: this was the third copy of the same expression, and the copies
-// disagreed about whether a blank env var counts as missing.
-export const HOST = SITE_URL;
+// Re-exported for the schema components that already reach for it here. The
+// origin itself is parsed once in libs/site.js.
+export { HOST };
 
 const OG_LOCALE = { fr: 'fr_FR', en: 'en_US' };
 
 const SHARE_IMAGE = `${HOST}/images/banner-meta.png`;
 
-function HeadPage({ title, description, alternatePaths }) {
+function HeadPage({ title, description, alternatePaths, noindex }) {
   const router = useRouter();
   const { locale, locales } = router;
 
@@ -43,27 +42,49 @@ function HeadPage({ title, description, alternatePaths }) {
       <title>{title}</title>
       <meta name='description' content={description} />
       <meta name='author' content='Alice Ouaknine' />
+      {noindex && <meta name='robots' content='noindex, follow' />}
 
-      {alternates.map(([target, path]) => (
-        <link
-          // `next/head` de-dupes every child against one shared key namespace,
-          // so a bare locale here would collide with og:locale:alternate below
-          // and silently drop one of the two annotations.
-          key={`hreflang-${target}`}
-          rel='alternate'
-          hrefLang={target}
-          href={`${HOST}${path}`}
-        />
-      ))}
-      {french && (
+      {/* A noindex page publishes a title, a description and the robots meta
+          and nothing else: an hreflang pointing at a URL that itself answers
+          404 is reported as an error, and a self-canonical beside noindex is a
+          contradictory pair of signals. */}
+      {!noindex &&
+        alternates.map(([target, path]) => (
+          <link
+            // `next/head` de-dupes every child against one shared key namespace,
+            // so a bare locale here would collide with og:locale:alternate below
+            // and silently drop one of the two annotations.
+            key={`hreflang-${target}`}
+            rel='alternate'
+            hrefLang={target}
+            href={`${HOST}${path}`}
+          />
+        ))}
+      {!noindex && french && (
         <link rel='alternate' hrefLang='x-default' href={`${HOST}${french}`} />
+      )}
+
+      {/* The markdown representation of this page, for agent clients.
+          https://acceptmarkdown.com
+
+          Built from the path actually requested, not from `pathFor`: the
+          expertise hub canonicalises onto its first field, and pointing the
+          markdown link there too would name a different document from the one
+          the middleware advertises and serves for this URL. Omitted under
+          `noindex`, where the requested path is the 404 route itself. */}
+      {!noindex && (
+        <link
+          rel='alternate'
+          type='text/markdown'
+          href={`${HOST}${markdownSibling(localeHref(router, locale))}`}
+        />
       )}
 
       <meta property='og:title' content={title} />
       <meta property='og:description' content={description} />
       <meta property='og:type' content='website' />
       <meta property='og:site_name' content='Cabinet Ouaknine' />
-      <meta property='og:url' content={canonical} />
+      {!noindex && <meta property='og:url' content={canonical} />}
       <meta property='og:locale' content={OG_LOCALE[locale]} />
       {locales
         .filter(target => target !== locale)
@@ -82,7 +103,7 @@ function HeadPage({ title, description, alternatePaths }) {
       <meta name='twitter:description' content={description} />
       <meta name='twitter:image' content={SHARE_IMAGE} />
 
-      <link rel='canonical' href={canonical} />
+      {!noindex && <link rel='canonical' href={canonical} />}
       <link rel='icon' href='/favicon.ico' />
 
       <link

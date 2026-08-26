@@ -1,9 +1,10 @@
 import clientApi from './clientApi';
-import { slugify } from './slug';
+import { normaliseFields } from './expertise-list.mjs';
 
 // The CMS has no slug field on an expertise item, so the URL is derived from
-// the title, stable for as long as the title is.
-export const expertiseSlug = slugify;
+// the title, stable for as long as the title is. `slugify` is the one
+// derivation behind every URL on the site.
+export { slugify as expertiseSlug } from './slug';
 
 const EXPERTISE_QUERY = `*[_type == "expertise" && language == $locale][0]{
   titleseo,
@@ -12,8 +13,14 @@ const EXPERTISE_QUERY = `*[_type == "expertise" && language == $locale][0]{
   "expertiseList": expertiseList[]->
 }`;
 
-export const fetchExpertise = locale =>
-  clientApi.fetch(EXPERTISE_QUERY, { locale: locale ?? 'fr' });
+// Normalised once, where every consumer reads the list. The shaping is in
+// libs/expertise-list.mjs, which is pure and therefore tested.
+export const fetchExpertise = async locale => {
+  const doc = await clientApi.fetch(EXPERTISE_QUERY, { locale: locale ?? 'fr' });
+  if (!doc) return doc;
+
+  return { ...doc, expertiseList: normaliseFields(doc.expertiseList) };
+};
 
 // Portable text down to one line, for a meta description.
 export const plainText = (blocks, limit = 160) => {

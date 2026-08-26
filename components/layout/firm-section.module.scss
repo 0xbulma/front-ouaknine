@@ -1,0 +1,64 @@
+@use '../../styles/variables' as *;
+
+.bottom {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: $space-6;
+  padding-top: $space-7;
+  @include desktop-container;
+}
+
+.portrait {
+  flex: 0 0 34%;
+}
+
+.desc {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.descinner {
+  width: 100%;
+  font-size: 1rem;
+}
+
+.descinner p {
+  max-width: $measure;
+  color: $ink-muted;
+}
+
+.bottomtitle {
+  @include serif;
+  margin-top: 0;
+  margin-bottom: $space-4;
+  font-size: $fs-section;
+  line-height: $lh-title;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: $ink;
+}
+
+@media (max-width: $breakpoint-md) {
+  .bottom {
+    padding-top: $space-5;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: $space-5;
+  }
+
+  .portrait {
+    flex: 0 0 auto;
+    width: 62%;
+  }
+}
+
+@media (max-width: $breakpoint-sm) {
+  .portrait {
+    width: 78%;
+  }
+}

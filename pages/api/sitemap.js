@@ -2,16 +2,12 @@ import clientApi from '../../libs/clientApi';
 import { expertiseSlug } from '../../libs/expertise';
 import EXPERTISE_PAIRS from '../../libs/expertisePairs';
 import { fetchPublications } from '../../libs/publications';
-import { withLocale } from '../../libs/localePath';
-import { SITE_URL } from '../../libs/site';
-
-const HOST = SITE_URL;
-
-const LOCALES = ['fr', 'en'];
+import { methodNotAllowed, unexpectedQuery } from '../../libs/query-guard.mjs';
+import { HOST, LOCALES, withLocale } from '../../libs/site-url.mjs';
 
 // No '/expertise': it renders the first field and canonicalises onto it, so
 // listing it here would ask Google to index a URL the page disowns.
-const PAGES = ['/', '/contact', '/iska', '/legal', '/publications'];
+const PAGES = ['/', '/about', '/contact', '/iska', '/legal', '/publications'];
 
 const escape = value =>
   value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -74,6 +70,24 @@ const entry = (locale, path, alternates, lastmod) => `
   </url>`;
 
 export default async function handler(req, res) {
+  if (methodNotAllowed(req.method)) {
+    res.statusCode = 405;
+    res.setHeader('Allow', 'GET, HEAD');
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.end('');
+    return;
+  }
+
+  // The rewrite carries a query string through from /sitemap.xml, and the CDN
+  // keys on it, so `?bust=n` would mint a fresh key and a fresh CMS query each
+  // time. This route takes no parameters at all.
+  if (unexpectedQuery(req.query, [])) {
+    res.statusCode = 404;
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.end('');
+    return;
+  }
+
   const lastmod = new Date().toISOString().slice(0, 10);
 
   // Every page but a field of expertise is the same path in both languages.
