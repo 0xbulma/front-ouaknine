@@ -58,6 +58,30 @@ function PublicationPage({ post, series, seo }) {
       ? series[position + 1]
       : null;
 
+  const meta = (
+    <div className={classes.meta}>
+      {seriesName && (
+        <span className={classes.metaitem}>
+          {seriesName}
+          {episode ? ` — ${copy.episode} ${episode}` : ''}
+        </span>
+      )}
+      <span className={classes.metaitem}>
+        {formatDate(post.publishedAt, locale)}
+      </span>
+      {post.readingTime > 0 && (
+        <span className={classes.metaitem}>
+          {post.readingTime} {copy.readingTime}
+        </span>
+      )}
+      {post.field && (
+        <Link href={`/expertise/${expertiseSlug(post.field)}`}>
+          <a className={classes.metalink}>{post.field}</a>
+        </Link>
+      )}
+    </div>
+  );
+
   return (
     <div>
       <HeadPage
@@ -71,30 +95,14 @@ function PublicationPage({ post, series, seo }) {
 
       <div className={classes.container}>
         <div className={classes.layout}>
-          <SeriesRail series={series} current={post._id} copy={copy} />
+          {series?.length ? (
+            <SeriesRail series={series} current={post._id} copy={copy} />
+          ) : (
+            <div className={classes.gutter}>{meta}</div>
+          )}
 
           <article className={classes.article}>
-            <div className={classes.meta}>
-              {seriesName && (
-                <span className={classes.metaitem}>
-                  {seriesName}
-                  {episode ? ` — ${copy.episode} ${episode}` : ''}
-                </span>
-              )}
-              <span className={classes.metaitem}>
-                {formatDate(post.publishedAt, locale)}
-              </span>
-              {post.readingTime > 0 && (
-                <span className={classes.metaitem}>
-                  {post.readingTime} {copy.readingTime}
-                </span>
-              )}
-              {post.field && (
-                <Link href={`/expertise/${expertiseSlug(post.field)}`}>
-                  <a className={classes.metalink}>{post.field}</a>
-                </Link>
-              )}
-            </div>
+            {series?.length ? meta : null}
 
             <div className={classes.body}>
               <RichText value={post.body} />
