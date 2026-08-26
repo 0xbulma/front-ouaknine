@@ -14,7 +14,12 @@
   padding: $space-6 0 $space-7 0;
 }
 
+// globals.scss gives every `section` `padding: $space-7 0`, which stacked with
+// the margin below to separate two sections by ~18rem rather than the 6rem the
+// margin declares, and made the :last-child reset a no-op. The margin owns the
+// rhythm here.
 .section {
+  padding: 0;
   margin-bottom: $space-7;
 
   &:last-child {
@@ -84,10 +89,9 @@
 
 .title {
   margin: 0;
-  // An h3 for structure, a row label to read. The global heading rule would put
-  // Bodoni and uppercase on it, and a 17px Didone on black is where its
-  // hairlines go.
-  font-family: inherit;
+  // An h3 for structure, a row label to read. globals.scss sets h3 to uppercase
+  // Inter 600 at 1rem with 0.08em tracking; the overrides below are what make it
+  // a row label instead of a heading.
   text-transform: none;
   font-size: 1.0625rem;
   font-weight: 500;

@@ -1,6 +1,6 @@
 import PublicationPage from '../../components/layout/publication-page';
 import {
-  fetchPublication,
+  fetchPublicationBody,
   fetchPublications,
   otherLocale,
   seriesOf,
@@ -36,17 +36,28 @@ export async function getStaticProps({ params, locale }) {
   try {
     const twin = otherLocale(locale);
 
-    // Only this page renders prose, so only this page asks for it. The list and
-    // the twin-locale check take the body-free projection: carrying bodies into
-    // them put the whole guide's text into the page's __NEXT_DATA__.
-    const [post, posts, translations] = await Promise.all([
-      fetchPublication(locale, params.slug),
+    // The list decides whether the page exists, so nothing heavier runs until it
+    // says yes. The twin-locale list only chooses whether an hreflang alternate
+    // is emitted, and a missing alternate is recoverable; a cached 404 is not,
+    // so it must not be able to take the page down with it.
+    const [posts, translations] = await Promise.all([
       fetchPublications(locale),
-      fetchPublications(twin),
+      fetchPublications(twin).catch(err => {
+        console.error('publication twin locale', params.slug, err);
+        return [];
+      }),
     ]);
 
-    if (!post) return { notFound: true, revalidate: 60 };
+    const meta = posts.find(entry => entry.slug === params.slug);
 
+    if (!meta) return { notFound: true, revalidate: 60 };
+
+    // Only now, and only this one document's prose.
+    const body = await fetchPublicationBody(locale, meta._id);
+
+    if (!body) return { notFound: true, revalidate: 60 };
+
+    const post = { ...meta, body };
     const { series, title } = splitTitle(post);
     const org = organizationContent[locale] ?? organizationContent.fr;
 

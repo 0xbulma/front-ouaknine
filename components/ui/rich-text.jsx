@@ -4,21 +4,46 @@ import { PortableText } from '@portabletext/react';
 import SanityImage from './sanityImage';
 import classes from './rich-text.module.scss';
 
+const SITE_HOST = 'ouaknine-avocats.com';
+
+// Where a link actually goes, resolved rather than pattern-matched.
+//
+// Two reasons not to test the raw string. The CMS authors internal links as
+// absolute URLs ("https://www.ouaknine-avocats.com/articles/<id>"), so a
+// startsWith('/') test sends every one of the guide's own cross-links out to a
+// new tab; and the URL parser strips tabs and treats a backslash as a slash, so
+// "/\evil.com" reads as a path and navigates off-site.
+//
+// Returns a same-origin path, or null when the link leaves the site.
+const internalPath = href => {
+  const clean = href.replace(/[\t\n\r]/g, '');
+  if (clean.startsWith('#')) return clean;
+
+  try {
+    const url = new URL(clean, 'https://internal.invalid');
+    const internal =
+      url.hostname === 'internal.invalid' ||
+      url.hostname === SITE_HOST ||
+      url.hostname.endsWith(`.${SITE_HOST}`);
+
+    return internal ? `${url.pathname}${url.search}${url.hash}` : null;
+  } catch (err) {
+    return null;
+  }
+};
+
 // `headingLevel` collapses every heading a document carries onto one tag. The
 // publications surface needs it: the guide writes h4 throughout and a press
 // cutting opens on the outlet's own h2, so without it the accessibility tree
 // exposes a gapped, inconsistent hierarchy under the page h1 while the stylesheet
 // renders them all alike.
-const headingOverrides = level =>
-  level
-    ? Object.fromEntries(
-        ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].map(style => [
-          style,
-          // eslint-disable-next-line react/display-name
-          ({ children }) => createElement(level, null, children),
-        ])
-      )
-    : {};
+const headingOverrides = level => {
+  if (!level) return {};
+
+  const Heading = ({ children }) => createElement(level, null, children);
+
+  return { h1: Heading, h2: Heading, h3: Heading, h4: Heading, h5: Heading, h6: Heading };
+};
 
 export default function RichText({ value, headingLevel }) {
   return (
@@ -67,23 +92,21 @@ export default function RichText({ value, headingLevel }) {
           // link that leaves the site opens away from it.
           link: ({ children, value }) => {
             const href = value?.href || '/';
+            const internal = internalPath(href);
 
-            // An allowlist, not a scheme test. Treating "not http(s)" as
-            // internal handed `javascript:` and `data:` URLs straight to an
-            // anchor, and link marks are authored in the CMS.
-            const isInternal =
-              (href.startsWith('/') && !href.startsWith('//')) ||
-              href.startsWith('#');
-
-            if (isInternal) {
+            if (internal) {
               return (
-                <Link href={href}>
+                <Link href={internal}>
                   <a className={classes.link}>{children}</a>
                 </Link>
               );
             }
 
-            if (!/^(https?|mailto|tel):/i.test(href)) return <>{children}</>;
+            // An allowlist, not a scheme denylist: anything that is not a
+            // recognised external scheme keeps its text and loses its link.
+            if (!/^(https?|mailto|tel):/i.test(href.trim())) {
+              return <>{children}</>;
+            }
 
             return (
               <a

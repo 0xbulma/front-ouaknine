@@ -13,7 +13,12 @@ const PAGE_QUERY = `*[_type == "articles" && language == $locale][0]{
 export async function getStaticProps({ locale }) {
   try {
     const [content, posts] = await Promise.all([
-      clientApi.fetch(PAGE_QUERY, { locale: locale ?? 'fr' }),
+      // The page renders without its CMS copy (`content ?? {}` below); only a
+      // failure to fetch the posts genuinely leaves it with nothing.
+      clientApi.fetch(PAGE_QUERY, { locale: locale ?? 'fr' }).catch(err => {
+        console.error('publications index copy', err);
+        return null;
+      }),
       fetchPublications(locale),
     ]);
 

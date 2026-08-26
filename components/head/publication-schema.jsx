@@ -46,12 +46,21 @@ function PublicationSchema({ post, title, series }) {
     inLanguage: locale,
     datePublished: post.publishedAt,
     dateModified: post.publishedAt,
-    publisher: { '@id': CABINET_ID },
     isAccessibleForFree: true,
     ...(series ? { isPartOf: { '@type': 'CreativeWorkSeries', name: series } } : {}),
+    // A press cutting is someone else's work: the outlet wrote and published
+    // it, and the practice is only mentioned in it. Naming the practice as the
+    // publisher asserted it published Le Monde's article; omitting the author
+    // entirely left a NewsArticle that no rich result will accept.
     ...(press
-      ? { mentions: { '@id': CABINET_ID }, ...(post.source ? { sameAs: post.source } : {}) }
-      : { author: { '@id': ALICE_ID } }),
+      ? {
+          mentions: { '@id': CABINET_ID },
+          ...(post.author
+            ? { author: { '@type': 'Organization', name: post.author } }
+            : {}),
+          ...(post.source ? { sameAs: post.source } : {}),
+        }
+      : { author: { '@id': ALICE_ID }, publisher: { '@id': CABINET_ID } }),
     ...(fieldSlug
       ? {
           about: {

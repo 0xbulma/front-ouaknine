@@ -7,8 +7,8 @@ that look small are usually design decisions.
 ## The project
 
 Marketing site for **Alice Ouaknine**, a criminal-law practice in Paris (17 rue
-de Douai, 75009). Bilingual `fr` / `en`. Four pages: home, expertise, contact,
-legal, plus a 404.
+de Douai, 75009). Bilingual `fr` / `en`. Six pages: home, expertise,
+publications, contact, iska, legal, plus a 404.
 
 | | |
 |---|---|
@@ -23,10 +23,16 @@ yarn install --frozen-lockfile
 yarn dev      # next dev
 yarn build    # next build
 yarn lint     # next lint
+yarn test     # node --test
 ```
 
-Run `yarn lint` and `yarn build` before calling anything done. There is no test
-suite; the build's typecheck and lint are the only automated gates.
+Run `yarn lint`, `yarn test` and `yarn build` before calling anything done.
+
+There is no component or end-to-end suite; the build's typecheck and lint carry
+most of the weight. `yarn test` covers one thing: the pure derivations in
+`libs/slug.js` and `libs/publication-fields.js`, which turn a title into every
+URL, hreflang and `@id` on the site and fail silently into a 404 when they
+break. They already broke once. Node's own runner, no dependencies, no config.
 
 ## Local development: read this before you try to run it
 
@@ -78,9 +84,13 @@ Two traps that have already cost time:
 
 ## Publications
 
-`/publications` renders the Sanity `post` documents: the firm's own writing
-(`filter: fact`, grouped into guides by the `series` field) and press mentions
-(`filter: press`). Anyone writing for it works from
+`/publications` renders the Sanity `post` documents: the firm's own writing and
+press mentions. Which is which is decided by `filter`, and by whether the
+document carries someone else's URL in `source`.
+
+Guides group themselves by the series name parsed out of the episode title
+(`<Guide> - Épisode <n> : <subtitle>`), because the studio carries no `series`
+field yet; the field takes over once it is added. Anyone writing for it works from
 `docs/publications-editorial-brief.md`, which carries the house format, the
 déontologie constraints, the full article list and the release schedule.
 
@@ -220,8 +230,6 @@ call button). Adding a fourth should need a reason.
 - `public/images/_50A7988_1.jpeg` (5.3MB) and `logodraft.svg` are unreferenced.
 - `public/images/paris-map.svg` is 810KB raw / ~254KB gzipped — the heaviest
   asset on the site. SVGO would likely halve it.
-- The footer and contact page use two slightly different Google Maps URLs for
-  the same address.
 - Legacy tokens (`$white`, `$gray*`, `$cyan*`) still sit in `_variables.scss`;
   `$green600` and `$amber600` are genuinely used by form status icons.
 

@@ -73,7 +73,9 @@
 
 .railindex {
   @include micro;
-  color: $rule-strong;
+  // $rule-strong is a hairline token; as text on $bg it measures 2.06:1 against
+  // a 4.5:1 minimum. Same call as .pagerlabel below.
+  color: $ink-muted;
   transition: color $dur $ease;
 }
 
@@ -160,8 +162,12 @@
     color: $ink;
   }
 
-  p {
-    color: $ink-muted;
+  // On the block, not on `p`: a list item is prose too, and colouring only
+  // paragraphs set every bullet at full paper strength beside them.
+  color: $ink-muted;
+
+  p,
+  li {
     line-height: 1.7;
   }
 

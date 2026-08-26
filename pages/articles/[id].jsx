@@ -1,4 +1,4 @@
-import { fetchPublicationById } from '../../libs/publications';
+import { fetchPublicationById, otherLocale } from '../../libs/publications';
 import { withLocale } from '../../libs/localePath';
 
 // The articles section used to address a post by its Sanity id. Sixteen of those
@@ -11,28 +11,35 @@ export default function LegacyArticle() {
 }
 
 export async function getServerSideProps({ params, locale, res }) {
-  let post = null;
+  const twin = otherLocale(locale);
+  let resolved = null;
 
   try {
-    post = await fetchPublicationById(params.id);
+    // In the language being read when it exists there. The press cuttings are
+    // French only, so an English legacy URL for one has to cross over rather
+    // than land permanently on an English page that does not exist.
+    const here = await fetchPublicationById(locale, params.id);
+
+    if (here) {
+      resolved = { locale, slug: here.slug };
+    } else {
+      const there = await fetchPublicationById(twin, params.id);
+      if (there) resolved = { locale: twin, slug: there.slug };
+    }
   } catch (err) {
-    // Fall through to the index; the redirect below stays temporary so the real
-    // destination is still reachable once the CMS answers again.
+    console.error('legacy article getServerSideProps', params.id, err);
   }
 
   // Next does not prefix a getServerSideProps redirect with the active locale,
-  // so an unprefixed path sends every /en/articles/<id> to the French page. The
-  // English half of the guide is the most-seen URL the site has, and permanent
-  // is the one kind of mistake a browser and a search engine both keep.
-  const destination = withLocale(
-    locale,
-    post ? `/publications/${post.slug}` : '/publications'
-  );
+  // so an unprefixed path sends every /en/articles/<id> to the French page.
+  const destination = resolved
+    ? withLocale(resolved.locale, `/publications/${resolved.slug}`)
+    : withLocale(locale, '/publications');
 
-  // Only a resolved post earns a permanent redirect. A CMS failure or an id that
-  // is not published yet gets a temporary one, so the URL can still find its own
-  // page later rather than being pinned to the index for good.
-  const permanent = Boolean(post);
+  // Only a resolved post earns a permanent redirect. A CMS failure or an id with
+  // no readable publication behind it gets a temporary one, so the URL can still
+  // find its own page later rather than being pinned to the index for good.
+  const permanent = Boolean(resolved);
 
   if (permanent) {
     res.setHeader('Cache-Control', 'public, max-age=0, s-maxage=3600');

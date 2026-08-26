@@ -101,9 +101,10 @@ h4  Le rôle de l'avocat
 and 1,179. Do not write 2,500-word monoliths; the series is the unit of depth,
 not the individual piece.
 
-**Headings are `h4`.** That is what the existing documents use and what the page
-styles. Name a heading after the thing itself ("Droit de garder le silence"),
-not after its function ("Deuxième point").
+**Headings are `h4`.** A studio convention, for consistency between documents:
+the page renders every heading level as an `h2` and styles them alike, so the
+level you pick does not change what a reader sees. Name a heading after the thing
+itself ("Droit de garder le silence"), not after its function ("Deuxième point").
 
 **Bold carries the operative sentence.** A reader who skims only the bold must
 still come away with the answer. This is deliberate and it is why the guide
@@ -252,23 +253,24 @@ Documents are of type `post`. Fill:
 | `slug` | One slug, shared by both languages. Set it deliberately; if left empty it is derived from the French title |
 | `series` | **Pending the studio schema change (see the timetable).** The guide name, exactly the same string on every episode of that guide |
 | `episode` | **Pending the studio schema change.** Number, for ordering |
-| `relatedExpertise` | Reference to the practice area. Drives the on-page link and the structured data |
+| `relatedExpertise` | Reference to the practice area. Drives the on-page link and the structured data, but only while the referenced document's title still matches an entry in `libs/expertisePairs.js`. Rename a field of expertise in the studio and both the link and the `about` node silently disappear until a developer updates that file |
 | `author` | `Alice Ouaknine` on the firm's own writing. On a press mention, the outlet or the journalist: the index prints this beside the date as the byline |
-| `publishedAt` | Publication date. Update it when the piece is revised |
+| `publishedAt` | Publication date. **Required**: an undated document is invisible everywhere, and a future date holds the piece back until then, which is how the timetable below is loaded in advance. Update it when the piece is revised |
 | `filter` | `fact` for the firm's own writing, `press` for a press mention |
 | `source` | Press mentions only: the URL of the original article. Filling it marks the document as a press mention whatever `filter` says, so a reference link for the firm's own writing belongs in the body, not here |
 
-**What decides whether a piece appears in a language is whether that language's
-body is filled**, nothing else. `language` is a legacy field the publications
-section does not read; leave it as you find it.
+**A piece appears in a language when that language's body is filled and
+`publishedAt` has passed.** Nothing else gates it: `language` is a legacy field
+the publications section does not read, so leave it as you find it.
 
 **Until `series` and `episode` exist, the title carries them.** Write an episode
 title as `<Guide> - Épisode <n> : <subtitle>`; that is the shape the code parses
 to group a guide and to set the page heading. Use one spelling of the guide name
-every time: the existing guide is stored under three ("Guide de survie en garde à
-vue", "Guide de survie à la garde à vue en France", and a variant of "Episode"
-without the accent), which is what the fields will fix. When they land, the same
-exact-string rule applies to the field.
+every time. The existing guide is stored under two ("Guide de survie en garde à
+vue" and "Guide de survie à la garde à vue en France"), and two spellings split
+one guide into two sections on `/publications`, each with its own episode rail.
+The accented and unaccented "Épisode" are both parsed, so only the guide name
+matters. When the `series` field lands, the same exact-string rule applies to it.
 
 ---
 
@@ -349,7 +351,7 @@ Named legal objects, explained in depth. The guides link into these.
 
 Only four pieces are written in both languages, and they are the four where
 English search intent is real and commercially useful. The garde à vue guide was
-translated in full and the English half brought 12,791 impressions of dictionary
+translated in full and its English episode 1 alone brought 12,791 impressions of dictionary
 traffic from outside France that converted to nothing. Do not translate for the
 sake of it.
 
