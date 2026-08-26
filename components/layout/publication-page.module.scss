@@ -175,6 +175,12 @@
     color: $ink;
     font-weight: 500;
   }
+
+  // The most emphasised block in a body would otherwise be the dimmest thing on
+  // the page, now that the muted colour sits on the block rather than on `p`.
+  blockquote {
+    color: $ink;
+  }
 }
 
 // Each on its own line. As inline-block siblings they ran together into

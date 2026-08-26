@@ -26,13 +26,24 @@ yarn lint     # next lint
 yarn test     # node --test
 ```
 
-Run `yarn lint`, `yarn test` and `yarn build` before calling anything done.
+Run `yarn lint`, `yarn test` and `yarn build` before calling anything done, and
+know what each one does and does not cover.
 
-There is no component or end-to-end suite; the build's typecheck and lint carry
-most of the weight. `yarn test` covers one thing: the pure derivations in
-`libs/slug.js` and `libs/publication-fields.js`, which turn a title into every
-URL, hreflang and `@id` on the site and fail silently into a 404 when they
-break. They already broke once. Node's own runner, no dependencies, no config.
+**There is no typecheck.** No TypeScript, no `tsconfig.json`, so `next build`
+checks nothing beyond compiling.
+
+**`next lint` walks only what it is told to.** Its default directory list is
+`pages`, `components`, `lib`, `src`. This repo's is `libs` (plural), so for a
+long time nothing in it was linted at all; the `lint` script now passes
+`--dir pages --dir components --dir libs`. Adding a top-level directory means
+adding it there too.
+
+**`yarn test` covers the pure derivations** in `libs/slug.js`, `libs/href.js` and
+`libs/publication-fields.js`: the functions that turn a title into every URL,
+hreflang and `@id` on the site, and that decide whether a CMS-authored link is
+same-site or hostile. They fail silently into a 404 or an unsafe anchor, and one
+of them already broke once. Node's own runner, no dependencies, no config. There
+is no component or end-to-end suite.
 
 ## Local development: read this before you try to run it
 
@@ -100,8 +111,9 @@ déontologie constraints, the full article list and the release schedule.
 copy — titles, body rich text, the expertise list. Editable by the client.
 
 **`content/*.json`** holds UI strings and contact facts, keyed by locale.
-`footerContent.json` is the canonical store for address, phone, mobile and email;
-it is read by both the home colophon and the contact page. Add contact details
+`footerContent.json` is the canonical store for the address, phone, mobile,
+email, the Google Maps URL and the geo coordinates; it is read by the home
+colophon, the contact page, the footer and the structured data. Add contact details
 there, not inline in a component.
 
 ### Orphaned Sanity fields
@@ -196,13 +208,14 @@ the cursor.
 1. Bodoni headlines
 2. Inter micro-labels
 3. Hairline rules (`$rule`)
-4. Numeric index — `01 / 02 / 03` on the home practice list and expertise accordion
+4. Numeric index — `01 / 02 / 03` on the home practice list, the expertise
+   accordion, the publications index and a guide's episode rail
 5. The ink-illustration portrait
 6. The ISKA wordmark
 
-Both list-style surfaces share one row shape: a micro-caps label gutter, the
-value beside it, a rule beneath. The contact details and the home practice list
-are the same pattern — keep them that way.
+Four surfaces share one row shape: a micro-caps label gutter, the value beside
+it, a rule beneath. The home practice list, the contact details, the publications
+index and a guide's episode rail are all the same pattern — keep them that way.
 
 **Deliberately removed. Do not reintroduce without asking:** diagonal
 `clip-path` panels, the scales-of-justice line drawing, decorative photography,

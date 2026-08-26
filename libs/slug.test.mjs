@@ -3,6 +3,7 @@ import { test } from 'node:test';
 
 import { slugify } from './slug.js';
 import { splitTitle, seriesOf, isPress } from './publication-fields.js';
+import { internalPath, isSafeExternal } from './href.js';
 
 // slugify is the single derivation behind every publication URL, every field of
 // expertise URL, every hreflang and every @id in the JSON-LD graph. It has
@@ -78,4 +79,34 @@ test('a document carrying someone else\'s URL is press whatever filter says', ()
   assert.equal(isPress({ source: 'https://lemonde.fr/x' }), true);
   assert.equal(isPress({ filter: 'fact' }), false);
   assert.equal(isPress({}), false);
+});
+
+// Link marks and `source` are free text an editor fills. Both decisions used to
+// be written twice and drifted; these pin the one that survived.
+test('internalPath keeps a same-site link on the site', () => {
+  assert.equal(
+    internalPath('https://www.ouaknine-avocats.com/articles/abc'),
+    '/articles/abc'
+  );
+  assert.equal(internalPath('/publications/x'), '/publications/x');
+  assert.equal(internalPath('#top'), '#top');
+});
+
+test('internalPath sends everything else away', () => {
+  assert.equal(internalPath('https://evil.com/'), null);
+  assert.equal(internalPath('//evil.com'), null);
+  assert.equal(internalPath('/\\evil.com'), null);
+  assert.equal(internalPath('https://www.ouaknine-avocats.com@evil.com'), null);
+  assert.equal(internalPath('https://notouaknine-avocats.com/x'), null);
+  assert.equal(internalPath('javascript:alert(1)'), null);
+});
+
+test('isSafeExternal refuses anything it does not recognise', () => {
+  assert.equal(isSafeExternal('https://lemonde.fr/x'), true);
+  assert.equal(isSafeExternal('mailto:a@b.c'), true);
+  assert.equal(isSafeExternal('javascript:alert(1)'), false);
+  assert.equal(isSafeExternal('  JAVASCRIPT:alert(1)'), false);
+  assert.equal(isSafeExternal('data:text/html,x'), false);
+  assert.equal(isSafeExternal(null), false);
+  assert.equal(isSafeExternal(undefined), false);
 });

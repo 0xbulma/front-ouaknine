@@ -6,6 +6,7 @@ import PageTitle from './page-title';
 import RichText from '../ui/rich-text';
 
 import { formatDate, isPress, splitTitle } from '../../libs/publications';
+import { isSafeExternal } from '../../libs/href';
 import { expertiseSlugIn } from '../../libs/localePath';
 import useLocale from '../../hooks/useLocale';
 import CONTENT from '../../content/publicationsContent.json';
@@ -106,7 +107,7 @@ function PublicationPage({ post, series, seo }) {
               <RichText value={post.body} headingLevel='h2' />
             </div>
 
-            {post.source && (
+            {isSafeExternal(post.source) && (
               <a
                 className={classes.source}
                 href={post.source}

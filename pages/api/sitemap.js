@@ -44,6 +44,16 @@ const expertisePairs = async () => {
   ]);
 };
 
+// French where there is a French version, and otherwise whatever the set does
+// have. Assuming French exists published an unprefixed URL for an
+// English-only publication, which is a page the site does not serve.
+const defaultHref = alternates => {
+  const [locale, path] =
+    alternates.find(([l]) => l === 'fr') ?? alternates[0];
+
+  return url(locale, path);
+};
+
 // One <url> per page per language, each carrying the alternates for the whole
 // set. Google wants the annotation to be reciprocal, and a sitemap is the one
 // place it can be stated for both languages at once.
@@ -59,7 +69,7 @@ const entry = (locale, path, alternates, lastmod) => `
           )}"/>`
       )
       .join('')}
-    <xhtml:link rel="alternate" hreflang="x-default" href="${url('fr', alternates[0][1])}"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="${defaultHref(alternates)}"/>
     <lastmod>${lastmod}</lastmod>
   </url>`;
 
@@ -93,7 +103,9 @@ export default async function handler(req, res) {
       )
     );
   } catch (err) {
-    // As above.
+    // The static pages are still worth serving, but a sitemap that quietly loses
+    // every publication is the kind of failure nobody notices for a month.
+    console.error('sitemap publications', err);
   }
 
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>

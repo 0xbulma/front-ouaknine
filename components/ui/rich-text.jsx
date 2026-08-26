@@ -1,36 +1,9 @@
 import { createElement } from 'react';
 import Link from 'next/link';
 import { PortableText } from '@portabletext/react';
+import { internalPath, isSafeExternal } from '../../libs/href';
 import SanityImage from './sanityImage';
 import classes from './rich-text.module.scss';
-
-const SITE_HOST = 'ouaknine-avocats.com';
-
-// Where a link actually goes, resolved rather than pattern-matched.
-//
-// Two reasons not to test the raw string. The CMS authors internal links as
-// absolute URLs ("https://www.ouaknine-avocats.com/articles/<id>"), so a
-// startsWith('/') test sends every one of the guide's own cross-links out to a
-// new tab; and the URL parser strips tabs and treats a backslash as a slash, so
-// "/\evil.com" reads as a path and navigates off-site.
-//
-// Returns a same-origin path, or null when the link leaves the site.
-const internalPath = href => {
-  const clean = href.replace(/[\t\n\r]/g, '');
-  if (clean.startsWith('#')) return clean;
-
-  try {
-    const url = new URL(clean, 'https://internal.invalid');
-    const internal =
-      url.hostname === 'internal.invalid' ||
-      url.hostname === SITE_HOST ||
-      url.hostname.endsWith(`.${SITE_HOST}`);
-
-    return internal ? `${url.pathname}${url.search}${url.hash}` : null;
-  } catch (err) {
-    return null;
-  }
-};
 
 // `headingLevel` collapses every heading a document carries onto one tag. The
 // publications surface needs it: the guide writes h4 throughout and a press
@@ -102,11 +75,7 @@ export default function RichText({ value, headingLevel }) {
               );
             }
 
-            // An allowlist, not a scheme denylist: anything that is not a
-            // recognised external scheme keeps its text and loses its link.
-            if (!/^(https?|mailto|tel):/i.test(href.trim())) {
-              return <>{children}</>;
-            }
+            if (!isSafeExternal(href)) return <>{children}</>;
 
             return (
               <a

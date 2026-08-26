@@ -20,7 +20,7 @@ const localeUrl = (locale, path) => `${HOST}${withLocale(locale, path)}`;
 function PublicationSchema({ post, title, series }) {
   const { locale } = useRouter();
   const nav = (headerContent[locale] ?? headerContent.fr).nav;
-  const label = url => nav.find(link => link.url === url)?.label;
+  const label = path => nav.find(link => link.url === path)?.label;
 
   const url = localeUrl(locale, `/publications/${post.slug}`);
   const press = isPress(post);

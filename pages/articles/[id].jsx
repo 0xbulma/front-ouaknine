@@ -36,14 +36,21 @@ export async function getServerSideProps({ params, locale, res }) {
     ? withLocale(resolved.locale, `/publications/${resolved.slug}`)
     : withLocale(locale, '/publications');
 
-  // Only a resolved post earns a permanent redirect. A CMS failure or an id with
-  // no readable publication behind it gets a temporary one, so the URL can still
-  // find its own page later rather than being pinned to the index for good.
-  const permanent = Boolean(resolved);
+  // Only a hit in the language being read is permanent. The cross-locale
+  // fallback is best-effort: /en/articles/<id> for a piece that is French-only
+  // today should serve /en/publications/<slug> once its English body is written,
+  // and a 308 would have consolidated it onto the French page for good.
+  const permanent = Boolean(resolved) && resolved.locale === locale;
 
-  if (permanent) {
-    res.setHeader('Cache-Control', 'public, max-age=0, s-maxage=3600');
-  }
+  // Both branches get an edge cache. Without one on the miss, an unbounded
+  // attacker-chosen path space reaches the origin on every request, and each
+  // miss now costs two CMS round trips.
+  res.setHeader(
+    'Cache-Control',
+    permanent
+      ? 'public, max-age=0, s-maxage=3600'
+      : 'public, max-age=0, s-maxage=60'
+  );
 
   return { redirect: { destination, permanent } };
 }

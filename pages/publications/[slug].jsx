@@ -27,7 +27,9 @@ export async function getStaticPaths({ locales }) {
 
     return { paths, fallback: 'blocking' };
   } catch (err) {
-    // A publication added in the studio still resolves on its first request.
+    // A publication added in the studio still resolves on its first request, but
+    // prebuilding none of them is a degradation worth recording.
+    console.error('publication getStaticPaths', err);
     return { paths: [], fallback: 'blocking' };
   }
 }
@@ -93,9 +95,11 @@ export async function getStaticProps({ params, locale }) {
       revalidate: 60,
     };
   } catch (err) {
-    // A transient CMS failure must not cache a 404 for a live publication until
-    // the next deploy; the deliberate not-found above already carries a window.
+    // Rethrown, not turned into a not-found. `notFound` is a successful result,
+    // so Next caches it over the last good render; a thrown getStaticProps makes
+    // it re-set the existing page instead (response-cache/index.js). The two
+    // guards above are the only definitive absences.
     console.error('publication getStaticProps', params.slug, err);
-    return { notFound: true, revalidate: 60 };
+    throw err;
   }
 }
