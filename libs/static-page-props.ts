@@ -16,40 +16,40 @@
 // The slice of Next's `GetStaticPropsContext` these routes read. Narrower on
 // purpose: nothing here should reach for preview data or a build id.
 export type PageContext = {
-  locale?: string;
-  params?: Record<string, string | string[] | undefined>;
+	locale?: string;
+	params?: Record<string, string | string[] | undefined>;
 };
 
 export type PageResult<P> =
-  | { props: P; revalidate: number }
-  | { notFound: true; revalidate: number };
+	| { props: P; revalidate: number }
+	| { notFound: true; revalidate: number };
 
 export type PageName = string | ((ctx?: PageContext) => string);
 
 const pageName = (page: PageName, ctx?: PageContext): string =>
-  typeof page === 'function' ? page(ctx) : page;
+	typeof page === "function" ? page(ctx) : page;
 
 export const staticPageProps =
-  <Data, Props = { data: Data }>(
-    fetcher: (locale?: string) => Promise<Data | null | undefined>,
-    page: PageName,
-    build?: (data: Data, ctx: PageContext) => Props | null
-  ) =>
-  async (ctx?: PageContext): Promise<PageResult<Props | { data: Data }>> => {
-    try {
-      const data = await fetcher(ctx?.locale);
-      if (!data) return { notFound: true, revalidate: 10 };
+	<Data, Props = { data: Data }>(
+		fetcher: (locale?: string) => Promise<Data | null | undefined>,
+		page: PageName,
+		build?: (data: Data, ctx: PageContext) => Props | null,
+	) =>
+	async (ctx?: PageContext): Promise<PageResult<Props | { data: Data }>> => {
+		try {
+			const data = await fetcher(ctx?.locale);
+			if (!data) return { notFound: true, revalidate: 10 };
 
-      const props = build ? build(data, ctx ?? {}) : { data };
-      if (!props) return { notFound: true, revalidate: 10 };
+			const props = build ? build(data, ctx ?? {}) : { data };
+			if (!props) return { notFound: true, revalidate: 10 };
 
-      return { props, revalidate: 10 };
-    } catch (err) {
-      console.error(
-        'getStaticProps failed',
-        { page: pageName(page, ctx), locale: ctx?.locale },
-        err
-      );
-      throw err;
-    }
-  };
+			return { props, revalidate: 10 };
+		} catch (err) {
+			console.error(
+				"getStaticProps failed",
+				{ page: pageName(page, ctx), locale: ctx?.locale },
+				err,
+			);
+			throw err;
+		}
+	};

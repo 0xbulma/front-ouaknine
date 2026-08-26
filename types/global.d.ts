@@ -8,7 +8,7 @@
 
 // A SCSS module resolves to a class-name map, and a name that is not in the
 // stylesheet is `undefined` rather than a silent empty class.
-declare module '*.module.scss' {
-  const classes: Record<string, string>;
-  export default classes;
+declare module "*.module.scss" {
+	const classes: Record<string, string>;
+	export default classes;
 }
