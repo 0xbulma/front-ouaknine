@@ -1,0 +1,7 @@
+# Revisions that only reformat. Teach git to skip them:
+#   git config blame.ignoreRevsFile .git-blame-ignore-revs
+# GitHub reads this file automatically.
+
+# chore: adopt Biome, add CI, and drop twelve dead dependencies
+# The Biome sweep reformatted 93 files to tabs and double quotes.
+83f27ddfcf13216644209d9fdb19006703bff0f8
