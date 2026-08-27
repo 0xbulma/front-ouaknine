@@ -93,3 +93,50 @@ test("nothing to render is nothing, not an empty shell", () => {
 
 	expect(container).toBeEmptyDOMElement();
 });
+
+test("an image block renders at the size encoded in its reference", () => {
+	// The GROQ projections return a bare asset reference, so the reference is
+	// where the intrinsic size comes from. Without it the article reflows
+	// around each image as it arrives.
+	render(
+		<RichText
+			value={[
+				{
+					_type: "image",
+					_key: "i",
+					alt: "Le palais de justice",
+					asset: { _ref: "image-abc123-1200x800-jpg", _type: "reference" },
+				},
+			]}
+		/>,
+	);
+
+	const img = screen.getByRole("img");
+	expect(img).toHaveAttribute("alt", "Le palais de justice");
+	expect(img).toHaveAttribute("width", "1200");
+	expect(img).toHaveAttribute("height", "800");
+});
+
+test("an image the studio left without alt text is marked decorative", () => {
+	// An empty alt is the right fallback. The attribute this component used to
+	// omit entirely is the wrong one: a screen reader falls back to the URL.
+	render(
+		<RichText
+			value={[
+				{
+					_type: "image",
+					_key: "i",
+					asset: { _ref: "image-abc123-1200x800-jpg", _type: "reference" },
+				},
+			]}
+		/>,
+	);
+
+	expect(screen.getByRole("presentation", { hidden: true })).toHaveAttribute("alt", "");
+});
+
+test("an image block with no asset renders nothing", () => {
+	const { container } = render(<RichText value={[{ _type: "image", _key: "i" }]} />);
+
+	expect(container.querySelector("img")).toBeNull();
+});

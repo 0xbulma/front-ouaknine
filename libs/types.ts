@@ -25,6 +25,11 @@ export type PortableSpan = {
 	marks?: string[];
 };
 
+export type ImageDimensions = {
+	width: number;
+	height: number;
+};
+
 export type SanityImageRef = {
 	_ref: string;
 	_type: string;

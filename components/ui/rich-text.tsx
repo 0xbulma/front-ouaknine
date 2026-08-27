@@ -55,10 +55,14 @@ export default function RichText({
 					),
 				},
 				types: {
-					image: ({ value: image }: { value: { asset?: SanityImageRef } }) =>
+					// The alt text sits on the block, not on the asset. The studio does not
+					// always fill it, and an empty string marks the image decorative, which
+					// is the right fallback and better than the attribute this component
+					// used to omit entirely.
+					image: ({ value: image }: { value: { asset?: SanityImageRef; alt?: string } }) =>
 						image.asset ? (
 							<div className={classes.img}>
-								<SanityImage asset={image.asset} />
+								<SanityImage asset={image.asset} alt={image.alt ?? ""} />
 							</div>
 						) : null,
 				},

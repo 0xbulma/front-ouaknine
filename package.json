@@ -27,9 +27,9 @@
   "dependencies": {
     "@heroicons/react": "1.0.6",
     "@portabletext/react": "1.0.6",
+    "@sanity/client": "3.4.1",
+    "@sanity/image-url": "1.0.1",
     "next": "12.3.1",
-    "next-sanity": "0.6.0",
-    "next-sanity-image": "4.1.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-icons": "4.4.0"
