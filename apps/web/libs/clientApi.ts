@@ -31,14 +31,22 @@ export default clientApi;
 // outside the Studio falls back to this.
 const STUDIO_URL = "https://cabinet-ouaknine.sanity.studio";
 
+// The server has no token, which is a different thing from the caller having a
+// bad secret, and pages/api/draft.ts answers the two differently. Its own class
+// so that decision is made on identity rather than on matching message text.
+export class DraftModeNotConfigured extends Error {
+	constructor() {
+		super("Draft mode needs SANITY_TOKEN, a Sanity token with Viewer access");
+		this.name = "DraftModeNotConfigured";
+	}
+}
+
 // `SANITY_TOKEN` is read per call rather than at module scope, because the
 // published site never needs it and must not fail to boot without it. A Viewer
 // token is enough; drafts are all it has to see.
 const draftToken = (): string => {
 	const token = process.env.SANITY_TOKEN;
-	if (!token) {
-		throw new Error("Draft mode needs SANITY_TOKEN, a Sanity token with Viewer access");
-	}
+	if (!token) throw new DraftModeNotConfigured();
 
 	return token;
 };
