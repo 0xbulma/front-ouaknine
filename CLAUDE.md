@@ -68,6 +68,24 @@ Both halves point at Sanity project `46fx2dmc`, dataset `production`. The site
 reads the id from `NEXT_PUBLIC_SANITY_ID`; the studio hardcodes it in
 `sanity.cli.js` and `sanity.config.js`.
 
+## Conductor
+
+`.conductor/settings.toml` and `.worktreeinclude` at the root configure the
+workspaces. Two run scripts rather than one, because the root `pnpm dev` starts
+both servers and cannot give them different ports: `web` takes
+`$CONDUCTOR_PORT` and `studio` takes `$CONDUCTOR_PORT + 1`, which is what makes
+`run_mode = "concurrent"` safe. Both are `available_in = ["local"]`, since
+`$CONDUCTOR_PORT` is unset in a cloud workspace and both servers would fall
+back to their default port and collide.
+
+`.worktreeinclude` copies `apps/web/.env*`, not a root `.env`. Next resolves
+its env file from its own project directory, so a copy at the repo root is read
+by nothing. **The main checkout has to have the file at `apps/web/.env` for
+there to be anything to copy.**
+
+The Mac app reads the shared `settings.toml` from the default branch on the
+remote, so none of this takes effect until it is on `main`.
+
 ## Deploying
 
 Vercel builds `apps/web` only. Its **Root Directory** must be `apps/web`, with
