@@ -68,6 +68,16 @@ Both halves point at Sanity project `46fx2dmc`, dataset `production`. The site
 reads the id from `NEXT_PUBLIC_SANITY_ID`; the studio hardcodes it in
 `sanity.cli.js` and `sanity.config.js`.
 
+The second seam runs the other way, and it is a URL rather than a type.
+`presentationTool` in `apps/studio/sanity.config.js` frames the site and calls
+`/api/draft` on it to hand over a one-time preview secret;
+`apps/web/pages/api/draft.ts` is what answers. Nothing validates that pairing
+either: rename the route and the Studio keeps offering a preview button that
+401s. `SANITY_STUDIO_PREVIEW_URL` chooses which site gets framed, defaulting to
+production, and `.conductor/settings.toml` points it at the local one. The site
+side of it is documented under "Draft mode, and editing on the page" in
+`apps/web/CLAUDE.md`.
+
 ## Conductor
 
 `.conductor/settings.toml` and `.worktreeinclude` at the root configure the

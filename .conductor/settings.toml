@@ -18,8 +18,13 @@ available_in = ["local"]
 default = true
 icon = "play"
 
+# SANITY_STUDIO_PREVIEW_URL points Presentation at the site running in this same
+# workspace, on $CONDUCTOR_PORT. Without it the Studio would frame production
+# while you edit locally, and the draft-mode handshake would set its cookie on
+# the wrong origin. Vite only exposes SANITY_STUDIO_* to the config, which is
+# what apps/studio/sanity.config.js reads.
 [scripts.run.studio]
-command = "pnpm --filter studio dev --port $((CONDUCTOR_PORT + 1))"
+command = "SANITY_STUDIO_PREVIEW_URL=http://localhost:$CONDUCTOR_PORT pnpm --filter studio dev --port $((CONDUCTOR_PORT + 1))"
 available_in = ["local"]
 icon = "database"
 

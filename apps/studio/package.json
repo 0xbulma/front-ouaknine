@@ -21,7 +21,7 @@
     "react-dom": "catalog:",
     "react-icons": "5.7.0",
     "sanity": "6.10.1",
-    "styled-components": "6.5.3"
+    "styled-components": "catalog:"
   },
   "devDependencies": {
     "@sanity/eslint-config-studio": "7.0.0",

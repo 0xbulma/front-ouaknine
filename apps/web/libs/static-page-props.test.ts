@@ -34,6 +34,21 @@ test("the fetcher receives the locale, defaulting to undefined off a bare call",
 	expect(seen).toStrictEqual(["en", undefined]);
 });
 
+test("draft mode reaches the fetcher, which is what picks the client", async () => {
+	// The whole of what draft mode changes here: a boolean handed to the fetcher,
+	// which reads it as `getClient(draft)` in libs/clientApi.ts.
+	const seen: (boolean | undefined)[] = [];
+	const props = staticPageProps(async (_locale, draft) => {
+		seen.push(draft);
+		return { title: "T" };
+	}, "/");
+
+	await props({ locale: "fr", draftMode: true });
+	await props({ locale: "fr" });
+
+	expect(seen).toStrictEqual([true, undefined]);
+});
+
 test("a missing document is a 404 that expires", async () => {
 	// Without `revalidate` Next caches the not-found entry with no expiry, so the
 	// page stays a 404 until the next deploy. The key must be present.
