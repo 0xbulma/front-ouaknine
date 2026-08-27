@@ -6,6 +6,7 @@ import expertisePage from './pages/expertise.js'
 import contactPage from './pages/contact.js'
 import articles from './pages/articles.js'
 import legal from './pages/legal.js'
+import iska from './pages/iska.js'
 
 export const schemaTypes = [
   post,
@@ -16,4 +17,5 @@ export const schemaTypes = [
   articles,
   contactPage,
   legal,
+  iska,
 ]

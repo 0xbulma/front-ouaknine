@@ -1,12 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
-import iskaContent from "../../content/iskaContent.json";
 import publicationsContent from "../../content/publicationsContent.json";
 import { varyWithAccept } from "../../libs/accept";
 import type { AgentContext } from "../../libs/agent-context";
 import { agentContext } from "../../libs/agent-context";
 import { fetchExpertise } from "../../libs/expertise";
-import { fetchContact, fetchHome, fetchLegal } from "../../libs/page-content";
+import { fetchContact, fetchHome, fetchIska, fetchLegal } from "../../libs/page-content";
 import {
 	aboutMarkdown,
 	contactMarkdown,
@@ -104,7 +103,7 @@ const render = async (path: string, ctx: MarkdownContext): Promise<string | null
 	}
 	if (path === "/contact") return renderDoc(fetchContact, contactMarkdown, ctx);
 	if (path === "/legal") return renderDoc(fetchLegal, legalMarkdown, ctx);
-	if (path === "/iska") return iskaMarkdown(iskaContent[ctx.locale], ctx);
+	if (path === "/iska") return renderDoc(fetchIska, iskaMarkdown, ctx);
 
 	if (path === "/expertise") return renderExpertise(null, ctx);
 	if (path === "/publications") return renderPublications(null, ctx);

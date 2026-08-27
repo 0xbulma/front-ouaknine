@@ -439,7 +439,7 @@ Rules worth keeping:
   (the list llms.txt and the `## Pages` section of every page's markdown
   publish), `pages/api/sitemap.ts`
   (`PAGES`), `content/404Content.json` (`links`) and the `render` match in
-  `pages/api/markdown.ts`. `content/agentContent.json` needs its note.
+  `pages/api/markdown.ts`. `content/agentContent.json` needs its label and note.
   `/publications` is the worked example: its index and every post answer in
   markdown, an episode carrying the rest of its guide the way the page does.
 - The JSON-LD lives in `components/head/site-schema.tsx` (published once per

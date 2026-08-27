@@ -1,5 +1,5 @@
 import { getClient } from "./clientApi";
-import type { ContactDocument, HomeDocument, LegalDocument } from "./types";
+import type { ContactDocument, HomeDocument, IskaDocument, LegalDocument } from "./types";
 
 // One place for the page documents, so `getStaticProps` and the markdown
 // representation of a page always read the same fields. Locale goes through a
@@ -33,6 +33,21 @@ const LEGAL_QUERY = `*[_type == "legal" && language == $locale][0]{
   block
 }`;
 
+const ISKA_QUERY = `*[_type == "iska" && language == $locale][0]{
+  titleseo,
+  descriptionseo,
+  title,
+  tagline,
+  cta,
+  ctaAria,
+  networkTitle,
+  network,
+  bringTitle,
+  bring,
+  skillsTitle,
+  skills
+}`;
+
 // Every one of these projects `[0]`, so a reachable Sanity with nothing
 // published resolves to null rather than rejecting.
 //
@@ -54,3 +69,6 @@ export const fetchContact = (locale?: string, draft?: boolean) =>
 
 export const fetchLegal = (locale?: string, draft?: boolean) =>
 	fetchDocument<LegalDocument>(LEGAL_QUERY, locale, draft);
+
+export const fetchIska = (locale?: string, draft?: boolean) =>
+	fetchDocument<IskaDocument>(ISKA_QUERY, locale, draft);

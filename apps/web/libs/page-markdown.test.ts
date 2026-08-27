@@ -206,15 +206,18 @@ test("an expertise field with no aside omits the heading", () => {
 	expect(markdown.includes("## undefined")).toBe(false);
 });
 
-test("the ISKA document comes straight from the content file", () => {
+test("the ISKA document renders its two rich-text sections and its practice areas", () => {
 	const markdown = iskaMarkdown(
 		{
 			title: "Réseau ISKA",
 			tagline: "Un réseau d’avocats indépendants.",
 			networkTitle: "Le réseau",
-			network: ["Implanté au cœur de Paris.", "Ses avocats plaident partout."],
+			network: [
+				paragraph("Implanté au cœur de Paris."),
+				paragraph("Ses avocats plaident partout."),
+			],
 			bringTitle: "Ce que le réseau apporte",
-			bring: ["Le cabinet reste indépendant.", "Une seule interlocutrice."],
+			bring: [paragraph("Le cabinet reste indépendant."), paragraph("Une seule interlocutrice.")],
 			skillsTitle: "Les compétences du réseau",
 			skills: ["Droit pénal", "Droit du travail"],
 		},
@@ -225,8 +228,8 @@ test("the ISKA document comes straight from the content file", () => {
 	expect(markdown.includes("> Un réseau d’avocats indépendants.")).toBe(true);
 	expect(markdown.includes("## Les compétences du réseau")).toBe(true);
 	expect(markdown.includes("- Droit pénal\n- Droit du travail")).toBe(true);
-	// The content file ships several paragraphs per section; they stay separate
-	// paragraphs rather than being glued into one.
+	// Each section carries several blocks; they stay separate paragraphs rather
+	// than being glued into one.
 	expect(
 		markdown.includes("Implanté au cœur de Paris.\n\nSes avocats plaident partout."),
 		markdown,
@@ -235,6 +238,13 @@ test("the ISKA document comes straight from the content file", () => {
 		markdown.includes("Le cabinet reste indépendant.\n\nUne seule interlocutrice."),
 		markdown,
 	).toBe(true);
+});
+
+test("an ISKA document the studio has barely filled in omits its empty sections", () => {
+	const markdown = iskaMarkdown({ title: "Réseau ISKA" }, ctx());
+
+	expect(firstLine(markdown)).toBe("# Réseau ISKA");
+	expect(markdown.includes("undefined"), markdown).toBe(false);
 });
 
 test("the 404 document names the site map and the agent guide", () => {

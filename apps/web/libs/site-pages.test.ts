@@ -2,7 +2,6 @@ import agentContent from "../content/agentContent.json";
 import contactContent from "../content/contactContent.json";
 import footerContent from "../content/footerContent.json";
 import headerContent from "../content/headerContent.json";
-import iskaContent from "../content/iskaContent.json";
 import { sitePages } from "./site-pages";
 import { HOST } from "./site-url";
 import type { Locale, NavLink, SitePagesLabels } from "./types";
@@ -15,6 +14,7 @@ const labels: SitePagesLabels = {
 	aboutNote: "le cabinet",
 	expertiseNote: "compétences",
 	contactNote: "coordonnées",
+	iskaLabel: "Réseau ISKA",
 	iskaNote: "réseau",
 	legalNote: "mentions",
 };
@@ -33,7 +33,7 @@ const labelsWithFallbacks: SitePagesLabels = {
 	publicationsLabel: "Publications",
 };
 
-const args = { labels, nav, iskaTitle: "Réseau ISKA", legalLabel: "Mentions Légales" };
+const args = { labels, nav, legalLabel: "Mentions Légales" };
 
 test("every public page is listed once, with a label, a note and an absolute URL", () => {
 	const pages = sitePages("fr", args);
@@ -97,7 +97,6 @@ test("the real agent copy fills every label and note, in both languages", () => 
 		const pages = sitePages(locale, {
 			labels: agentContent[locale],
 			nav: headerContent[locale].nav,
-			iskaTitle: iskaContent[locale].title,
 			legalLabel: footerContent[locale].link2,
 		});
 
@@ -123,6 +122,7 @@ test("the real agent copy fills every label and note, in both languages", () => 
 			"englishNote",
 			"otherLocaleLabel",
 			"expertiseLabel",
+			"iskaLabel",
 			"contactLabel",
 			"publicationsLabel",
 			"publicationsNote",
@@ -144,17 +144,6 @@ test("the real agent copy fills every label and note, in both languages", () => 
 		// And the contact labels the contact document renders.
 		for (const key of ["addressLabel", "phoneLabel", "mobileLabel", "emailLabel"] as const) {
 			expect(contactContent[locale][key].trim(), `${locale} ${key}`).toBeTruthy();
-		}
-
-		// And the ISKA copy, which is the one page whose whole body is a content
-		// file rather than the CMS.
-		const iska = iskaContent[locale];
-		for (const key of ["title", "tagline", "networkTitle", "bringTitle", "skillsTitle"] as const) {
-			expect(iska[key].trim(), `${locale} iska ${key}`).toBeTruthy();
-		}
-		for (const key of ["network", "bring", "skills"] as const) {
-			expect(Array.isArray(iska[key]), `${locale} iska ${key}`).toBe(true);
-			expect(iska[key].length, `${locale} iska ${key} is empty`).toBeGreaterThan(0);
 		}
 	}
 });
