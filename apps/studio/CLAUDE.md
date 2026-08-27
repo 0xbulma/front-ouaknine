@@ -17,6 +17,15 @@ dataset `production`, deployed to Sanity's own hosting rather than to Vercel.
 | Tests | `node --test`. No Vitest, no test framework |
 | Deploy | `pnpm --filter studio deploy`, pinned to the existing studio by `appId` |
 
+`presentationTool` puts the site in an iframe beside the form that feeds it, and
+turns every string on the page into a click target for its field. That needs
+`/api/draft` on the other side (`apps/web/pages/api/draft.ts`) and a
+`SANITY_TOKEN` there; without them Presentation still frames the site, but as a
+preview of what is already published. `SANITY_STUDIO_PREVIEW_URL` chooses which
+site, defaulting to production. Vite only exposes `SANITY_STUDIO_*`, which is
+why it is read off `import.meta.env` rather than `process.env`, a global this
+Studio's ESLint config does not know.
+
 ```bash
 pnpm dev          # sanity dev, :3333
 pnpm build        # sanity build

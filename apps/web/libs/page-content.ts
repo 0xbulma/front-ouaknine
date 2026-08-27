@@ -1,4 +1,4 @@
-import clientApi from "./clientApi";
+import { getClient } from "./clientApi";
 import type { ContactDocument, HomeDocument, LegalDocument } from "./types";
 
 // One place for the page documents, so `getStaticProps` and the markdown
@@ -35,12 +35,22 @@ const LEGAL_QUERY = `*[_type == "legal" && language == $locale][0]{
 
 // Every one of these projects `[0]`, so a reachable Sanity with nothing
 // published resolves to null rather than rejecting.
-const fetchDocument = <T>(query: string, locale: string | undefined): Promise<T | null> =>
-	clientApi.fetch<T | null>(query, { locale: locale ?? "fr" });
+//
+// `draft` is the flag libs/static-page-props.ts reads off Next's draft mode. It
+// picks the client, and nothing else changes: same query, same locale, same
+// shape back. What differs is that the answer may be unpublished and that every
+// string in it carries a stega-encoded edit link.
+const fetchDocument = <T>(
+	query: string,
+	locale: string | undefined,
+	draft?: boolean,
+): Promise<T | null> => getClient(draft).fetch<T | null>(query, { locale: locale ?? "fr" });
 
-export const fetchHome = (locale?: string) => fetchDocument<HomeDocument>(HOME_QUERY, locale);
+export const fetchHome = (locale?: string, draft?: boolean) =>
+	fetchDocument<HomeDocument>(HOME_QUERY, locale, draft);
 
-export const fetchContact = (locale?: string) =>
-	fetchDocument<ContactDocument>(CONTACT_QUERY, locale);
+export const fetchContact = (locale?: string, draft?: boolean) =>
+	fetchDocument<ContactDocument>(CONTACT_QUERY, locale, draft);
 
-export const fetchLegal = (locale?: string) => fetchDocument<LegalDocument>(LEGAL_QUERY, locale);
+export const fetchLegal = (locale?: string, draft?: boolean) =>
+	fetchDocument<LegalDocument>(LEGAL_QUERY, locale, draft);

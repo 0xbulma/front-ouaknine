@@ -1,11 +1,16 @@
 packages:
   - "apps/*"
 
-# React is the one dependency the site and the studio genuinely share. The
-# catalog is what stops them drifting onto two different 19.x behind a caret.
+# The dependencies the site and the studio genuinely share. The catalog is what
+# stops them drifting onto two different 19.x behind a caret.
+#
+# styled-components is here for the same reason React is: the studio has always
+# needed it, and the site now does too, as the peer @sanity/visual-editing
+# declares. Neither imports it directly; both have to resolve the same one.
 catalog:
   react: 19.2.8
   react-dom: 19.2.8
+  styled-components: 6.5.3
 
 # The studio's Vite toolchain. Nothing in the site needs a postinstall, so this
 # stays an allowlist rather than a blanket `dangerouslyAllowAllBuilds`.

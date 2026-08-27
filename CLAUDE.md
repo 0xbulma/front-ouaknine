@@ -68,6 +68,16 @@ Both halves point at Sanity project `46fx2dmc`, dataset `production`. The site
 reads the id from `NEXT_PUBLIC_SANITY_ID`; the studio hardcodes it in
 `sanity.cli.js` and `sanity.config.js`.
 
+The second seam runs the other way, and it is a URL rather than a type.
+`presentationTool` in `apps/studio/sanity.config.js` frames the site and calls
+`/api/draft` on it to hand over a one-time preview secret;
+`apps/web/pages/api/draft.ts` is what answers. Nothing validates that pairing
+either: rename the route and the Studio keeps offering a preview button that
+401s. `SANITY_STUDIO_PREVIEW_URL` chooses which site gets framed, defaulting to
+production, and `.conductor/settings.toml` points it at the local one. The site
+side of it is documented under "Draft mode, and editing on the page" in
+`apps/web/CLAUDE.md`.
+
 ## Conductor
 
 `.conductor/settings.toml` and `.worktreeinclude` at the root configure the
@@ -78,10 +88,19 @@ both servers and cannot give them different ports: `web` takes
 `$CONDUCTOR_PORT` is unset in a cloud workspace and both servers would fall
 back to their default port and collide.
 
-`.worktreeinclude` copies `apps/web/.env*`, not a root `.env`. Next resolves
-its env file from its own project directory, so a copy at the repo root is read
-by nothing. **The main checkout has to have the file at `apps/web/.env` for
-there to be anything to copy.**
+Next resolves its env file from its own project directory, so the site's env has
+to end up at `apps/web/.env`; a copy at the repo root is read by nothing, and
+the symptom is `Configuration must contain projectId` and a 500 on every page.
+
+Two things get it there, because the main checkout still keeps the file at the
+root. `.worktreeinclude` copies **both** locations, since a pattern that selects
+nothing is a workspace that comes up with no env at all. Then the `setup` script
+promotes the root copy to `apps/web/.env` when that one is absent. It never
+overwrites, so a workspace that received the real thing keeps it, and the whole
+step becomes a no-op the day the main checkout moves the file for good.
+
+`SANITY_TOKEN` rides along in the same file. Only draft mode reads it, so a
+workspace without it runs the published site fine.
 
 The Mac app reads the shared `settings.toml` from the default branch on the
 remote, so none of this takes effect until it is on `main`.

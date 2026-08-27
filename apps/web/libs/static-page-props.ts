@@ -14,10 +14,16 @@
 // Pure: the fetcher is injected, so this is testable without the Sanity client.
 
 // The slice of Next's `GetStaticPropsContext` these routes read. Narrower on
-// purpose: nothing here should reach for preview data or a build id.
+// purpose: nothing here should reach for a build id or the preview payload.
+//
+// `draftMode` is the one exception, and it is a boolean rather than the payload:
+// it selects which client the fetcher reads through (libs/clientApi.ts) and
+// nothing more. Next sets it when the cookie from pages/api/draft.ts is present,
+// and serves the page on demand instead of from the ISR cache while it is.
 export type PageContext = {
 	locale?: string;
 	params?: Record<string, string | string[] | undefined>;
+	draftMode?: boolean;
 };
 
 export type PageResult<P> =
@@ -31,13 +37,13 @@ const pageName = (page: PageName, ctx?: PageContext): string =>
 
 export const staticPageProps =
 	<Data, Props = { data: Data }>(
-		fetcher: (locale?: string) => Promise<Data | null | undefined>,
+		fetcher: (locale?: string, draft?: boolean) => Promise<Data | null | undefined>,
 		page: PageName,
 		build?: (data: Data, ctx: PageContext) => Props | null,
 	) =>
 	async (ctx?: PageContext): Promise<PageResult<Props | { data: Data }>> => {
 		try {
-			const data = await fetcher(ctx?.locale);
+			const data = await fetcher(ctx?.locale, ctx?.draftMode);
 			if (!data) return { notFound: true, revalidate: 10 };
 
 			const props = build ? build(data, ctx ?? {}) : { data };
