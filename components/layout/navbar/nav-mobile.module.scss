@@ -46,7 +46,7 @@
 .link {
   display: block;
   padding: 4.5vh 0;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-inter, sans-serif);
   @include scaleclick;
 }
 

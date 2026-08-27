@@ -5,8 +5,8 @@ body {
   position: relative;
   padding: 0;
   margin: 0;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  // Set on :root by pages/_app.tsx, where next/font generates the family name.
+  font-family: var(--font-inter, -apple-system, BlinkMacSystemFont, sans-serif);
   color: $ink;
   background-color: $bg;
   -webkit-font-smoothing: antialiased;
@@ -81,7 +81,7 @@ h3,h4,h5,h6 {
   margin-bottom: $space-2;
   font-size: 1rem;
   line-height: $lh-heading;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-inter, sans-serif);
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;

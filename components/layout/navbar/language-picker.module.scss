@@ -47,7 +47,7 @@ $localewidth: 62px;
 .tag {
   font-size: 1rem;
   user-select: none;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-inter, sans-serif);
 }
 
 .check {
@@ -72,7 +72,7 @@ $localewidth: 62px;
   user-select: none;
   transition: all 0.15s;
 
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-inter, sans-serif);
 
   &:hover {
     background-color: rgba($accent, 0.06);
@@ -99,7 +99,7 @@ $localewidth: 62px;
   opacity: 0;
   transition: all 0.15s;
   visibility: hidden;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-inter, sans-serif);
 
 }
 

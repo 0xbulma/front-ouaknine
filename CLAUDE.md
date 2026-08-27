@@ -92,9 +92,9 @@ reads exactly like a component that stopped rendering.
 because Next 16 removed `next lint` and ESLint 10 no longer reads `.eslintrc`.
 It loads the Next plugin and `@typescript-eslint/parser` and nothing else. Those 21 rules have no Biome equivalent and
 several matter here: `no-html-link-for-pages` in a pages-router app,
-`google-font-display` / `google-font-preconnect` because `_document.tsx`
-hand-loads Google Fonts, `inline-script-id` and `next-script-for-ga` for the gtag
-snippet, `no-duplicate-head`. Suppressions are `biome-ignore`, not
+`inline-script-id` and `next-script-for-ga` for the gtag snippet,
+`no-duplicate-head`. The two `google-font-*` rules no longer have anything to
+watch, since `next/font` self-hosts. Suppressions are `biome-ignore`, not
 `eslint-disable`, everywhere except those rules. The file list is the app, not
 the build output and not `test/`, whose mocks render a bare `<img>` on purpose.
 
@@ -370,6 +370,28 @@ aliased to `$paper` — it is not a colour, it is emphasis.
 Hardcoded literals have caused every dark-theme bug so far (`background-color:
 black` on the burger, `white` autofill shadows, `color: black` placeholders).
 If you write a raw colour word, you have almost certainly made a mistake.
+
+**The fonts are self-hosted, through `next/font/google` in `pages/_app.tsx`.**
+They are downloaded at build time and served from this origin; there is no
+request to `fonts.googleapis.com` or `fonts.gstatic.com` at page load. That
+matters twice over: it was a render-blocking third-party stylesheet in front of
+a page made almost entirely of type, and it sent every visitor's IP to Google
+from a law practice's own site.
+
+The loader declares no `fallback` list on purpose. Passing one suppresses the
+metrics-matched face Next derives from the real font (`ascent-override`,
+`size-adjust`), and that face is what keeps a 144px headline from reflowing when
+the webfont swaps in. The designer's `Didot, 'Times New Roman', serif` chain
+lives on as the `var()` fallback in `styles/_variables.scss`, for the only case
+it was really for: the custom property not being set at all.
+
+Stylesheets name the families through `var(--font-bodoni)` and
+`var(--font-inter)`, never as literals. `_app.tsx` sets both on `:root` with a
+`<style jsx global>` block, because `globals.scss` styles `body` and `body` is
+above anything a component can put a className on.
+
+`pages/_document.tsx` is gone: the three font `<link>` tags were the only thing
+in it that Next's default document does not already do.
 
 ### Type — two families, split by size
 
