@@ -43,19 +43,9 @@ jobs:
       # One install for both workspaces: the root pnpm-lock.yaml covers them.
       - run: pnpm install --frozen-lockfile
 
-      # Formatting and the Biome rules first: it is the fastest of the four and
-      # the one most likely to fail on an unformatted branch.
-      - run: pnpm --filter web biome:check
-
-      # ESLint carries only the @next/next rules Biome has no equivalent for.
-      - run: pnpm --filter web lint
-
-      - run: pnpm --filter web typecheck
-
-      - run: pnpm --filter web test
-
-      # The studio is JS on its own toolchain: @sanity/eslint-config-studio and
-      # node --test, no Biome and no tsc.
-      - run: pnpm --filter studio lint
-
-      - run: pnpm --filter studio test
+      # One step, deliberately. Naming the workspaces here is what lets a third
+      # one be added and never checked; `pnpm verify` is `pnpm -r verify` behind
+      # the parity guard, so every workspace is covered by construction. What
+      # each one runs is its own business: the site is Biome, ESLint, tsc and
+      # Vitest, the studio is eslint-config-studio and node --test.
+      - run: pnpm verify

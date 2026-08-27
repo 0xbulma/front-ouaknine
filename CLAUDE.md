@@ -4,8 +4,8 @@ Two workspaces, one site. Everything specific to either of them is documented
 inside it; this file is only the map and the seams between them.
 
 ```
-apps/web      the Next.js site.       See apps/web/CLAUDE.md, which is the long one.
-apps/studio   the Sanity Studio that feeds it. Imported from 0xbulma/back-ouaknine.
+apps/web      the Next.js site.               See apps/web/CLAUDE.md, the long one.
+apps/studio   the Sanity Studio that feeds it. See apps/studio/CLAUDE.md.
 docs/         editorial briefs. Prose about content, not about either codebase.
 ```
 
@@ -16,21 +16,41 @@ version; there is no Turborepo, because with two apps and no shared package
 there is nothing for it to schedule.
 
 ```bash
-pnpm install              # both workspaces
-pnpm dev                  # the site on :3000
-pnpm studio               # the studio on :3333
-pnpm verify               # everything CI runs, both workspaces
-pnpm build                # next build. Needs NEXT_PUBLIC_SANITY_ID
-pnpm studio:deploy        # sanity deploy, pinned to the existing studio by appId
+pnpm install   # both workspaces
+pnpm dev       # both dev servers: the site on :3000, the studio on :3333
+pnpm build     # both. The site needs NEXT_PUBLIC_SANITY_ID
+pnpm verify    # everything CI runs, every workspace
 ```
 
-Anything narrower is `pnpm --filter web <script>` or `pnpm --filter studio
-<script>`. The two apps do not share a lint, a test runner, or a language: the
-site is TypeScript on Biome + Vitest, the studio is JavaScript on
-`@sanity/eslint-config-studio` + `node --test`. `pnpm verify` runs both.
+Every root script is `pnpm -r <task>`. None of them names a workspace, which is
+the point: a third one is picked up without editing this file or the CI. Narrow
+with `pnpm --filter web <task>` or `pnpm --filter studio <task>`.
 
-`catalog:` in `pnpm-workspace.yaml` holds the one dependency they genuinely
-share, React, so the studio and the site cannot drift onto two different 19.x.
+## What keeps the two apps equal
+
+Not sameness. They do not share a language, a linter, a test runner or a deploy
+target, and forcing them to would mean giving the studio a `tsconfig.json` it
+has no use for. What they share is the **task vocabulary**: `dev`, `build`,
+`lint`, `test`, `verify`. Every workspace answers to those five words; what each
+one runs behind them is its own business.
+
+`scripts/workspace-parity.mjs` is what makes that a rule rather than a habit.
+`pnpm -r <task>` runs the workspaces that define a task and **exits 0 on the
+ones that do not**, so a workspace added without a `verify` does not fail CI, it
+disappears from it. The guard fails the build instead. It runs first in
+`pnpm verify`, and `pnpm verify` is the whole of the CI job.
+
+`catalog:` in `pnpm-workspace.yaml` is the same idea for dependencies: React is
+the one both apps really use, so it is declared once and neither can drift onto
+its own 19.x.
+
+Three asymmetries are deliberate, and named here so nobody tries to fix them:
+
+| | Why |
+|---|---|
+| `engines.node` only in `apps/web` | Vercel reads it from the deployed workspace. A second copy would be a second thing to forget. CI points at that one file |
+| Biome only covers `apps/web` | Its rules assume TypeScript and the React Compiler. The studio's own ESLint config covers the studio |
+| Only the site has a `deploy` through git | The studio deploys with `pnpm --filter studio deploy`, to Sanity's hosting, by hand |
 
 ## The seam
 

@@ -2,34 +2,29 @@
   "name": "studio",
   "private": true,
   "version": "1.0.0",
-  "description": "",
-  "main": "package.json",
   "author": "Benjamin A <benjamin.anoufa@gmail.com>",
   "license": "UNLICENSED",
   "type": "module",
   "scripts": {
     "dev": "sanity dev",
-    "start": "sanity start",
     "build": "sanity build",
+    "start": "sanity start",
     "deploy": "sanity deploy",
     "lint": "eslint .",
     "test": "node --test \"test/**/*.test.js\"",
-    "check:data": "node scripts/check-orphaned-fields.mjs",
-    "verify": "pnpm lint && pnpm test"
+    "verify": "pnpm lint && pnpm test",
+    "check:data": "node scripts/check-orphaned-fields.mjs"
   },
-  "keywords": [
-    "sanity"
-  ],
   "dependencies": {
     "@sanity/vision": "6.9.2",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "react-icons": "^5.7.0",
+    "react-icons": "5.7.0",
     "sanity": "6.9.2",
-    "styled-components": "^6.1.15"
+    "styled-components": "6.5.3"
   },
   "devDependencies": {
-    "@sanity/eslint-config-studio": "^7.0.0",
-    "eslint": "^10.0.0"
+    "@sanity/eslint-config-studio": "7.0.0",
+    "eslint": "10.9.1"
   }
 }

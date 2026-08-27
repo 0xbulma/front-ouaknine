@@ -10,10 +10,12 @@ Sanity Studio that feeds it.
 
 ```bash
 pnpm install
-pnpm dev        # the site on :3000
-pnpm studio     # the studio on :3333
-pnpm verify     # lint, typecheck and test both workspaces
+pnpm dev        # both: the site on :3000, the studio on :3333
+pnpm verify     # lint, typecheck and test every workspace
 ```
+
+One workspace at a time is `pnpm --filter web <task>` or
+`pnpm --filter studio <task>`.
 
 The site needs `NEXT_PUBLIC_SANITY_ID` in `apps/web/.env.local` to render a
 page: every page's `getStaticProps` fetches from the CMS.

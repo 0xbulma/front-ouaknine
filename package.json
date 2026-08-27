@@ -3,11 +3,10 @@
   "private": true,
   "packageManager": "pnpm@11.1.1",
   "scripts": {
-    "dev": "pnpm --filter web dev",
-    "build": "pnpm --filter web build",
-    "start": "pnpm --filter web start",
-    "verify": "pnpm --filter web verify && pnpm --filter studio verify",
-    "studio": "pnpm --filter studio dev",
-    "studio:deploy": "pnpm --filter studio deploy"
+    "dev": "pnpm -r --parallel dev",
+    "build": "pnpm -r build",
+    "lint": "pnpm -r lint",
+    "test": "pnpm -r test",
+    "verify": "node scripts/workspace-parity.mjs && pnpm -r verify"
   }
 }
