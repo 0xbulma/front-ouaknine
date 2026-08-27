@@ -93,20 +93,11 @@
   min-width: 0;
 
   // An article outside a guide has no index beside it, so it takes the row
-  // rather than the 17rem column auto-placement would drop it into. Only the
-  // row: dropping the measure with it ran the prose across the full 1200px
-  // container at 164 characters a line.
-  //
-  // It takes $measure-wide and stays hard left, where the banner and the meta
-  // rule already start. Centred in the row it read as a block floating in the
-  // middle of the page; against the left edge it is the same column the guide
-  // has beside its index, and the air falls on the right of both.
+  // rather than the 17rem column auto-placement would drop it into. The prose
+  // needs no rule of its own here: .body is capped at $measure-wide and fills
+  // whatever column it is given, which is this whole row.
   &:only-child {
     grid-column: 1 / -1;
-
-    .body {
-      max-width: $measure-wide;
-    }
   }
 }
 
@@ -137,7 +128,15 @@
 }
 
 .body {
-  max-width: $measure;
+  // Fill the column, up to a cap. Beside the index that column is 832px and
+  // the prose ends flush with the meta rule and the banner above it, which is
+  // where the eye already expects the page to stop; on an article, which has
+  // no index, the row is the full container and the cap is what stops it
+  // running to 164 characters a line.
+  //
+  // Not $measure: that is the blurb width, right for the three paragraphs on
+  // /about and short for a thousand words here.
+  max-width: $measure-wide;
   margin-top: $space-5;
 
   // One heading treatment for every level. A piece of this length wants a
