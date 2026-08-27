@@ -4,7 +4,7 @@ titlefr: "Escroquerie, faux et usage de faux en entreprise"
 slug: escroquerie-faux-et-usage-de-faux
 relatedExpertise: droit-penal-des-affaires
 author: Alice Ouaknine
-publishedAt: 2027-09-21
+publishedAt: 2027-05-06
 filter: fact
 targetQuery: escroquerie faux et usage de faux entreprise
 status: brouillon, non validé

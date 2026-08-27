@@ -6,7 +6,7 @@ series: Guide de survie du dirigeant mis en cause
 episode: 2
 relatedExpertise: droit-penal-des-affaires
 author: Alice Ouaknine
-publishedAt: 2027-02-09
+publishedAt: 2026-12-03
 filter: fact
 targetQuery: perquisition dans une entreprise que faire
 status: brouillon, non validé

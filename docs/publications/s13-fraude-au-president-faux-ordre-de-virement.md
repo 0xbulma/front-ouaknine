@@ -4,7 +4,7 @@ titlefr: "La fraude au président et le faux ordre de virement"
 slug: fraude-au-president-faux-ordre-de-virement
 relatedExpertise: droit-penal-des-affaires
 author: Alice Ouaknine
-publishedAt: 2027-10-12
+publishedAt: 2027-05-20
 filter: fact
 targetQuery: fraude au président que faire
 status: brouillon, non validé

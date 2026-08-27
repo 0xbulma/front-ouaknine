@@ -4,7 +4,7 @@ titlefr: "Corruption et trafic d’influence : les textes et leur portée"
 slug: corruption-et-trafic-d-influence
 relatedExpertise: droit-penal-des-affaires
 author: Alice Ouaknine
-publishedAt: 2027-08-17
+publishedAt: 2027-04-15
 filter: fact
 targetQuery: différence entre corruption et trafic d’influence
 status: brouillon, non validé

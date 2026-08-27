@@ -6,7 +6,7 @@ series: Guide de survie du dirigeant mis en cause
 episode: 13
 relatedExpertise: droit-penal-des-affaires
 author: Alice Ouaknine
-publishedAt: 2027-06-01
+publishedAt: 2027-02-18
 filter: fact
 targetQuery: procès correctionnel déroulement
 status: brouillon, non validé

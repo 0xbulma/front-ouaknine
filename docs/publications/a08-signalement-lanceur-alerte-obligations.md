@@ -6,7 +6,7 @@ series: Conduire une enquête interne
 episode: 8
 relatedExpertise: enquetes-internes
 author: Alice Ouaknine
-publishedAt: 2026-12-08
+publishedAt: 2026-10-22
 filter: fact
 targetQuery: obligations de l’employeur signalement lanceur d’alerte
 status: brouillon, non validé

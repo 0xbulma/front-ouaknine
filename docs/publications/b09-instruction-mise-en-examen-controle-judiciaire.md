@@ -6,7 +6,7 @@ series: Guide de survie du dirigeant mis en cause
 episode: 9
 relatedExpertise: droit-penal-des-affaires
 author: Alice Ouaknine
-publishedAt: 2027-04-20
+publishedAt: 2027-01-21
 filter: fact
 targetQuery: mise en examen déroulement de l’instruction
 status: brouillon, non validé

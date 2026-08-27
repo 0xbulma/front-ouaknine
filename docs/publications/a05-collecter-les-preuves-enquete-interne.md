@@ -6,7 +6,7 @@ series: Conduire une enquête interne
 episode: 5
 relatedExpertise: enquetes-internes
 author: Alice Ouaknine
-publishedAt: 2026-11-10
+publishedAt: 2026-10-01
 filter: fact
 targetQuery: consulter la messagerie professionnelle d’un salarié
 status: brouillon, non validé

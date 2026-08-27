@@ -6,7 +6,7 @@ series: Guide de survie du dirigeant mis en cause
 episode: 5
 relatedExpertise: droit-penal-des-affaires
 author: Alice Ouaknine
-publishedAt: 2027-03-09
+publishedAt: 2026-12-24
 filter: fact
 targetQuery: saisie pénale compte bancaire entreprise
 status: brouillon, non validé

@@ -4,7 +4,7 @@ titlefr: "L’abus de biens sociaux : définition et sanctions"
 slug: abus-de-biens-sociaux
 relatedExpertise: droit-penal-des-affaires
 author: Alice Ouaknine
-publishedAt: 2027-08-03
+publishedAt: 2027-04-01
 filter: fact
 targetQuery: abus de biens sociaux définition
 status: brouillon, non validé

@@ -4,7 +4,7 @@ titlefr: "Le Parquet National Financier : compétence et saisine"
 slug: parquet-national-financier-competence
 relatedExpertise: droit-penal-des-affaires
 author: Alice Ouaknine
-publishedAt: 2027-07-13
+publishedAt: 2027-03-18
 filter: fact
 targetQuery: Parquet national financier compétence
 status: brouillon, non validé

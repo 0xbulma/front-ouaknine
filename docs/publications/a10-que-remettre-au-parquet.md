@@ -6,7 +6,7 @@ series: Conduire une enquête interne
 episode: 10
 relatedExpertise: enquetes-internes
 author: Alice Ouaknine
-publishedAt: 2027-01-12
+publishedAt: 2026-11-05
 filter: fact
 targetQuery: révélation spontanée au parquet entreprise
 status: brouillon, non validé

@@ -4,7 +4,7 @@ titlefr: "Fuite de données et usage abusif des outils de l’entreprise"
 slug: fuite-de-donnees-et-usage-abusif-des-outils
 relatedExpertise: cyber-criminalite
 author: Alice Ouaknine
-publishedAt: 2027-11-09
+publishedAt: 2027-06-10
 filter: fact
 targetQuery: vol de données par un salarié
 status: brouillon, non validé

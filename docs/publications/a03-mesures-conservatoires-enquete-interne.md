@@ -6,7 +6,7 @@ series: Conduire une enquête interne
 episode: 3
 relatedExpertise: enquetes-internes
 author: Alice Ouaknine
-publishedAt: 2026-10-20
+publishedAt: 2026-09-17
 filter: fact
 targetQuery: mise à pied conservatoire enquête interne
 status: brouillon, non validé

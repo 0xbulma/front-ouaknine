@@ -4,7 +4,7 @@ titlefr: "La loi de blocage face au discovery américain"
 slug: loi-de-blocage-face-au-discovery-americain
 relatedExpertise: droit-penal-international
 author: Alice Ouaknine
-publishedAt: 2027-12-07
+publishedAt: 2027-06-24
 filter: fact
 targetQuery: loi de blocage discovery américain
 status: brouillon, non validé

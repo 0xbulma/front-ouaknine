@@ -4,7 +4,7 @@ titlefr: "La responsabilité pénale de la personne morale (article 121-2)"
 slug: responsabilite-penale-de-la-personne-morale
 relatedExpertise: droit-penal-des-affaires
 author: Alice Ouaknine
-publishedAt: 2027-11-16
+publishedAt: 2027-06-17
 filter: fact
 targetQuery: responsabilité pénale de la personne morale
 status: brouillon, non validé

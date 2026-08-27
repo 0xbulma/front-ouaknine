@@ -4,7 +4,7 @@ titlefr: "Le délit d’initié et le manquement d’initié"
 slug: delit-d-initie-et-manquement-d-initie
 relatedExpertise: droit-penal-des-affaires
 author: Alice Ouaknine
-publishedAt: 2027-10-05
+publishedAt: 2027-05-13
 filter: fact
 targetQuery: différence entre délit d’initié et manquement d’initié
 status: brouillon, non validé

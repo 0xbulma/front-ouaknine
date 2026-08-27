@@ -6,7 +6,7 @@ series: Conduire une enquête interne
 episode: 11
 relatedExpertise: enquetes-internes
 author: Alice Ouaknine
-publishedAt: 2027-01-19
+publishedAt: 2026-11-12
 filter: fact
 targetQuery: le rapport d’enquête interne est-il confidentiel
 status: brouillon, non validé

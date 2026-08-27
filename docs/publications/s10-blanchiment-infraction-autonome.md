@@ -4,7 +4,7 @@ titlefr: "Le blanchiment : l’infraction autonome"
 slug: blanchiment-infraction-autonome
 relatedExpertise: droit-penal-des-affaires
 author: Alice Ouaknine
-publishedAt: 2027-09-14
+publishedAt: 2027-04-29
 filter: fact
 targetQuery: blanchiment infraction autonome
 status: brouillon, non validé

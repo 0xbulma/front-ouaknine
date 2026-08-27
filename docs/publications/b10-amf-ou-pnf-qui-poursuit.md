@@ -6,7 +6,7 @@ series: Guide de survie du dirigeant mis en cause
 episode: 10
 relatedExpertise: droit-penal-des-affaires
 author: Alice Ouaknine
-publishedAt: 2027-05-04
+publishedAt: 2027-01-28
 filter: fact
 targetQuery: AMF ou PNF procédure abus de marché
 status: brouillon, non validé

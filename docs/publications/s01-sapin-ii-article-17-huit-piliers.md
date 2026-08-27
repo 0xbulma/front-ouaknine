@@ -4,7 +4,7 @@ titlefr: "Sapin II : les huit piliers du dispositif anticorruption"
 slug: sapin-ii-article-17-huit-piliers
 relatedExpertise: droit-penal-des-affaires
 author: Alice Ouaknine
-publishedAt: 2027-06-08
+publishedAt: 2027-02-25
 filter: fact
 targetQuery: les huit piliers Sapin 2
 status: brouillon, non validé

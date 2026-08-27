@@ -6,7 +6,7 @@ series: Guide de survie du dirigeant mis en cause
 episode: 3
 relatedExpertise: droit-penal-des-affaires
 author: Alice Ouaknine
-publishedAt: 2027-02-16
+publishedAt: 2026-12-10
 filter: fact
 targetQuery: audition libre droits
 status: brouillon, non validé

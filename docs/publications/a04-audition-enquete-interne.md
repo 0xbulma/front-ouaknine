@@ -6,7 +6,7 @@ series: Conduire une enquête interne
 episode: 4
 relatedExpertise: enquetes-internes
 author: Alice Ouaknine
-publishedAt: 2026-11-03
+publishedAt: 2026-09-24
 filter: fact
 targetQuery: audition enquête interne salarié
 status: brouillon, non validé

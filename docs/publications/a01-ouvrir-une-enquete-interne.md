@@ -6,7 +6,7 @@ series: Conduire une enquête interne
 episode: 1
 relatedExpertise: enquetes-internes
 author: Alice Ouaknine
-publishedAt: 2026-10-06
+publishedAt: 2026-09-03
 filter: fact
 targetQuery: ouvrir une enquête interne
 status: brouillon, non validé

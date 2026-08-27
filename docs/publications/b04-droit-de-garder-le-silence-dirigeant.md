@@ -6,7 +6,7 @@ series: Guide de survie du dirigeant mis en cause
 episode: 4
 relatedExpertise: droit-penal-des-affaires
 author: Alice Ouaknine
-publishedAt: 2027-03-02
+publishedAt: 2026-12-17
 filter: fact
 targetQuery: droit de garder le silence dirigeant
 status: brouillon, non validé

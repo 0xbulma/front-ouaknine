@@ -4,7 +4,7 @@ titlefr: "Le contrôle de l’AFA : comment s’y préparer"
 slug: controle-afa-comment-s-y-preparer
 relatedExpertise: droit-penal-des-affaires
 author: Alice Ouaknine
-publishedAt: 2027-06-15
+publishedAt: 2027-03-04
 filter: fact
 targetQuery: contrôle AFA préparation
 status: brouillon, non validé

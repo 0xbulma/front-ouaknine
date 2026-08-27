@@ -4,7 +4,7 @@ titlefr: "FCPA et droit français : le risque de double poursuite"
 slug: fcpa-et-droit-francais-double-poursuite
 relatedExpertise: droit-penal-international
 author: Alice Ouaknine
-publishedAt: 2027-12-21
+publishedAt: 2027-07-08
 filter: fact
 targetQuery: FCPA et droit français double poursuite
 status: brouillon, non validé

@@ -4,7 +4,7 @@ titlefr: "Discrimination et agissements sexistes : conduire l’enquête"
 slug: discrimination-et-agissements-sexistes-enquete
 relatedExpertise: droit-penal-du-travail
 author: Alice Ouaknine
-publishedAt: 2027-11-02
+publishedAt: 2027-06-03
 filter: fact
 targetQuery: enquête interne discrimination au travail
 status: brouillon, non validé

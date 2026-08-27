@@ -6,7 +6,7 @@ series: Conduire une enquête interne
 episode: 7
 relatedExpertise: enquetes-internes
 author: Alice Ouaknine
-publishedAt: 2026-12-01
+publishedAt: 2026-10-15
 filter: fact
 targetQuery: suites d’une enquête interne
 status: brouillon, non validé

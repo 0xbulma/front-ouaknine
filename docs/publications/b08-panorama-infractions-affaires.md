@@ -6,7 +6,7 @@ series: Guide de survie du dirigeant mis en cause
 episode: 8
 relatedExpertise: droit-penal-des-affaires
 author: Alice Ouaknine
-publishedAt: 2027-04-13
+publishedAt: 2027-01-14
 filter: fact
 targetQuery: infractions de droit pénal des affaires liste
 status: brouillon, non validé

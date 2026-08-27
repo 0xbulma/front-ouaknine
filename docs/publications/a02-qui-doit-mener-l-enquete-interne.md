@@ -6,7 +6,7 @@ series: Conduire une enquête interne
 episode: 2
 relatedExpertise: enquetes-internes
 author: Alice Ouaknine
-publishedAt: 2026-10-13
+publishedAt: 2026-09-10
 filter: fact
 targetQuery: qui doit mener une enquête interne
 status: brouillon, non validé

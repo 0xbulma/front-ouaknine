@@ -4,7 +4,7 @@ titlefr: "La prise illégale d’intérêts"
 slug: prise-illegale-d-interets
 relatedExpertise: droit-penal-des-affaires
 author: Alice Ouaknine
-publishedAt: 2027-09-07
+publishedAt: 2027-04-22
 filter: fact
 targetQuery: prise illégale d’intérêts définition
 status: brouillon, non validé

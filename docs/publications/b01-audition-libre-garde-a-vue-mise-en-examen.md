@@ -6,7 +6,7 @@ series: Guide de survie du dirigeant mis en cause
 episode: 1
 relatedExpertise: droit-penal-des-affaires
 author: Alice Ouaknine
-publishedAt: 2027-02-02
+publishedAt: 2026-11-26
 filter: fact
 targetQuery: convocation police dirigeant entreprise
 status: brouillon, non validé

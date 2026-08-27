@@ -6,7 +6,7 @@ series: Conduire une enquête interne
 episode: 12
 relatedExpertise: droit-penal-international
 author: Alice Ouaknine
-publishedAt: 2027-01-26
+publishedAt: 2026-11-19
 filter: fact
 targetQuery: enquête interne transfrontalière France États-Unis
 status: brouillon, non validé

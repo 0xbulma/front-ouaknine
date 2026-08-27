@@ -4,7 +4,7 @@ titlefr: "L’abus de confiance en entreprise"
 slug: abus-de-confiance-en-entreprise
 relatedExpertise: droit-penal-des-affaires
 author: Alice Ouaknine
-publishedAt: 2027-08-10
+publishedAt: 2027-04-08
 filter: fact
 targetQuery: abus de confiance entreprise
 status: brouillon, non validé

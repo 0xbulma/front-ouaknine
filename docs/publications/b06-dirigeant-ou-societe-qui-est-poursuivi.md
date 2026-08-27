@@ -6,7 +6,7 @@ series: Guide de survie du dirigeant mis en cause
 episode: 6
 relatedExpertise: droit-penal-des-affaires
 author: Alice Ouaknine
-publishedAt: 2027-03-16
+publishedAt: 2026-12-31
 filter: fact
 targetQuery: responsabilité pénale du dirigeant et de la société
 status: brouillon, non validé

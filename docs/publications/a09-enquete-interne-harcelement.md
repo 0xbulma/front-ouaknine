@@ -6,7 +6,7 @@ series: Conduire une enquête interne
 episode: 9
 relatedExpertise: droit-penal-du-travail
 author: Alice Ouaknine
-publishedAt: 2026-12-15
+publishedAt: 2026-10-29
 filter: fact
 targetQuery: enquête interne harcèlement moral
 status: brouillon, non validé

@@ -4,7 +4,7 @@ titlefr: "La cartographie des risques de corruption"
 slug: cartographie-des-risques-de-corruption
 relatedExpertise: droit-penal-des-affaires
 author: Alice Ouaknine
-publishedAt: 2027-07-06
+publishedAt: 2027-03-11
 filter: fact
 targetQuery: cartographie des risques de corruption méthode
 status: brouillon, non validé

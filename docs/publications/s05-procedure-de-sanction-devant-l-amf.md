@@ -4,7 +4,7 @@ titlefr: "La procédure de sanction devant l’AMF"
 slug: procedure-de-sanction-devant-l-amf
 relatedExpertise: droit-penal-des-affaires
 author: Alice Ouaknine
-publishedAt: 2027-07-20
+publishedAt: 2027-03-25
 filter: fact
 targetQuery: commission des sanctions AMF procédure
 status: brouillon, non validé

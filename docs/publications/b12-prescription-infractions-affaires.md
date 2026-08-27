@@ -6,7 +6,7 @@ series: Guide de survie du dirigeant mis en cause
 episode: 12
 relatedExpertise: droit-penal-des-affaires
 author: Alice Ouaknine
-publishedAt: 2027-05-18
+publishedAt: 2027-02-11
 filter: fact
 targetQuery: prescription infractions droit pénal des affaires
 status: brouillon, non validé

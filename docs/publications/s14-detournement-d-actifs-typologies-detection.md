@@ -4,7 +4,7 @@ titlefr: "Le détournement d’actifs : typologies et détection"
 slug: detournement-d-actifs-typologies-detection
 relatedExpertise: droit-penal-des-affaires
 author: Alice Ouaknine
-publishedAt: 2027-10-19
+publishedAt: 2027-05-27
 filter: fact
 targetQuery: détournement d’actifs en entreprise détection
 status: brouillon, non validé

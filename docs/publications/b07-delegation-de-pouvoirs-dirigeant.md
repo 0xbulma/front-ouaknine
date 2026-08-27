@@ -6,7 +6,7 @@ series: Guide de survie du dirigeant mis en cause
 episode: 7
 relatedExpertise: droit-penal-des-affaires
 author: Alice Ouaknine
-publishedAt: 2027-04-06
+publishedAt: 2027-01-07
 filter: fact
 targetQuery: délégation de pouvoirs responsabilité pénale dirigeant
 status: brouillon, non validé

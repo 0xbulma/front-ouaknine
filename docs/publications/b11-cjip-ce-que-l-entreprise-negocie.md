@@ -6,7 +6,7 @@ series: Guide de survie du dirigeant mis en cause
 episode: 11
 relatedExpertise: droit-penal-des-affaires
 author: Alice Ouaknine
-publishedAt: 2027-05-11
+publishedAt: 2027-02-04
 filter: fact
 targetQuery: CJIP convention judiciaire d’intérêt public
 status: brouillon, non validé

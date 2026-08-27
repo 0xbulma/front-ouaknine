@@ -4,7 +4,7 @@ titlefr: "Entreprise française visée par le DOJ : premiers réflexes"
 slug: entreprise-francaise-visee-par-le-doj
 relatedExpertise: droit-penal-international
 author: Alice Ouaknine
-publishedAt: 2027-12-14
+publishedAt: 2027-07-01
 filter: fact
 targetQuery: entreprise française enquête DOJ
 status: brouillon, non validé
