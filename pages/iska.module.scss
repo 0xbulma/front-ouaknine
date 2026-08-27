@@ -56,8 +56,11 @@
   min-width: 0;
 }
 
+// globals.scss gives every `section` `padding: $space-7 0`; overriding only the
+// bottom leaves that 6rem top in place and separated two blocks by 12rem rather
+// than the 6rem below. The padding-bottom owns the rhythm here.
 .block {
-  padding-bottom: $space-7;
+  padding: 0 0 $space-7 0;
 }
 
 .blockindex {
