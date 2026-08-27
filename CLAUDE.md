@@ -16,7 +16,7 @@ publications, contact, ISKA, legal, plus a 404.
 | Language | **TypeScript**, `strict` + `noUncheckedIndexedAccess`. No `.js` left outside `next.config.js` |
 | Styling | SCSS modules + a global token file. No Tailwind, no CSS-in-JS |
 | Content | Sanity for page copy, local JSON for UI strings |
-| Tests | **Vitest** (`vitest.config.mts`), node environment, globals on |
+| Tests | **Vitest** (`vitest.config.mts`), two projects: `libs` on node, `ui` on jsdom |
 | Lint + format | **Biome** (`biome.json`) for both, plus `next lint` for the `@next/next` rules only |
 | Package manager | **yarn** (`yarn.lock` is committed; there is no `packageManager` field) |
 | Node | 24.x per `engines` |
@@ -93,17 +93,45 @@ ships `.d.ts` files that re-export its own `.tsx` sources, and those sources
 fail the rule inside `node_modules` where no suppression can reach them.
 `import type` is still the convention, it is just not enforced by the compiler.
 
-**A stray `next dev` clobbers `yarn build`.** Both write `./.next`, so a dev
-server left running in the workspace overwrites the static export while you are
-curling `next start` — the symptom is a 500 on `/404` with
-`MissingStaticPage … .next/server/pages/fr/404.html`. Stop it, `rm -rf .next`,
-rebuild.
+**A stray `next dev` clobbers `yarn build`.** Next 12 gives both the same
+`./.next`, so a dev server left running in the workspace (Conductor starts one)
+overwrites the production build while you curl `next start` against it. It has
+cost time twice, with two different symptoms that both look like real bugs: a
+500 on `/404` with `MissingStaticPage`, and `jsxDEV is not a function` from a
+route recompiled in development mode.
+
+Do not stop the dev server, give the verification build its own directory:
+
+```bash
+NEXT_DIST_DIR=.next-verify yarn build
+NEXT_DIST_DIR=.next-verify PORT=3111 yarn start
+```
+
+`next.config.js` reads that variable; unset, the build goes to `./.next` as
+usual. Next 16 solves this itself by writing `next dev` output to `.next/dev`.
 
 **`next lint` walks only what it is told to.** Its default directory list is
 `pages`, `components`, `lib`, `src`. This repo's is `libs` (plural), so for a
 long time nothing in it was linted at all; the `lint` script now passes
 `--dir pages --dir components --dir libs --dir hooks --dir context`. Adding a
 top-level directory means adding it there too.
+
+**The suite is two projects.** `libs` runs on node and covers the pure
+derivations; `ui` runs on jsdom and covers the component seams the pure tests
+cannot reach. Run one with `yarn vitest run --project ui`.
+
+`ui` mocks everything below the component in `test/setup.tsx`: `next/head`
+renders its children inline so the annotations are queryable, `next/link` clones
+its `<a>` child the way Next 12 does, `next/image` becomes an `<img>`, and
+`libs/clientApi` is stubbed because it throws at import without
+`NEXT_PUBLIC_SANITY_ID`. A test sets the router with `setRouter({ locale: 'en' })`
+in place of re-mocking the module. Stylesheets resolve to `test/style-stub.ts`,
+because Vite 8 calls a sass API the pinned 1.54.3 does not have; bumping sass
+changes the CSS the production build emits, so it waits for the Next upgrade.
+
+What `ui` is for: which annotations the head actually publishes (and which a
+`noindex` page suppresses), what the JSON-LD graph says about a document, and
+whether a CMS-authored link leaves the site. Those were curl-and-eyeball before.
 
 **`yarn test` covers the pure derivations.** `libs/slug.ts`, `libs/href.ts` and
 `libs/publication-fields.ts` turn a title into every URL, hreflang and `@id` on
@@ -128,9 +156,9 @@ Where a type is looser than the data really is (an optional label the JSON
 always carries), `libs/site-pages.test.ts` is the guarantee: it reads the real
 files and asserts every key is filled.
 
-The JSON-LD has no unit test; it lives in TSX components and is checked with
-curl. Components and routes have none either — check those with curl against
-`yarn build && yarn start`. There is no end-to-end suite.
+The routes have no tests: the negotiation branches, the status codes and the
+cache headers are checked with curl against a verification build (above). There
+is no end-to-end suite.
 
 ## Local development: read this before you try to run it
 
@@ -418,9 +446,11 @@ call button). Adding a fourth should need a reason.
 - `sharp` was removed with the other eleven unreferenced dependencies. Next 12
   picks it up implicitly for image optimisation when it is present; on Vercel the
   platform supplies it, so this only matters if the site is ever self-hosted.
-- `public/images/_50A7988_1.jpeg` (5.3MB) and `logodraft.svg` are unreferenced.
-- `public/images/paris-map.svg` is 810KB raw / ~254KB gzipped — the heaviest
-  asset on the site. SVGO would likely halve it.
+- `public/images/alice-portrait-illustration.png` is 1.7MB in the repo. It goes
+  through `next/image`, so what ships is optimised, but the source is heavy.
+- `sass` is pinned at 1.54.3 (2022). It predates the async compiler API Vite 8
+  calls, which is why the `ui` project stubs stylesheets rather than compiling
+  them. Bumping it changes the CSS the production build emits.
 - Legacy tokens (`$white`, `$gray*`, `$cyan*`) still sit in `_variables.scss`;
   `$green600` and `$amber600` are genuinely used by form status icons.
 - `content/publicationsContent.json` carries no `description`, so the markdown

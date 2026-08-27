@@ -4,7 +4,7 @@ import useLocale from "../../hooks/useLocale";
 import { isSafeExternal } from "../../libs/href";
 import { expertiseSlugIn } from "../../libs/localePath";
 
-import { formatDate, isPress, splitTitle } from "../../libs/publications";
+import { formatDate, isPress, pagerFor, splitTitle } from "../../libs/publications";
 import type { PageSeo, Publication, SeriesLink } from "../../libs/types";
 import HeadPage from "../head/head-page";
 import PublicationSchema from "../head/publication-schema";
@@ -66,10 +66,7 @@ function PublicationPage({ post, series, seo }: PublicationPageProps) {
 	// through the pairs and dropped when the field has no counterpart.
 	const fieldSlug = expertiseSlugIn(post.field, locale);
 
-	const position = series ? series.findIndex((e) => e.post._id === post._id) : -1;
-	const previous = position > 0 ? series?.[position - 1] : null;
-	// The guard has to stay: at -1, series[0] would wrongly be the next episode.
-	const next = position >= 0 ? (series?.[position + 1] ?? null) : null;
+	const { previous, next } = pagerFor(series, post._id);
 
 	const meta = (
 		<div className={classes.meta}>
