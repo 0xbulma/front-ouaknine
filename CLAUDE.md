@@ -226,6 +226,23 @@ déontologie constraints, the full article list and the release schedule.
 
 ## Content: two sources, know which is which
 
+**Sanity** is reached through `@sanity/client` and `@sanity/image-url` directly.
+The `next-sanity` and `next-sanity-image` wrappers were dropped: each re-exported
+one function, and between them they pinned the repo below Next 16. On the version
+pinned here the client constructor is the *default* export, not `createClient`,
+which arrives in v4. `libs/clientApi.ts` also exports `SANITY_PROJECT`, so the
+image URL builder takes a plain `{ projectId, dataset }` rather than reaching
+into the client for its private `clientConfig` — that coupling is what forced a
+new major of `@sanity/image-url`, and it is what would break on the next client
+bump.
+
+`components/ui/sanityImage.tsx` reproduces what `useNextSanityImage` did by
+default: `auto=format`, `fit=clip`, quality 75, a loader that resizes on Sanity's
+CDN rather than through `/_next/image`, and a 64px blur-up placeholder at quality
+30. The intrinsic size comes from the asset reference itself
+(`image-<id>-<w>x<h>-<ext>`), parsed by `libs/sanity-image.ts`; without it
+`next/image` cannot reserve the space and a responsive layout collapses.
+
 **Sanity** (`libs/clientApi.ts`) holds page copy — titles, body rich text, the
 expertise list. Editable by the client. No page component contains GROQ: the
 queries live in `libs/page-content.ts` and `libs/expertise.ts`, which every
@@ -456,6 +473,10 @@ call button). Adding a fourth should need a reason.
 - `content/publicationsContent.json` carries no `description`, so the markdown
   representation of `/publications` publishes a title and its lists with no
   blockquote lead. Every other page has one.
+- No published document currently embeds a CMS image, so
+  `components/ui/sanityImage.tsx` is unexercised in production. It is covered by
+  the reference parser's tests, a component test for the size and alt reaching
+  the DOM, and a manual check that all three CDN URLs it builds resolve.
 - `libs/types.ts` describes the CMS documents by hand rather than parsing them.
   The GROQ projections are the contract, and nothing validates that a document
   matches the type at the boundary; a studio schema change is caught by a

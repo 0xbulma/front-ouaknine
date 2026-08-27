@@ -65,8 +65,12 @@ vi.mock("next/router", () => ({
 }));
 
 // Imported at module scope by anything that touches the CMS, and it throws
-// without NEXT_PUBLIC_SANITY_ID. Nothing under test performs a fetch.
-vi.mock("../libs/clientApi", () => ({ default: { fetch: async () => null } }));
+// without NEXT_PUBLIC_SANITY_ID. Nothing under test performs a fetch, but the
+// image URL builder does read the config, so the stub carries one.
+vi.mock("../libs/clientApi", () => ({
+	default: { fetch: async () => null },
+	SANITY_PROJECT: { projectId: "test-project", dataset: "production" },
+}));
 
 beforeEach(() => {
 	setRouter();
