@@ -93,13 +93,19 @@
   min-width: 0;
 
   // An article outside a guide has no index beside it, so it takes the row
-  // rather than the 17rem column auto-placement would drop it into, and its
-  // text runs the full container instead of stopping at the measure.
+  // rather than the 17rem column auto-placement would drop it into. Only the
+  // row: dropping the measure with it ran the prose across the full 1200px
+  // container at 164 characters a line.
+  //
+  // It takes $measure-wide and stays hard left, where the banner and the meta
+  // rule already start. Centred in the row it read as a block floating in the
+  // middle of the page; against the left edge it is the same column the guide
+  // has beside its index, and the air falls on the right of both.
   &:only-child {
     grid-column: 1 / -1;
 
     .body {
-      max-width: none;
+      max-width: $measure-wide;
     }
   }
 }

@@ -421,7 +421,20 @@ axis and `font-optical-sizing: auto` so the sizes it *is* used at stay solid.
 labels, buttons and the colophon all use it.
 
 Headings are **uppercase** with slightly negative tracking. Body copy is
-`$ink-muted`, capped at `$measure` (62ch).
+`$ink-muted`, capped at `$measure` (39rem, 624px, about 84 characters a line at
+the 1rem body size).
+
+`$measure` was `62ch` and is a fixed length now. `ch` is the width of the `0`
+glyph, and Inter's `0` is a third wider than its average letter, so `62ch` never
+meant 62 characters, it meant about 84. Worse, it scaled with the font size of
+whatever it was applied to: on the ISKA tagline, at 40px, the same token was
+1378px. A length means one thing everywhere, and the characters per line follow
+from the font size of the text inside it.
+
+`$measure-wide` (60rem) is the second measure, for a publication with no episode
+index beside it. Both are anchored left, where the banner and the meta rule
+start; a centred column reads as floating on a page whose every other edge is
+flush left.
 
 ### Scale
 
