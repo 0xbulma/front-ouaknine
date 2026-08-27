@@ -79,6 +79,16 @@ Two tools exist for that seam and they look at opposite ends of it:
   part of `verify`. `apps/web/CLAUDE.md` lists the fields the redesign stopped
   rendering; they should be cleaned up here.
 
+`locations.js` crosses the same seam in the other direction: it tells
+Presentation which URL each document is shown at, so the form carries a link
+straight to its page. Building that URL needs the site's `slugify` and
+`withLocale`, and there is no shared package to take them from, so both are
+copies. `test/slug-parity.test.js` loads `apps/web/libs/slug.ts` directly —
+Node strips the types and that file imports nothing — and fails if the two ever
+disagree. `withLocale` is checked against a table instead, because
+`apps/web/libs/site-url.ts` opens with an extensionless relative import Node
+will not resolve.
+
 ## Conventions
 
 - Schema types are plain, import-free objects. That is what lets the parity test

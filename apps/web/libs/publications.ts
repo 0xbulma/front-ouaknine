@@ -1,4 +1,4 @@
-import clientApi from "./clientApi";
+import clientApi, { getClient } from "./clientApi";
 import { otherLocale, withSlug } from "./publication-fields";
 import { slugify } from "./slug";
 import type { Locale, PortableText, PublicationDocument, PublicationMeta } from "./types";
@@ -42,9 +42,22 @@ const projection = (locale: string | undefined): string => {
 
 // A dated document that is not a draft. `publishedAt` is what holds a piece back
 // until its release date, so an undated one is not published at all.
-const PUBLISHED = `_type == "post"
+//
+// The `drafts.**` clause only bites under the `raw` perspective, which nothing
+// here uses. Draft mode reads through `drafts`, and that perspective resolves a
+// draft over its published twin and returns it under the published id, so the
+// clause never sees a prefixed one. Verified against the dataset: the same
+// filter answers 10 documents published and 13 in draft mode.
+//
+// The release date is the one clause draft mode drops, and it has to: the whole
+// point of Presentation is to look at what is not live yet, and a piece dated
+// next month is exactly that. Left in, the Studio frames a 404 for it and the
+// editor has no way to see the page they are writing. On the dataset today that
+// is 45 of 58 posts. `defined(publishedAt)` stays either way — the list orders
+// by it, and an undated post has no place in that order.
+const published = (draft?: boolean): string => `_type == "post"
   && defined(publishedAt)
-  && dateTime(publishedAt) < dateTime(now())
+  ${draft ? "" : "&& dateTime(publishedAt) < dateTime(now())"}
   && !(_id in path("drafts.**"))`;
 
 // Only what the reader can actually read. A French press cutting has no English
@@ -54,9 +67,12 @@ const readable = (post: PublicationDocument): boolean => Boolean(post?.hasBody);
 // Every publication in a language, without the prose. This is what a list needs,
 // and a list is most of what the section does: the index renders rows, the rail
 // renders links, the sitemap renders slugs.
-export const fetchPublications = async (locale?: string): Promise<PublicationMeta[]> => {
-	const posts = await clientApi.fetch<PublicationDocument[] | null>(
-		`*[${PUBLISHED}] | order(publishedAt desc) ${projection(locale)}`,
+export const fetchPublications = async (
+	locale?: string,
+	draft?: boolean,
+): Promise<PublicationMeta[]> => {
+	const posts = await getClient(draft).fetch<PublicationDocument[] | null>(
+		`*[${published(draft)}] | order(publishedAt desc) ${projection(locale)}`,
 	);
 
 	return (posts ?? []).filter(readable).map(withSlug);
@@ -68,11 +84,12 @@ export const fetchPublications = async (locale?: string): Promise<PublicationMet
 export const fetchPublicationBody = async (
 	locale: string | undefined,
 	id: string,
+	draft?: boolean,
 ): Promise<PortableText | null> => {
 	const l = safeLocale(locale);
 
-	const post = await clientApi.fetch<{ body?: PortableText | null } | null>(
-		`*[${PUBLISHED} && _id == $id][0]{ "body": content${l}.body${l} }`,
+	const post = await getClient(draft).fetch<{ body?: PortableText | null } | null>(
+		`*[${published(draft)} && _id == $id][0]{ "body": content${l}.body${l} }`,
 		{ id },
 	);
 
@@ -83,6 +100,11 @@ export const fetchPublicationBody = async (
 // being read. It applies exactly the filters the destination page applies, so it
 // can never resolve an id to a page that will 404 — which is what a permanent
 // redirect to a locale with no body did.
+//
+// The published client on purpose, and the one fetcher here that takes no
+// `draft`: this route only ever answers with a redirect, so there is nothing to
+// preview, and resolving a draft-only post here would mint a 308 to a URL the
+// published site does not serve.
 export const fetchPublicationById = async (
 	locale: string | undefined,
 	id: string,
@@ -90,7 +112,7 @@ export const fetchPublicationById = async (
 	const l = safeLocale(locale);
 
 	const post = await clientApi.fetch<{ slug?: string | null; hasBody?: boolean } | null>(
-		`*[${PUBLISHED} && _id == $id][0]{
+		`*[${published()} && _id == $id][0]{
       "slug": coalesce(slug.current, contentfr.titlefr, contenten.titleen),
       "hasBody": defined(content${l}.body${l})
     }`,
