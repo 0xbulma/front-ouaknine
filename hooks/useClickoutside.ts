@@ -4,7 +4,7 @@ import { useEffect } from "react";
 const useClickOutside = (
 	state: boolean,
 	setState: Dispatch<SetStateAction<boolean>>,
-	ref: RefObject<HTMLElement>,
+	ref: RefObject<HTMLElement | null>,
 ): void => {
 	useEffect(() => {
 		if (!state) return;

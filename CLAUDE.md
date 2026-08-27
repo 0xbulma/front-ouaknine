@@ -19,7 +19,7 @@ publications, contact, ISKA, legal, plus a 404.
 | Tests | **Vitest** (`vitest.config.mts`), two projects: `libs` on node, `ui` on jsdom |
 | Lint + format | **Biome** (`biome.json`) for both, plus ESLint for the `@next/next` rules only |
 | Package manager | **yarn** (`yarn.lock` is committed; there is no `packageManager` field) |
-| React | 18. Next 16 accepts it; 19 and the compiler are a separate step |
+| React | 19, with the **React Compiler** on (`reactCompiler: true`). It memoizes for you; do not hand-write `useMemo`/`useCallback`/`memo` |
 | Node | 24.x per `engines` |
 | CI | `.github/workflows/ci.yml` runs the four checks on every PR |
 
@@ -48,14 +48,19 @@ tabs at width 2, 100 columns, double quotes, trailing commas, imports organised.
 The `no-type-assertion.grit` plugin is ported with it and is what enforces the
 no-`as` rule.
 
-Five of that config's rules are turned off or loosened here, because they target
+Two of that config's rules are turned off or loosened here, because they target
 a stack this repo does not have:
 
 | Rule | Why |
 |---|---|
-| `noRestrictedImports`, `noReactForwardRef` | They exist for React 19 + the compiler. This is React 18, and `hooks/useTimout.ts` needs `useCallback` |
 | `useSortedClasses` | No Tailwind |
 | `useMaxParams` | Raised from 2 to 3 |
+
+`noRestrictedImports` and `noReactForwardRef` came back on with React 19. The
+first bans `useMemo`, `useCallback` and `memo` from `react`: the compiler
+memoizes on its own, and a hand-written cache beside it is at best redundant and
+at worst a stale-closure bug. Reach for `use no memo` in the one component that
+genuinely needs to opt out, not for a `biome-ignore`.
 
 The three a11y rules that used to be off here came back on with Next 16.
 `useValidAnchor`, `useAnchorContent` and `useAriaPropsSupportedByRole` were
@@ -135,6 +140,13 @@ again since the upgrade, so the stub the project used to need is gone.
 What `ui` is for: which annotations the head actually publishes (and which a
 `noindex` page suppresses), what the JSON-LD graph says about a document, and
 whether a CMS-authored link leaves the site. Those were curl-and-eyeball before.
+
+**Assert head annotations against `document.head`, not the render result.**
+React 19 hoists every `<title>`, `<meta>` and `<link>` out of the tree and into
+the head wherever it was declared, so `render(...).container` comes back empty
+for a component that emits nothing else. `components/head/head-page.test.tsx`
+queries `document.head`; that RTL's `cleanup()` empties it again between tests
+is what the `noindex` case relies on.
 
 **`yarn test` covers the pure derivations.** `libs/slug.ts`, `libs/href.ts` and
 `libs/publication-fields.ts` turn a title into every URL, hreflang and `@id` on

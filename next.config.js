@@ -11,6 +11,13 @@ const nextConfig = {
   },
   reactStrictMode: true,
 
+  // The React Compiler memoizes components and hooks on its own, which is what
+  // lets biome.json ban useMemo/useCallback/memo and forwardRef. It runs through
+  // Babel on the files an SWC pre-pass says need it; on a site this size that
+  // costs nothing measurable. `experimental.turbopackRustReactCompiler` would
+  // skip Babel entirely, and is worth revisiting once it leaves experimental.
+  reactCompiler: true,
+
   // The articles section is now /publications. Its list pages redirect here;
   // an individual article is resolved by pages/articles/[id].jsx, which looks
   // the post up and sends it to its own slug. Locale prefixes are matched by
