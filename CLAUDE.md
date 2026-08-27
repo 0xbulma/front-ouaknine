@@ -185,7 +185,9 @@ throws `Configuration must contain projectId`. `yarn build` compiles and
 typechecks fine, then fails at "Collecting page data". Pages 500 in dev.
 
 If you have the value, put `.env.local` in the **repository root** (not the
-worktree) so new workspaces inherit it via Files to copy.
+worktree) so new workspaces inherit it via Files to copy. `SANITY_TOKEN` belongs
+there too, but only draft mode reads it — see "Draft mode, and editing on the
+page" below.
 
 If you do not have it and need to see a visual change, stub the client:
 
@@ -302,6 +304,59 @@ should be cleaned up there:
 The portrait is a **hardcoded local import**
 (`components/layout/firm-section.tsx`, the block the home page and `/about`
 share), not CMS driven — swapping it needs a developer.
+
+### Draft mode, and editing on the page
+
+The Studio's **Presentation** tool renders this site in an iframe beside the
+form that feeds it, and every string on the page is a click target that selects
+the field behind it. It is configured in the other repo
+(`0xbulma/back-ouaknine`, `sanity.config.js`); this half is the three pieces it
+talks to.
+
+**`pages/api/draft.ts`** is the door. Presentation mints a one-time secret in
+the dataset, calls the route with it, and `validatePreviewUrl` reads it back and
+burns it. Anything less than a match is a `401` — including a dead token, which
+is otherwise a stack trace on a public endpoint. The exit is
+`pages/api/disable-draft.ts`, which needs no secret: the worst it can do is put
+someone back on the published site. Nothing links to either; Presentation drives
+the first and the second is the way out for anyone who ends up holding the
+cookie outside the Studio.
+
+**`getClient(draft)` in `libs/clientApi.ts`** is what changes once the cookie is
+set. Same query, same locale, same shape back; a different client. It reads
+`perspective: "drafts"` off the API rather than the CDN, and it turns on
+**stega**, which encodes an edit link into every string it returns.
+
+Stega is why draft mode gates all of this rather than being on everywhere. Those
+links are invisible Unicode riding along *inside* the copy: on the published
+site they would end up in the HTML, in the markdown the agent surface serves,
+and in anything a reader copies off the page. `getClient()` without the flag is
+the ordinary published client and cannot produce them.
+
+**`libs/static-page-props.ts`** carries the flag from Next to the fetcher, so
+the six routes that go through it need no change of their own. The overlay in
+`_app.tsx` keys off `router.isPreview` instead, which is global, so it covers
+every route including the two that fetch outside `staticPageProps`.
+
+`/publications` is deliberately not wired: `libs/publications.ts` filters
+`drafts.**` and gates on `publishedAt` in GROQ, and those two would have to
+become conditional to show an unpublished post. Publication pages render inside
+Presentation, they just show what is live.
+
+**Two env vars, and one of them is new.** `NEXT_PUBLIC_SANITY_ID` as before, plus
+**`SANITY_TOKEN`**, a Sanity token with **Viewer** access, from
+sanity.io/manage. It is read per request rather than at module scope, so the
+published site neither needs it nor fails to boot without it — only
+`/api/draft` does, and it answers `401` when it is missing or stale. The one
+that was already in `.env` is revoked (`SIO-401-ANF`, "Session not found"); mint
+a fresh one before expecting any of this to work.
+
+**The overlay is not in the bundle a reader downloads.** It arrives through
+`next/dynamic` with `ssr: false`, because it pulls `@sanity/ui` and
+`styled-components` — the CSS-in-JS this repo otherwise does not have — and
+those belong in a chunk nothing fetches until draft mode renders it. A build
+that puts `styled-components` in `/_app` or `/` has lost that, and the symptom
+is a bundle that grew, so check the manifest rather than the page.
 
 ## The agent surface
 

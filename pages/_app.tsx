@@ -1,5 +1,7 @@
 import type { AppProps } from "next/app";
+import dynamic from "next/dynamic";
 import { Bodoni_Moda, Inter } from "next/font/google";
+import { useRouter } from "next/router";
 
 import Layout from "../components/layout/layout";
 import CookieContext from "../context/cookie-context";
@@ -34,10 +36,28 @@ const inter = Inter({
 	display: "swap",
 });
 
+// The click-to-edit overlay Sanity's Presentation tool drives. It reads the edit
+// links the draft-mode client stega-encodes into the copy (libs/clientApi.ts) and
+// turns each one into a target that selects the right field in the Studio beside
+// it.
+//
+// Loaded through `dynamic` with `ssr: false` on purpose: it pulls @sanity/ui and
+// styled-components, and neither belongs in the bundle a reader downloads. This
+// keeps them in a chunk nothing fetches until the branch below renders.
+const VisualEditing = dynamic(
+	() => import("@sanity/visual-editing/next-pages-router").then((m) => m.VisualEditing),
+	{ ssr: false },
+);
+
 function MyApp({ Component, pageProps }: AppProps<{ seo?: PageSeo }>) {
 	// A page that publishes an explicit alternate set knows which languages it has.
 	const alternates = pageProps?.seo?.alternates;
 	const locales = alternates ? Object.keys(alternates) : null;
+
+	// `isPreview` is Next's draft-mode flag, and it is global rather than a prop,
+	// so the overlay covers every route — including the two that fetch outside
+	// libs/static-page-props.ts — without each page having to pass it down.
+	const draft = useRouter().isPreview;
 
 	return (
 		<>
@@ -59,6 +79,7 @@ function MyApp({ Component, pageProps }: AppProps<{ seo?: PageSeo }>) {
 					</LocalesContext>
 				</NavContext>
 			</CookieContext>
+			{draft ? <VisualEditing /> : null}
 		</>
 	);
 }
