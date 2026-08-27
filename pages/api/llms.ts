@@ -1,8 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import type { AgentLabels } from "../../libs/agent-context";
 import { agentContext } from "../../libs/agent-context";
-import { fetchExpertise, plainText } from "../../libs/expertise";
+import { fetchExpertise } from "../../libs/expertise";
 import { leadSentence, llmsTxt } from "../../libs/llms-txt";
+import { plainText } from "../../libs/plain-text";
 import { methodNotAllowed, unexpectedQuery } from "../../libs/query-guard";
 import { pageUrl } from "../../libs/site-url";
 import type { LinkItem, Locale } from "../../libs/types";

@@ -1,5 +1,18 @@
 import type { ImageDimensions } from "./types";
 
+// The two fields that address a project on Sanity's CDN, and the whole of what
+// the image URL builder needs. They live here rather than beside the client
+// because `components/ui/sanityImage.tsx` runs in the browser: importing them
+// from libs/clientApi pulled @sanity/client, rxjs and get-it into the bundle of
+// every page that can render rich text, 72 kB the browser never calls.
+// An absent id stays absent rather than becoming a silent default: the client
+// refuses a blank one with "Configuration must contain `projectId`", which is
+// the error the local-development notes in CLAUDE.md tell you to expect.
+export const SANITY_PROJECT = {
+	projectId: process.env.NEXT_PUBLIC_SANITY_ID ?? "",
+	dataset: "production",
+};
+
 // Sanity encodes an asset's pixel size in the reference itself:
 //
 //   image-<assetId>-<width>x<height>-<extension>

@@ -5,7 +5,7 @@ import publicationsContent from "../../content/publicationsContent.json";
 import { varyWithAccept } from "../../libs/accept";
 import type { AgentContext } from "../../libs/agent-context";
 import { agentContext } from "../../libs/agent-context";
-import { fetchExpertise, plainText } from "../../libs/expertise";
+import { fetchExpertise } from "../../libs/expertise";
 import { fetchContact, fetchHome, fetchLegal } from "../../libs/page-content";
 import {
 	aboutMarkdown,
@@ -20,6 +20,7 @@ import {
 	publicationsIndexMarkdown,
 	unavailableMarkdown,
 } from "../../libs/page-markdown";
+import { plainText } from "../../libs/plain-text";
 import { groupPublications, seriesOf, splitTitle } from "../../libs/publication-fields";
 import { fetchPublicationBody, fetchPublications } from "../../libs/publications";
 import { methodNotAllowed, unexpectedQuery } from "../../libs/query-guard";

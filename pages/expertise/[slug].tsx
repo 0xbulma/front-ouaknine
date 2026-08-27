@@ -2,7 +2,8 @@ import type { GetStaticPaths } from "next";
 import type { ExpertisePageProps } from "../../components/layout/expertise-page";
 import ExpertisePage from "../../components/layout/expertise-page";
 import organizationContent from "../../content/organizationContent.json";
-import { fetchExpertise, plainText } from "../../libs/expertise";
+import { fetchExpertise } from "../../libs/expertise";
+import { plainText } from "../../libs/plain-text";
 import { LOCALES, resolveLocale } from "../../libs/site-url";
 import { staticPageProps } from "../../libs/static-page-props";
 

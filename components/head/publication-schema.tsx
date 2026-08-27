@@ -1,9 +1,9 @@
 import headerContent from "../../content/headerContent.json";
 import useLocale from "../../hooks/useLocale";
-import { plainText } from "../../libs/expertise";
 import { isSafeExternal } from "../../libs/href";
 import { expertiseSlugIn, withLocale } from "../../libs/localePath";
-import { isPress } from "../../libs/publications";
+import { plainText } from "../../libs/plain-text";
+import { isPress } from "../../libs/publication-fields";
 import type { Locale, Publication } from "../../libs/types";
 import { HOST } from "./head-page";
 import JsonLd from "./json-ld";

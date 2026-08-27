@@ -3,8 +3,8 @@ import FirmSection from "../components/layout/firm-section";
 
 import CONTENT from "../content/aboutContent.json";
 import useLocale from "../hooks/useLocale";
-import { plainText } from "../libs/expertise";
 import { fetchHome } from "../libs/page-content";
+import { plainText } from "../libs/plain-text";
 import { staticPageProps } from "../libs/static-page-props";
 import type { HomeDocument } from "../libs/types";
 

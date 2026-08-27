@@ -3,17 +3,10 @@ import { otherLocale, withSlug } from "./publication-fields";
 import { slugify } from "./slug";
 import type { Locale, PortableText, PublicationDocument, PublicationMeta } from "./types";
 
-// The pure derivations live next door so they can be loaded without a CMS
-// client. Re-exported here so call sites import one module.
-export {
-	formatDate,
-	groupPublications,
-	isPress,
-	otherLocale,
-	pagerFor,
-	seriesOf,
-	splitTitle,
-} from "./publication-fields";
+// The pure derivations live in ./publication-fields and are NOT re-exported
+// here. This module builds a Sanity client, so anything that re-exported from
+// it put @sanity/client in the bundle of every page that renders a publication.
+// libs/no-client-in-components.test.ts is the guard.
 
 const LOCALES: readonly Locale[] = ["fr", "en"];
 

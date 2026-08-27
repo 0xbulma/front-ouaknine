@@ -2,8 +2,7 @@ import imageUrlBuilder from "@sanity/image-url";
 import type { ImageLoader } from "next/image";
 import Image from "next/image";
 
-import { SANITY_PROJECT } from "../../libs/clientApi";
-import { imageDimensions } from "../../libs/sanity-image";
+import { imageDimensions, SANITY_PROJECT } from "../../libs/sanity-image";
 import type { SanityImageRef } from "../../libs/types";
 
 // The transforms `next-sanity-image` applied by default, kept so the CDN keeps
