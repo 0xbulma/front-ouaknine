@@ -28,9 +28,7 @@ export default {
         {title: 'H4', value: 'h4'},
         {title: 'Quote', value: 'blockquote'},
       ],
-      lists: [{title: 'Bullet', value: 'bullet'}, {title: 'Bullet sans point', value: 'bullet2', blockEditor: {
-        icon: () => 'S'
-      }}, {title: 'Numbered', value: 'number'}],
+      lists: [{title: 'Bullet', value: 'bullet'}, {title: 'Bullet sans point', value: 'bullet2', icon: () => 'S'}, {title: 'Numbered', value: 'number'}],
       
       // Marks let you mark up inline text in the block editor.
       marks: {

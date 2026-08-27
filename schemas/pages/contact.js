@@ -67,14 +67,6 @@ export default {
           name: 'alt',
           type: 'string',
           title: 'Image Title Alt',
-          options: {
-            isHighlighted: true,
-            metadata: [
-              'blurhash',   // Default: included
-              'lqip',       // Default: included
-              'palette'    // Default: included
-            ],
-          }
         }
       ]
     },

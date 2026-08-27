@@ -106,14 +106,6 @@ export default {
           name: 'alt',
           type: 'string',
           title: 'Image Title Alt',
-          options: {
-            isHighlighted: true,
-            metadata: [
-              'blurhash', // Default: included
-              'lqip', // Default: included
-              'palette', // Default: included
-            ],
-          },
         },
       ],
     },
@@ -139,14 +131,6 @@ export default {
           name: 'title',
           type: 'string',
           title: 'Image Title',
-          options: {
-            isHighlighted: true,
-            metadata: [
-              'blurhash', // Default: included
-              'lqip', // Default: included
-              'palette', // Default: included
-            ], // <-- make this field easily accessible
-          },
         },
       ],
     },
