@@ -21,7 +21,7 @@ function MainFooter() {
 		<footer className={`${classes.footer} ${underPinnedIndex ? classes.footerbare : ""}`}>
 			<div className={classes.innercontainer}>
 				<div className={classes.logo}>
-					<Image src={LogoSquare} alt="logo" width={70} height={38.73} />
+					<Image src={LogoSquare} alt="logo" width={70} height={39} />
 				</div>
 
 				<div className={classes.links}>

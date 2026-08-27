@@ -39,7 +39,7 @@ function Contact({ data }: { data: ContactDocument }) {
 						tabIndex={-1}
 						aria-hidden="true"
 					>
-						<Image src={parisMap} alt="" style={{ width: "100%", height: "auto" }} />
+						<Image src={parisMap} alt="" priority style={{ width: "100%", height: "auto" }} />
 					</a>
 
 					<dl className={classes.details}>

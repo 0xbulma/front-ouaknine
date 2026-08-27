@@ -67,6 +67,21 @@ the anchor itself now, so they see the real element.
 2-space, single-quote house style; only `.ts`/`.tsx` are on tabs. Do not try to
 run Biome over them.
 
+**Do not hand-write a vendor prefix beside its standard property.** Turbopack
+minifies with Lightning CSS, which adds prefixes itself from `browserslist`.
+Given both, in the header's case `backdrop-filter` followed by
+`-webkit-backdrop-filter`, it keeps only the prefixed one, and the effect
+silently disappears in every browser but Safari. `.svg` in
+`components/layout/phone.module.scss` declares the standard property alone and
+comes out with both. Declare the standard property and let the build prefix it.
+
+An audit that catches this: compile every `*.scss` with `sass` directly, pull
+the property names out of both that and `.next/static/chunks/*.css`, and diff
+the two sets. Shorthand folding is expected noise (`animation-delay` and
+`animation-fill-mode` into `animation`, `grid-row` into `grid-area`,
+`border-top-color` into `border-top`); a property that vanishes with no
+shorthand to explain it is a real loss.
+
 **Turbopack names CSS-module classes differently.** Webpack emitted
 `main-header_header__h46Bl`; Turbopack emits
 `main-header-module-scss-module__h46BlG__header`. Nothing depends on the shape,
