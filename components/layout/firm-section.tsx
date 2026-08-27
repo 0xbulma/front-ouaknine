@@ -31,7 +31,6 @@ function FirmSection({
 					style={{ width: "100%", height: "auto" }}
 					sizes="(min-width: 992px) 34vw, 78vw"
 					placeholder="blur"
-					quality={72}
 					priority={priority}
 				/>
 			</div>

@@ -464,6 +464,11 @@ call button). Adding a fourth should need a reason.
   `components/ui/sanityImage.tsx` is unexercised in production. It is covered by
   the reference parser's tests, a component test for the size and alt reaching
   the DOM, and a manual check that all three CDN URLs it builds resolve.
+- `images.qualities` in `next.config.js` does not take effect: Next 16 inlines
+  two copies of the image config into the pages-router SSR bundle, and
+  `next/image` resolves against the default `[75]` rather than the project's.
+  The portrait's `quality={72}` was dropped for that reason. Do not re-add a
+  `quality` prop expecting it to survive without checking the emitted `q=`.
 - `libs/types.ts` describes the CMS documents by hand rather than parsing them.
   The GROQ projections are the contract, and nothing validates that a document
   matches the type at the boundary; a studio schema change is caught by a
@@ -472,3 +477,13 @@ call button). Adding a fourth should need a reason.
 > When auditing for unused tokens, note that macOS ships **BSD grep**, which does
 > not honour `\b`. A `grep -r '\$token\b'` sweep silently matches nothing and
 > reports everything as unused. Use `grep -rF`.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

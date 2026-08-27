@@ -1,3 +1,4 @@
+@use 'sass:math';
 @use '../../../styles/variables' as *;
 
 .nav {
@@ -78,7 +79,7 @@ $gapDelay: .12s;
   }
   .animationsep#{($i - 1)} {
       animation: itemanimation 0.3s;
-      animation-delay: $newDelay + ($gapDelay / 2);
+      animation-delay: $newDelay + math.div($gapDelay, 2);
       animation-fill-mode: backwards;
       transform: translate3d(0,0,0);
     }
