@@ -1,0 +1,28 @@
+"$schema" = "https://conductor.build/schemas/settings.repo.schema.json"
+
+[scripts]
+setup = "pnpm install"
+
+# Each workspace is given ten ports from $CONDUCTOR_PORT and the two servers
+# take one each, so two workspaces can run side by side. Nothing else is
+# shared: no database, no Docker, no fixed port.
+run_mode = "concurrent"
+
+# Both run scripts are local-only because $CONDUCTOR_PORT is unset in cloud
+# workspaces, and both dev servers would otherwise fall back to their default
+# port and collide.
+
+[scripts.run.web]
+command = "pnpm --filter web dev --port $CONDUCTOR_PORT"
+available_in = ["local"]
+default = true
+icon = "play"
+
+[scripts.run.studio]
+command = "pnpm --filter studio dev --port $((CONDUCTOR_PORT + 1))"
+available_in = ["local"]
+icon = "database"
+
+[[preview_urls]]
+name = "Site"
+url = "http://localhost:$CONDUCTOR_PORT"

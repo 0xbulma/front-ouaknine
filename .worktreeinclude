@@ -1,0 +1,7 @@
+# Gitignored files copied into every new local workspace. .gitignore pattern
+# syntax; a file has to already be ignored for a pattern here to select it.
+#
+# The env file lives with the app that reads it. Next resolves .env from its
+# own project directory, which is apps/web now, not the repository root, and a
+# copy left at the root is read by nothing.
+apps/web/.env*

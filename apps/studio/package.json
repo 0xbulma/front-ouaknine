@@ -1,0 +1,30 @@
+{
+  "name": "studio",
+  "private": true,
+  "version": "1.0.0",
+  "author": "Benjamin A <benjamin.anoufa@gmail.com>",
+  "license": "UNLICENSED",
+  "type": "module",
+  "scripts": {
+    "dev": "sanity dev",
+    "build": "sanity build",
+    "start": "sanity start",
+    "deploy": "sanity deploy",
+    "lint": "eslint .",
+    "test": "node --test \"test/**/*.test.js\"",
+    "verify": "pnpm lint && pnpm test",
+    "check:data": "node scripts/check-orphaned-fields.mjs"
+  },
+  "dependencies": {
+    "@sanity/vision": "6.10.1",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "react-icons": "5.7.0",
+    "sanity": "6.10.1",
+    "styled-components": "6.5.3"
+  },
+  "devDependencies": {
+    "@sanity/eslint-config-studio": "7.0.0",
+    "eslint": "10.9.1"
+  }
+}
