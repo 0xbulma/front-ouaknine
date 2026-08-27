@@ -32,7 +32,6 @@
   font-size: $fs-display-sub;
   color: $ink-muted;
   margin: 0 0 $space-4 0;
-  animation: rise 0.5s $ease both;
 }
 
 .title {
@@ -43,7 +42,6 @@
   letter-spacing: -0.015em;
   text-transform: uppercase;
   @include serif;
-  animation: rise 0.6s $ease $stagger both;
 }
 
 .spegroup {
@@ -78,23 +76,6 @@
 .spelabel {
   font-size: 1.0625rem;
   letter-spacing: 0.01em;
-}
-
-@for $i from 1 through 10 {
-  .spegroup li:nth-child(#{$i}) .spe {
-    animation: rise 0.4s $ease ($stagger * ($i + 2)) both;
-  }
-}
-
-@keyframes rise {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 // Closes the hero with a rule and the two facts a visitor wants, rather than

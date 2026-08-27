@@ -1,40 +1,24 @@
 @use '../../styles/variables' as *;
 
-// ---------------------------------------------------------------------------
-// Motion. Two moves, and only two — no fade-and-drift anywhere.
+// The one animation on this page, and one of three on the site. Nothing here
+// animates because it arrived; this animates because it changed.
 //
-//   rise  — type that leads comes out from behind its own top edge
-//   draw  — everything else arrives left to right, the way a rule is ruled
-//
-// Both run on the site's single curve. Nothing animates opacity on its own,
-// which is what made the old reveals read as a slideshow rather than a page
-// setting itself.
-// ---------------------------------------------------------------------------
-@keyframes rise {
+// Picking a field from the index replaces the column on the right and leaves the
+// rest of the page exactly as it was — same URL shape, same index, same
+// scroll. Without a cue the swap is invisible, so the column it happens in
+// fades. It replays on every pick because the component keys the block on the
+// field's slug, which remounts it.
+@keyframes fade {
   from {
-    transform: translateY(110%);
+    opacity: 0;
   }
   to {
-    transform: translateY(0);
+    opacity: 1;
   }
 }
 
-@keyframes draw {
-  from {
-    clip-path: inset(0 100% 0 0);
-  }
-  to {
-    clip-path: inset(0 0 0 0);
-  }
-}
-
-@keyframes rule {
-  from {
-    transform: scaleX(0);
-  }
-  to {
-    transform: scaleX(1);
-  }
+.fieldinner {
+  animation: fade $dur $ease;
 }
 
 // An index and a field. The index carries all ten titles at label size and
@@ -75,9 +59,6 @@
   text-align: left;
   cursor: pointer;
   @include borderbottomlight;
-
-  animation: draw 500ms $ease both;
-  animation-delay: calc(var(--i) * 35ms);
 
   // The rule under the row is ruled in as the field is picked out, and unruled
   // the same way when it is dropped.
@@ -134,7 +115,6 @@
 }
 
 .meta {
-  overflow: hidden;
   margin: 0 0 $space-3 0;
 }
 
@@ -142,19 +122,10 @@
   display: inline-block;
   @include micro;
   color: $ink;
-  animation: rise 550ms $ease both;
 }
 
 .metatotal {
   color: $ink-muted;
-}
-
-// The title comes out from behind its own top edge, which is the one piece of
-// motion big enough to carry a 64px Didone.
-.titlemask {
-  overflow: hidden;
-  padding-bottom: 0.08em;
-  margin-bottom: -0.08em;
 }
 
 .title {
@@ -165,15 +136,12 @@
   letter-spacing: -0.01em;
   text-transform: uppercase;
   text-wrap: balance;
-  animation: rise 800ms $ease 60ms both;
 }
 
 .rule {
   height: 1px;
   margin: $space-4 0 $space-5 0;
   background-color: $rule-strong;
-  transform-origin: left;
-  animation: rule 700ms $ease 200ms both;
 }
 
 .body {
@@ -201,25 +169,12 @@
   @include micro;
   margin: 0 0 $space-3 0;
   color: $ink-muted;
-  animation: draw 500ms $ease 320ms both;
 }
 
 .spelist {
   font-size: 0.9375rem;
   line-height: 1.7;
   color: $ink-muted;
-}
-
-// Paragraph by paragraph and competence by competence, each ruled in behind
-// the one before it.
-@for $i from 1 through 16 {
-  .description > *:nth-child(#{$i}) {
-    animation: draw 550ms $ease (280ms + $i * 55ms) both;
-  }
-
-  .spelist > *:nth-child(#{$i}) {
-    animation: draw 450ms $ease (380ms + $i * 45ms) both;
-  }
 }
 
 .link {
@@ -229,7 +184,6 @@
   gap: $space-1;
   margin-top: $space-6;
   @include micro;
-  animation: draw 550ms $ease 520ms both;
 
   @media (hover: hover) and (pointer: fine) {
     &::after {
@@ -292,23 +246,5 @@
   .description,
   .spe {
     grid-column: 1 / -1;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .railitem,
-  .metainner,
-  .title,
-  .rule,
-  .spetitle,
-  .link,
-  // Matches the staggered rules above on specificity, so it can override them.
-  .description > *:nth-child(n),
-  .spelist > *:nth-child(n) {
-    animation: none;
-  }
-
-  .railtitle {
-    transition: color $dur $ease;
   }
 }

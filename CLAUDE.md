@@ -486,14 +486,51 @@ not an accident. Resist filling the gap between them.
 `$space-1`…`$space-8` on an 8px base (0.5rem → 8rem). Use them; do not write
 ad-hoc rem values.
 
+Motion is nearly absent, and that is the design rather than an omission.
+
+**Nothing animates because it arrived.** The pages are type on a black ground,
+served rendered: a reveal laid over that is a page pretending to load, and it
+costs the one thing the design is actually built on, which is that the type is
+up immediately.
+
+**Three things animate, and all three animate because something changed:**
+
+- picking a field of expertise — the column that was replaced fades, keyed on
+  the field's slug so it replays on every pick. Everything around it, the index
+  included, holds still, which is the point: without a cue the swap is invisible.
+- opening the mobile menu — the panel fades as one.
+- the cookie banner arriving.
+
 One curve and two durations: `$ease` (`cubic-bezier(0.22, 1, 0.36, 1)`),
-`$dur-fast` 150ms, `$dur` 250ms, `$stagger` 80ms. Reveals are deliberately
-short — a typographic page with slow choreography reads broken, not elegant.
-Hovers change **colour only**; never nudge an element with `transform` under
-the cursor.
+`$dur-fast` 150ms, `$dur` 250ms. Hovers change **colour only**; never nudge an
+element with `transform` under the cursor.
 
 `globals.scss` has a `prefers-reduced-motion` block and a single
 `:focus-visible` rule. Keep both working.
+
+**A full reveal vocabulary was built here and taken out again.** Four things it
+cost, so that they do not have to be found twice:
+
+- **A JS reveal has to be paid for in the HTML.** Server-rendering
+  `opacity: 0` and turning it on after hydration means the page is blank
+  whenever that JavaScript does not arrive: a chunk that 404s after a deploy
+  while a tab is open, an extension, JS off. Seen for real in this repo, twice,
+  as a black screen with a header. CSS keyframes do not have this failure mode.
+- **It gates LCP.** Nothing on the page is a contentful-paint candidate while it
+  is transparent, so the largest element cannot be measured until hydration
+  finishes. FCP stayed at ~85ms; LCP moved behind the JS.
+- **`motion` is ~43KB gzipped**, on a site that self-hosts its fonts to save one
+  render-blocking stylesheet. It cannot be trimmed with `LazyMotion` either:
+  `inView` is in none of its feature presets (`domMin`, `domAnimation`,
+  `domMax` are four lines each in
+  `node_modules/framer-motion/dist/es/render/dom/features-*.mjs`), so
+  `whileInView` needs the full component.
+- **A page transition has two traps.** Next scrolls a new route to the top on
+  the first frame of a navigation, measured at 13ms, while the page being left
+  is still fully lit — so an article read to the end snaps back to its own title
+  before it fades, and something has to hold the position for the length of the
+  fade-out. And `/expertise/[slug]` is ten routes over one page which must be
+  one key, or the whole page transitions every time the index is clicked.
 
 ### The kit — six elements, and that is the whole vocabulary
 

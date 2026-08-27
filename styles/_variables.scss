@@ -123,13 +123,21 @@ $space-7: 6rem;
 $space-8: 8rem;
 
 // ---------------------------------------------------------------------------
-// Motion. One curve, two durations. Reveals are short by design: a typographic
-// page with slow choreography reads broken rather than deliberate.
+// Motion. One curve, two durations, and almost nothing that uses them.
+//
+// Nothing on this site animates because it arrived. The pages are type on a
+// black ground, served rendered: a reveal on top of that is a page pretending to
+// load, and it costs the thing the design is actually built on, which is that
+// the type is up immediately.
+//
+// Three things animate, and all three animate because something *changed*:
+// picking a field of expertise (the column that was replaced fades), opening the
+// menu (the panel fades), and the cookie banner arriving. Everything else here
+// is hover and focus state.
 // ---------------------------------------------------------------------------
 $ease: cubic-bezier(0.22, 1, 0.36, 1);
 $dur-fast: 150ms;
 $dur: 250ms;
-$stagger: 80ms;
 
 // ---------------------------------------------------------------------------
 // Fluid type scale — interpolates between 375px and 1440px viewports, clamped
