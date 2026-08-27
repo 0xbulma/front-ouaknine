@@ -78,6 +78,12 @@ production, and `.conductor/settings.toml` points it at the local one. The site
 side of it is documented under "Draft mode, and editing on the page" in
 `apps/web/CLAUDE.md`.
 
+`apps/studio/locations.js` is the return leg: which URL each document is shown
+at, so the Studio can link from a form to its page. It has to spell those URLs
+the way the site does, which means copies of `slugify` and `withLocale` from
+`apps/web/libs`. `apps/studio/test/slug-parity.test.js` pins the first against
+the real file and the second against a table.
+
 ## Conductor
 
 `.conductor/settings.toml` and `.worktreeinclude` at the root configure the
