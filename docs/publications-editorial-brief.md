@@ -263,6 +263,17 @@ Documents are of type `post`. Fill:
 `publishedAt` has passed.** Nothing else gates it: `language` is a legacy field
 the publications section does not read, so leave it as you find it.
 
+**Never leave an empty block in a body to open up space.** The stylesheet owns
+prose spacing: `.body p` carries the margin, and headings carry their own. An
+empty block renders as a `<br>` on top of that margin, so the paragraph after it
+gets a different gap from every other paragraph on the page. This is how the
+garde à vue guide ended up with paragraph gaps of 36px, 44px and 64px and
+heading gaps of 84px, 92px and 112px in a single episode. An empty list item is
+worse: it splits one list into several, puts a blank bullet in the accessibility
+tree, and reaches an agent as a bare `- ` line in the markdown. If a passage
+needs more air than the stylesheet gives it, that is a change to
+`publication-page.module.scss`, not to the document.
+
 **Until `series` and `episode` exist, the title carries them.** Write an episode
 title as `<Guide> - Épisode <n> : <subtitle>`; that is the shape the code parses
 to group a guide and to set the page heading. Use one spelling of the guide name
@@ -359,38 +370,59 @@ sake of it.
 
 ## 9. Timetable
 
-Three pieces a month. **Each guide ships complete before the next begins**: a
-guide whose episodes trickle out over ten months never reads as finished, and its
-internal linking stays weak until it is.
+One piece a week, published on a Thursday. **Each guide ships complete before the
+next begins**: a guide whose episodes trickle out over ten months never reads as
+finished, and its internal linking stays weak until it is.
+
+Forty-five consecutive Thursdays, 3 September 2026 to 8 July 2027. The number in
+brackets is the date in that month.
 
 | Month | Pieces | |
 |---|---|---|
-| Sept 2026 | *(no writing)* | Section ships. Sanity fields added, index renamed, sitemap resubmitted |
-| Oct 2026 | A1, A2, A3 | |
-| Nov 2026 | A4, A5, A6 | |
-| Dec 2026 | A7, A8, A9 | |
-| Jan 2027 | A10, A11, A12* | **Guide A complete** |
-| Feb 2027 | B1, B2, B3 | |
-| Mar 2027 | B4, B5, B6 | |
-| Apr 2027 | B7, B8, B9 | |
-| May 2027 | B10, B11, B12 | |
-| Jun 2027 | B13, S1, S2 | **Guide B complete** |
-| Jul 2027 | S3, S4, S5 | |
-| Aug 2027 | S6, S7, S8 | |
-| Sept 2027 | S9, S10, S11 | |
-| Oct 2027 | S12, S13, S14 | |
-| Nov 2027 | S15, S16, S17 | |
-| Dec 2027 | S18*, S19*, S20* | **Complete: 45 pieces** |
+| Sept 2026 | A1 (3), A2 (10), A3 (17), A4 (24) | |
+| Oct 2026 | A5 (1), A6 (8), A7 (15), A8 (22), A9 (29) | |
+| Nov 2026 | A10 (5), A11 (12), A12* (19), B1 (26) | **Guide A complete** on 19 Nov |
+| Dec 2026 | B2 (3), B3 (10), B4 (17), B5 (24), B6 (31) | Two slots fall in the holidays, see below |
+| Jan 2027 | B7 (7), B8 (14), B9 (21), B10 (28) | |
+| Feb 2027 | B11 (4), B12 (11), B13 (18), S1 (25) | **Guide B complete** on 18 Feb |
+| Mar 2027 | S2 (4), S3 (11), S4 (18), S5 (25) | |
+| Apr 2027 | S6 (1), S7 (8), S8 (15), S9 (22), S10 (29) | |
+| May 2027 | S11 (6), S12 (13), S13 (20), S14 (27) | |
+| Jun 2027 | S15 (3), S16 (10), S17 (17), S18* (24) | |
+| Jul 2027 | S19* (1), S20* (8) | **Complete: 45 pieces** on 8 Jul |
 
-About 36,000 words over fifteen months, roughly 2,400 a month. At two pieces a
-month instead the same programme runs to mid-2028; the ordering does not change,
-the guides simply complete in month 6 and month 13.
+About 36,000 words over forty-five weeks, roughly 800 a week. The ordering is
+fixed by the guides and does not change if the cadence does: at three pieces a
+month the same programme runs to December 2027, at two a month to mid-2028, and
+in both cases the guides simply complete later.
+
+**The setup work is not in this table and comes first.** The section ships, the
+`series` and `episode` fields are added to the studio, the index is renamed and
+the sitemap is resubmitted. None of it blocks A1, but the `series` field is the
+one thing that stops the two guides from being held together by their title
+prefixes alone.
+
+**Two Thursdays fall badly.** B5 lands on 24 December and B6 on 31 December,
+when the general counsel and finance directors these pieces are written for are
+not at their desks. Move both forward a week and let the rest of the run slide,
+or hold those two and double up in the second week of January. Do not simply
+publish into the holidays and count the impressions as a result.
+
+### The binding constraint is validation, not writing
+
+Section 5 requires Alice to approve every piece before publication. A weekly
+cadence means a piece cleared every week for ten months, without a gap. That is
+the part of this schedule most likely to fail, and it fails quietly: an
+unapproved draft keeps its future `publishedAt`, the date passes, and nothing
+appears. Build the review slot into the week before the writing slot.
 
 ### What to expect
 
-Nothing for the first three months. Guide A should begin showing positions around
-month five or six. The compounding only becomes visible once a guide is complete
-and cross-linked.
+Nothing for the first three months. The lag is calendar time and not volume, so
+publishing weekly rather than monthly does not bring the results forward in
+proportion: Guide A completes in November 2026 rather than January 2027, but the
+compounding should still only start to be visible in the spring, once the guide
+has been complete and cross-linked for a quarter.
 
 These are low-volume terms. At maturity the realistic figure is a few hundred
 clicks a month, not thousands. Every one of them is a general counsel or a
