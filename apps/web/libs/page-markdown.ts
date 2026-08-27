@@ -7,7 +7,7 @@ import type {
 	ExpertiseDocument,
 	ExpertiseField,
 	HomeDocument,
-	IskaContent,
+	IskaDocument,
 	LegalDocument,
 	MarkdownContext,
 	PublicationMeta,
@@ -126,15 +126,18 @@ export const legalMarkdown = (data: LegalDocument, ctx: MarkdownContext): string
 		sections: [toMarkdown(data.block)],
 	});
 
-export const iskaMarkdown = (content: IskaContent, ctx: MarkdownContext): string =>
+export const iskaMarkdown = (data: IskaDocument, ctx: MarkdownContext): string =>
 	document(ctx, {
 		path: "/iska",
-		title: content.title,
-		lead: content.tagline,
+		title: data.title?.trim() ?? "",
+		lead: data.tagline,
 		sections: [
-			section(content.networkTitle, content.network.join("\n\n")),
-			section(content.bringTitle, content.bring.join("\n\n")),
-			section(content.skillsTitle, content.skills.map((skill) => `- ${skill}`).join("\n")),
+			section(data.networkTitle?.trim(), toMarkdown(data.network)),
+			section(data.bringTitle?.trim(), toMarkdown(data.bring)),
+			section(
+				data.skillsTitle?.trim(),
+				(data.skills ?? []).map((skill) => `- ${skill}`).join("\n"),
+			),
 		],
 	});
 

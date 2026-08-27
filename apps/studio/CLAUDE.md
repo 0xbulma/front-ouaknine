@@ -71,6 +71,8 @@ Two tools exist for that seam and they look at opposite ends of it:
   test spent a while comparing v6 against itself. Reaching that commit needs
   full history, which is why CI checks out with `fetch-depth: 0`.
   An intentional schema change means editing `EXPECTED_DIFFS`, with the reason.
+  A schema type that did not exist in v2 has no baseline to compare against, so
+  it goes in `ADDED_SINCE_V2` instead; the test checks that list stays honest.
 - **`scripts/check-orphaned-fields.mjs`** reads the live dataset and reports
   fields that exist in documents but have nowhere to live in the schema. Not
   lost data, just invisible in the Studio. It hits the network, so it is not

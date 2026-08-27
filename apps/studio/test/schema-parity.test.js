@@ -36,6 +36,14 @@ const SCHEMA_FILES = [
 ]
 
 /**
+ * Types that did not exist in v2. This test is about the v2->v6 upgrade, not
+ * about the schema never growing: a type with no baseline has nothing to
+ * compare against, so it is excluded from the set comparison rather than
+ * pinned. Every other test iterates the baseline's keys and skips it already.
+ */
+const ADDED_SINCE_V2 = new Set(['iska'])
+
+/**
  * The complete set of intentional changes, keyed by JSON-path prefix.
  * Each entry is a v2->v6 breaking-change fix, justified below.
  */
@@ -154,8 +162,16 @@ before(async () => {
 })
 
 describe('v2 -> v6 schema parity', () => {
-  test('exposes exactly the same set of types', () => {
-    assert.deepEqual(Object.keys(newTypes).sort(), Object.keys(oldTypes).sort())
+  test('exposes exactly the same set of types, plus the ones added since', () => {
+    const carried = Object.keys(newTypes).filter((name) => !ADDED_SINCE_V2.has(name))
+    assert.deepEqual(carried.sort(), Object.keys(oldTypes).sort())
+
+    // Keeps the exclusion list honest: a name left here after the type is gone,
+    // or one that turns out to have existed in v2, would silence a real diff.
+    for (const name of ADDED_SINCE_V2) {
+      assert.ok(newTypes[name], `Stale exclusion, no such type: ${name}`)
+      assert.ok(!oldTypes[name], `Not new, v2 already had it: ${name}`)
+    }
   })
 
   test('every type keeps its document/object kind', () => {

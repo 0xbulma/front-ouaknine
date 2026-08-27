@@ -9,7 +9,7 @@ import type { SitePage, SitePagesCopy } from "./types";
 // content JSON.
 export const sitePages = (
 	locale: string,
-	{ labels, nav, iskaTitle, legalLabel }: SitePagesCopy,
+	{ labels, nav, legalLabel }: SitePagesCopy,
 ): SitePage[] => {
 	// By URL, not by position: reordering content/headerContent.json would
 	// otherwise relabel every page here, and a shorter nav would throw.
@@ -34,7 +34,7 @@ export const sitePages = (
 			path: "/contact",
 			note: labels.contactNote,
 		},
-		{ label: iskaTitle, path: "/iska", note: labels.iskaNote },
+		{ label: labels.iskaLabel, path: "/iska", note: labels.iskaNote },
 		{ label: legalLabel, path: "/legal", note: labels.legalNote },
 	].map((page) => ({ ...page, url: pageUrl(locale, page.path) }));
 };

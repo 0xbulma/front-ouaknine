@@ -82,6 +82,21 @@ export type LegalDocument = SeoFields & {
 	block?: PortableText;
 };
 
+// The three numbered sections of /iska. `title` is the wordmark's alt text and
+// the markdown heading, never a visible string on the page.
+export type IskaDocument = SeoFields & {
+	title?: string;
+	tagline?: string;
+	cta?: string;
+	ctaAria?: string;
+	networkTitle?: string;
+	network?: PortableText;
+	bringTitle?: string;
+	bring?: PortableText;
+	skillsTitle?: string;
+	skills?: string[];
+};
+
 export type ExpertiseFieldDocument = {
 	_id?: string;
 	title?: string;
@@ -205,6 +220,7 @@ export type SitePagesLabels = Partial<
 		| "publicationsNote"
 		| "contactLabel"
 		| "contactNote"
+		| "iskaLabel"
 		| "iskaNote"
 		| "legalNote",
 		string
@@ -214,7 +230,6 @@ export type SitePagesLabels = Partial<
 export type SitePagesCopy = {
 	labels: SitePagesLabels;
 	nav: NavLink[];
-	iskaTitle: string;
 	legalLabel: string;
 };
 
@@ -274,17 +289,6 @@ export type MarkdownContext = {
 	body?: PortableText | null;
 	series?: PublicationMeta[];
 	groups?: PublicationGroups;
-};
-
-export type IskaContent = {
-	title: string;
-	tagline: string;
-	networkTitle: string;
-	network: string[];
-	bringTitle: string;
-	bring: string[];
-	skillsTitle: string;
-	skills: string[];
 };
 
 // --- UI copy -----------------------------------------------------------------
