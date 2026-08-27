@@ -124,8 +124,9 @@ derivations; `ui` runs on jsdom and covers the component seams the pure tests
 cannot reach. Run one with `yarn vitest run --project ui`.
 
 `ui` mocks everything below the component in `test/setup.tsx`: `next/head`
-renders its children inline so the annotations are queryable, `next/link` clones
-its `<a>` child the way Next 12 does, `next/image` becomes an `<img>`, and
+renders its children inline so the annotations are queryable, `next/link`
+renders the anchor itself the way Next 13+ does, `next/image` becomes an
+`<img>`, and
 `libs/clientApi` is stubbed because it throws at import without
 `NEXT_PUBLIC_SANITY_ID`. A test sets the router with `setRouter({ locale: 'en' })`
 in place of re-mocking the module. Stylesheets compile for real: sass is current
