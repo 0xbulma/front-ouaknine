@@ -27,15 +27,14 @@
   animation-fill-mode: forwards;
 }
 
+// A fade and nothing else, which is the one reveal the rest of the site has.
+// It used to drift up 5% under the fade as well.
 @keyframes show {
   from {
     opacity: 0;
-    transform: translateY(5%);
-
   }
   to {
     opacity: 1;
-    transform: translateY(0);
   }
 }
 

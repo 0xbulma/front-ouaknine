@@ -13,15 +13,15 @@
   align-items: center;
 }
 
+// The map does not animate. It is the one image on the page and the largest
+// thing on it, and the vocabulary is for type.
 .map {
   display: block;
-  animation: rise 0.5s $ease both;
 }
 
 .details {
   margin: 0;
   border-top: 1px solid $rule;
-  animation: rise 0.5s $ease $stagger both;
 }
 
 .row {
@@ -56,17 +56,6 @@
 
   &:hover {
     color: $paper-raised;
-  }
-}
-
-@keyframes rise {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
   }
 }
 

@@ -1,14 +1,5 @@
 @use '../../styles/variables' as *;
 
-@keyframes draw {
-  from {
-    clip-path: inset(0 100% 0 0);
-  }
-  to {
-    clip-path: inset(0 0 0 0);
-  }
-}
-
 .container {
   @include desktop-container;
   padding: $space-6 0 $space-7 0;
@@ -57,12 +48,6 @@
   color: $ink;
   @include borderbottomlight;
   transition: color $dur-fast $ease, border-color $dur-fast $ease;
-
-  // `backwards`, not `both`: `both` leaves the final `clip-path: inset(0 0 0 0)`
-  // applied for good, and a clip-path clips the whole rendering of the element,
-  // including the :focus-visible outline globals.scss draws outside its border
-  // box. Every row here is a link, so `both` means no keyboard focus ring.
-  animation: draw 500ms $ease backwards;
 
   &:hover {
     color: $paper-raised;
@@ -122,11 +107,5 @@
   .row {
     grid-template-columns: 2.5rem minmax(0, 1fr);
     gap: $space-2;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .row {
-    animation: none;
   }
 }

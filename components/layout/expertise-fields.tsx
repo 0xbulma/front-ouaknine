@@ -33,6 +33,12 @@ function ExpertiseFields({
 	// and however far into the last one the page had been scrolled. Not on the
 	// first render, though — a page opened from a search result should start
 	// where it was asked to start.
+	//
+	// And not while that first line is already clear of the header. The field
+	// starts at a fixed offset down the document, so at the top of the page it
+	// sits about 70px below the reading line: pulling it up from there scrolls a
+	// page that was not scrolled, and left every field looking like it had
+	// already been read into.
 	useEffect(() => {
 		if (!landed.current) {
 			landed.current = true;
@@ -41,7 +47,7 @@ function ExpertiseFields({
 
 		const element = fieldRef.current;
 		const top = element?.getBoundingClientRect().top;
-		if (!element || top === undefined || Math.abs(top - READING_TOP) < 8) return;
+		if (!element || top === undefined || top >= READING_TOP) return;
 
 		const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 		element.scrollIntoView({
@@ -63,7 +69,6 @@ function ExpertiseFields({
 								href={`/expertise/${item.slug}`}
 								scroll={false}
 								className={classes.railitem}
-								style={{ "--i": index }}
 								aria-current={isActive ? "page" : undefined}
 							>
 								<span className={classes.railindex}>{pad(index + 1)}</span>
