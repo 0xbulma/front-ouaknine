@@ -4,7 +4,7 @@ import FirmSection from "../components/layout/firm-section";
 import footerContent from "../content/footerContent.json";
 import useLocale from "../hooks/useLocale";
 import { splitAddress } from "../libs/address";
-import { expertiseSlug } from "../libs/expertise";
+import { expertiseSlug } from "../libs/expertise-list";
 import { fetchHome } from "../libs/page-content";
 import { staticPageProps } from "../libs/static-page-props";
 import type { HomeDocument } from "../libs/types";

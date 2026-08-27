@@ -4,7 +4,7 @@ import useLocale from "../../hooks/useLocale";
 import { isSafeExternal } from "../../libs/href";
 import { expertiseSlugIn } from "../../libs/localePath";
 
-import { formatDate, isPress, pagerFor, splitTitle } from "../../libs/publications";
+import { formatDate, isPress, pagerFor, splitTitle } from "../../libs/publication-fields";
 import type { PageSeo, Publication, SeriesLink } from "../../libs/types";
 import HeadPage from "../head/head-page";
 import PublicationSchema from "../head/publication-schema";

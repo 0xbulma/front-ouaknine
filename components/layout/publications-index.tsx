@@ -1,7 +1,7 @@
 import Link from "next/link";
 import CONTENT from "../../content/publicationsContent.json";
 import useLocale from "../../hooks/useLocale";
-import { formatDate, groupPublications, isPress, splitTitle } from "../../libs/publications";
+import { formatDate, groupPublications, isPress, splitTitle } from "../../libs/publication-fields";
 import type { Locale, PageSeo, PublicationMeta, PublicationsDocument } from "../../libs/types";
 import HeadPage from "../head/head-page";
 import PageTitle from "./page-title";

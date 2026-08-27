@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import clientApi from "../../libs/clientApi";
-import { expertiseSlug } from "../../libs/expertise";
+import { expertiseSlug } from "../../libs/expertise-list";
 import EXPERTISE_PAIRS from "../../libs/expertisePairs";
 import { fetchPublications } from "../../libs/publications";
 import { methodNotAllowed } from "../../libs/query-guard";

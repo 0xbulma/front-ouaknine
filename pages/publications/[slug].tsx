@@ -2,15 +2,10 @@ import type { GetStaticPaths, GetStaticProps } from "next";
 import type { PublicationPageProps } from "../../components/layout/publication-page";
 import PublicationPage from "../../components/layout/publication-page";
 import organizationContent from "../../content/organizationContent.json";
-import { plainText } from "../../libs/expertise";
 import { withLocale } from "../../libs/localePath";
-import {
-	fetchPublicationBody,
-	fetchPublications,
-	otherLocale,
-	seriesOf,
-	splitTitle,
-} from "../../libs/publications";
+import { plainText } from "../../libs/plain-text";
+import { otherLocale, seriesOf, splitTitle } from "../../libs/publication-fields";
+import { fetchPublicationBody, fetchPublications } from "../../libs/publications";
 import { LOCALES, resolveLocale } from "../../libs/site-url";
 import type { Locale, PageSeo } from "../../libs/types";
 

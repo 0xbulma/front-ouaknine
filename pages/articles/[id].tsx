@@ -1,6 +1,7 @@
 import type { GetServerSideProps } from "next";
 import { withLocale } from "../../libs/localePath";
-import { fetchPublicationById, otherLocale } from "../../libs/publications";
+import { otherLocale } from "../../libs/publication-fields";
+import { fetchPublicationById } from "../../libs/publications";
 import { resolveLocale } from "../../libs/site-url";
 import type { Locale } from "../../libs/types";
 

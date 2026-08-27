@@ -1,6 +1,6 @@
 import headerContent from "../../content/headerContent.json";
 import useLocale from "../../hooks/useLocale";
-import { plainText } from "../../libs/expertise";
+import { plainText } from "../../libs/plain-text";
 import { pageUrl } from "../../libs/site-url";
 import type { ExpertiseField } from "../../libs/types";
 import JsonLd from "./json-ld";

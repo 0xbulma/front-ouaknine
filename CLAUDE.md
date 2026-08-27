@@ -154,7 +154,9 @@ the site, and decide whether a CMS-authored link is same-site or hostile; they
 fail silently into a 404 or an unsafe anchor, and one of them already broke
 once. The agent surface adds the negotiation (`libs/accept.ts`), the routing
 decision (`libs/proxy-route.ts`), the markdown rendering, the page list,
-the URL spelling and llms.txt.
+the URL spelling, llms.txt and the meta-description truncation
+(`libs/plain-text.ts`). One test asserts no component can reach the Sanity
+client, which is a property of the import graph rather than of any one module.
 
 What makes a module testable is not importing the Sanity client or React —
 Vite resolves extensionless imports and JSON imports, so nothing needs an
@@ -243,13 +245,31 @@ déontologie constraints, the full article list and the release schedule.
 
 **Sanity** is reached through `@sanity/client` and `@sanity/image-url` directly.
 The `next-sanity` and `next-sanity-image` wrappers were dropped: each re-exported
-one function, and between them they pinned the repo below Next 16. On the version
-pinned here the client constructor is the *default* export, not `createClient`,
-which arrives in v4. `libs/clientApi.ts` also exports `SANITY_PROJECT`, so the
-image URL builder takes a plain `{ projectId, dataset }` rather than reaching
-into the client for its private `clientConfig` — that coupling is what forced a
-new major of `@sanity/image-url`, and it is what would break on the next client
-bump.
+one function, and between them they pinned the repo below Next 16. The
+constructor is `createClient`, the named export; the default export still
+resolves but is deprecated. `apiVersion` is pinned to `2025-02-19`, the version
+where the default perspective changed from `raw` to `published`, and
+`perspective` is set explicitly beside it so a later date cannot silently start
+serving drafts: only the publications query filters `drafts.**` itself, and a
+`[0]` projection would hand a page whichever copy came back first.
+
+**The Sanity client must never reach the browser.** `SANITY_PROJECT` lives in
+`libs/sanity-image.ts`, not beside the client, because the image URL builder
+runs client-side and importing the constant from `libs/clientApi.ts` dragged
+`@sanity/client`, `rxjs` and `get-it` into the bundle. For the same reason
+neither `libs/publications.ts` nor `libs/expertise.ts` re-exports the pure
+derivations beside it: a component importing `formatDate` or `plainText` from
+the module that builds a client cost 23 kB gzipped on the home page. The pure
+halves are `libs/publication-fields.ts`, `libs/expertise-list.ts` and
+`libs/plain-text.ts`, and `libs/no-client-in-components.test.ts` walks the
+import graph of every component and fails with the chain if one reaches the
+client again. It is invisible in a diff and invisible in a screenshot; a test
+is the only thing that sees it.
+
+The image URL builder takes a plain `{ projectId, dataset }` rather than
+reaching into the client for its private `clientConfig` — that coupling is what
+forced a new major of `@sanity/image-url`, and what would otherwise have broken
+on the jump from client v3 to v8.
 
 `components/ui/sanityImage.tsx` reproduces what `useNextSanityImage` did by
 default: `auto=format`, `fit=clip`, quality 75, a loader that resizes on Sanity's
