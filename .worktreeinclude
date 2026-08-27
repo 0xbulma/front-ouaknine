@@ -5,3 +5,9 @@
 # own project directory, which is apps/web now, not the repository root, and a
 # copy left at the root is read by nothing.
 apps/web/.env*
+
+# The root copy is here because that is where the main checkout still keeps it,
+# and a pattern that selects nothing is a workspace that comes up with no env
+# and 500s on every page. Copying it is only half the job: the setup script in
+# .conductor/settings.toml is what puts it where Next will look.
+.env*

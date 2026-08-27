@@ -1,7 +1,15 @@
 "$schema" = "https://conductor.build/schemas/settings.repo.schema.json"
 
 [scripts]
-setup = "pnpm install"
+# Install both workspaces, then make sure the site can find its env.
+#
+# Next resolves .env from its own project directory, so the file has to be at
+# apps/web/.env or it is read by nothing: the symptom is `Configuration must
+# contain projectId` and a 500 on every page. .worktreeinclude copies both
+# locations because the main checkout still keeps it at the root, and this
+# promotes that copy when the apps/web one is absent. It never overwrites, and
+# it is a no-op once the main checkout moves the file for good.
+setup = "pnpm install && { [ -f apps/web/.env ] || [ ! -f .env ] || cp .env apps/web/.env; }"
 
 # Each workspace is given ten ports from $CONDUCTOR_PORT and the two servers
 # take one each, so two workspaces can run side by side. Nothing else is
