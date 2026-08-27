@@ -151,5 +151,21 @@ $lh-display: 1.02;
 $lh-title: 1.1;
 $lh-heading: 1.25;
 
-$measure: 62ch;
+// The reading measure, as a fixed length rather than in `ch`.
+//
+// `ch` is the width of the `0` glyph and scales with the font size, which made
+// this token mean two different things at once: 62ch rendered as 625px and
+// about 84 characters a line, and raising the prose size would have widened the
+// column without shortening the line at all. 39rem is the same 624px it has
+// always been, so every surface using it is unchanged, and the character count
+// is now set by the font size of the text inside it.
+$measure: 39rem;
+
+// The publications measure. Long-form runs wider than the blurbs $measure was
+// drawn for, and it is a cap rather than a width: beside the episode index the
+// grid column is narrower and wins, so a guide episode sets at 832px with its
+// right edge flush against the meta rule, and an article with no index sets at
+// this. Without any cap that article took the whole 1200px container, which is
+// 164 characters a line.
+$measure-wide: 60rem;
 $fs-micro: 0.75rem;

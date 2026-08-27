@@ -421,7 +421,27 @@ axis and `font-optical-sizing: auto` so the sizes it *is* used at stay solid.
 labels, buttons and the colophon all use it.
 
 Headings are **uppercase** with slightly negative tracking. Body copy is
-`$ink-muted`, capped at `$measure` (62ch).
+`$ink-muted`, capped at `$measure` (39rem, 624px, about 84 characters a line at
+the 1rem body size).
+
+`$measure` was `62ch` and is a fixed length now. `ch` is the width of the `0`
+glyph, and Inter's `0` is a third wider than its average letter, so `62ch` never
+meant 62 characters, it meant about 84. Worse, it scaled with the font size of
+whatever it was applied to: on the ISKA tagline, at 40px, the same token was
+1378px. A length means one thing everywhere, and the characters per line follow
+from the font size of the text inside it.
+
+`$measure-wide` (60rem) is the publications measure, and it is a **cap, not a
+width**. `.body` fills whatever grid column it is given and stops at the cap.
+Beside the episode index that column is narrower and wins, so a guide episode
+sets at 832px on a 1440px screen with its right edge flush against the meta rule
+and the banner, and it stays flush at every width because it is the column
+rather than a number. An article has no index, so its row is the whole container
+and the cap is what stops it; without one it ran to 164 characters a line.
+
+Both are anchored left, where the banner and the meta rule start. A centred
+column reads as floating on a page whose every other edge is flush left.
+`$measure` is the blurb width and is not used by publications.
 
 ### Scale
 
