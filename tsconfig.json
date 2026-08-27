@@ -16,8 +16,8 @@
       "DOM.Iterable"
     ],
     "module": "ESNext",
-    "moduleResolution": "node",
-    "jsx": "preserve",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
@@ -27,7 +27,8 @@
         "name": "next"
       }
     ],
-    "allowJs": true
+    "allowJs": true,
+    "verbatimModuleSyntax": true
   },
   "include": [
     "types/**/*.d.ts",

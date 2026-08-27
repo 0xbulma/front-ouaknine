@@ -2,7 +2,6 @@ import "@testing-library/jest-dom/vitest";
 import { cleanup } from "@testing-library/react";
 import type { NextRouter } from "next/router";
 import type { AnchorHTMLAttributes, ImgHTMLAttributes, ReactNode } from "react";
-import { cloneElement, isValidElement } from "react";
 
 // The router every `ui` test renders against. Tests call `setRouter` in a
 // `beforeEach`; the mock below reads this object at call time, so a test can
@@ -39,16 +38,21 @@ vi.mock("next/head", () => ({
 	default: ({ children }: { children: ReactNode }) => <>{children}</>,
 }));
 
-// Next 12's <Link> clones its <a> child and injects the href. The real one
-// needs a router context; this does the one thing the tests care about.
+// Next 13+ <Link> renders the anchor itself. The real one needs a router
+// context; this does the one thing the tests care about.
 vi.mock("next/link", () => ({
-	default: ({ href, children }: { href: string | { pathname: string }; children: ReactNode }) => {
-		const url = typeof href === "string" ? href : href.pathname;
-		if (isValidElement<AnchorHTMLAttributes<HTMLAnchorElement>>(children)) {
-			return cloneElement(children, { href: url });
-		}
-		return <a href={url}>{children}</a>;
-	},
+	default: ({
+		href,
+		children,
+		...rest
+	}: Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href"> & {
+		href: string | { pathname: string };
+		children: ReactNode;
+	}) => (
+		<a {...rest} href={typeof href === "string" ? href : href.pathname}>
+			{children}
+		</a>
+	),
 }));
 
 // next/image does layout maths, blur placeholders and a loader. None of it is

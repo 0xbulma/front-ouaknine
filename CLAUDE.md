@@ -12,13 +12,14 @@ publications, contact, ISKA, legal, plus a 404.
 
 | | |
 |---|---|
-| Framework | Next.js 12, **pages router** (not App Router) |
+| Framework | Next.js 16, **pages router** (not App Router). Turbopack builds |
 | Language | **TypeScript**, `strict` + `noUncheckedIndexedAccess`. No `.js` left outside `next.config.js` |
 | Styling | SCSS modules + a global token file. No Tailwind, no CSS-in-JS |
 | Content | Sanity for page copy, local JSON for UI strings |
 | Tests | **Vitest** (`vitest.config.mts`), two projects: `libs` on node, `ui` on jsdom |
-| Lint + format | **Biome** (`biome.json`) for both, plus `next lint` for the `@next/next` rules only |
+| Lint + format | **Biome** (`biome.json`) for both, plus ESLint for the `@next/next` rules only |
 | Package manager | **yarn** (`yarn.lock` is committed; there is no `packageManager` field) |
+| React | 18. Next 16 accepts it; 19 and the compiler are a separate step |
 | Node | 24.x per `engines` |
 | CI | `.github/workflows/ci.yml` runs the four checks on every PR |
 
@@ -29,7 +30,7 @@ yarn build        # next build
 yarn verify       # biome:check + lint + typecheck + test, what CI runs
 yarn biome:check  # biome check .        (lint + format, no writes)
 yarn biome:fix    # biome check --write .
-yarn lint         # next lint
+yarn lint         # eslint .
 yarn typecheck    # tsc --noEmit
 yarn test         # vitest run
 yarn test:watch   # vitest
@@ -52,28 +53,50 @@ a stack this repo does not have:
 
 | Rule | Why |
 |---|---|
-| `useValidAnchor`, `useAnchorContent`, `useAriaPropsSupportedByRole` | Next 12's legacy `<Link>` injects `href` onto its `<a>` child at runtime, so every anchor on this site reads as hrefless to a static analyser |
 | `noRestrictedImports`, `noReactForwardRef` | They exist for React 19 + the compiler. This is React 18, and `hooks/useTimout.ts` needs `useCallback` |
 | `useSortedClasses` | No Tailwind |
 | `useMaxParams` | Raised from 2 to 3 |
 
-`noStaticElementInteractions` and `useKeyWithClickEvents` stay on: they are what
-caught the language pickers being keyboard-inaccessible. The four remaining
-`<Link><a onClick>` sites carry a one-line `biome-ignore` each rather than a
-blanket exemption.
+The three a11y rules that used to be off here came back on with Next 16.
+`useValidAnchor`, `useAnchorContent` and `useAriaPropsSupportedByRole` were
+unusable under Next 12's legacy `<Link>`, which injected `href` onto an `<a>`
+child at runtime and left every anchor reading as hrefless. `<Link>` renders
+the anchor itself now, so they see the real element.
 
 **Biome does not format SCSS.** `styles/` and every `*.module.scss` keep the
 2-space, single-quote house style; only `.ts`/`.tsx` are on tabs. Do not try to
 run Biome over them.
 
-**ESLint survives only for `@next/next`.** `.eslintrc.json` extends
-`plugin:@next/next/core-web-vitals` and nothing else, with the parser spelled out
-because `eslint-config-next` is gone. Those 21 rules have no Biome equivalent and
+**Do not hand-write a vendor prefix beside its standard property.** Turbopack
+minifies with Lightning CSS, which adds prefixes itself from `browserslist`.
+Given both, in the header's case `backdrop-filter` followed by
+`-webkit-backdrop-filter`, it keeps only the prefixed one, and the effect
+silently disappears in every browser but Safari. `.svg` in
+`components/layout/phone.module.scss` declares the standard property alone and
+comes out with both. Declare the standard property and let the build prefix it.
+
+An audit that catches this: compile every `*.scss` with `sass` directly, pull
+the property names out of both that and `.next/static/chunks/*.css`, and diff
+the two sets. Shorthand folding is expected noise (`animation-delay` and
+`animation-fill-mode` into `animation`, `grid-row` into `grid-area`,
+`border-top-color` into `border-top`); a property that vanishes with no
+shorthand to explain it is a real loss.
+
+**Turbopack names CSS-module classes differently.** Webpack emitted
+`main-header_header__h46Bl`; Turbopack emits
+`main-header-module-scss-module__h46BlG__header`. Nothing depends on the shape,
+but a grep of the served HTML for the old one silently finds nothing, which
+reads exactly like a component that stopped rendering.
+
+**ESLint survives only for `@next/next`.** `eslint.config.mjs` is flat config,
+because Next 16 removed `next lint` and ESLint 10 no longer reads `.eslintrc`.
+It loads the Next plugin and `@typescript-eslint/parser` and nothing else. Those 21 rules have no Biome equivalent and
 several matter here: `no-html-link-for-pages` in a pages-router app,
 `google-font-display` / `google-font-preconnect` because `_document.tsx`
 hand-loads Google Fonts, `inline-script-id` and `next-script-for-ga` for the gtag
 snippet, `no-duplicate-head`. Suppressions are `biome-ignore`, not
-`eslint-disable`, everywhere except those rules.
+`eslint-disable`, everywhere except those rules. The file list is the app, not
+the build output and not `test/`, whose mocks render a bare `<img>` on purpose.
 
 A Biome suppression must be **one line** and sit **immediately above** the line
 it suppresses. A two-line comment silently does nothing and reports as
@@ -83,51 +106,31 @@ it suppresses. A two-line comment silently does nothing and reports as
 `biome.json` is strict JSON with the `.json` extension, so it takes no comments.
 Reasons live here instead.
 
-**`tsconfig.json` is partly Next's.** `next dev` and `next build` rewrite it on
-every run to enforce the options they need (`moduleResolution: node`,
-`allowJs`, `isolatedModules`, `jsx: preserve`, `noEmit`). Do not fight that: set
-anything else beside it and it survives. Two deliberate divergences from the
-usual house config: `moduleResolution` is `node`, not `bundler`, because Next 12
-insists; and `verbatimModuleSyntax` is off, because `@portabletext/react@1`
-ships `.d.ts` files that re-export its own `.tsx` sources, and those sources
-fail the rule inside `node_modules` where no suppression can reach them.
-`import type` is still the convention, it is just not enforced by the compiler.
+**`tsconfig.json` is partly Next's.** `next build` rewrites it on every run to
+enforce the options it needs, and on Next 16 those are the modern ones:
+`moduleResolution: bundler` and `jsx: react-jsx`. Do not fight that; set
+anything else beside it and it survives. The house config now applies in full,
+including `verbatimModuleSyntax`, which Next 12 could not support because
+`@portabletext/react@1` shipped `.d.ts` files re-exporting its own `.tsx`
+sources.
 
-**A stray `next dev` clobbers `yarn build`.** Next 12 gives both the same
-`./.next`, so a dev server left running in the workspace (Conductor starts one)
-overwrites the production build while you curl `next start` against it. It has
-cost time twice, with two different symptoms that both look like real bugs: a
-500 on `/404` with `MissingStaticPage`, and `jsxDEV is not a function` from a
-route recompiled in development mode.
-
-Do not stop the dev server, give the verification build its own directory:
-
-```bash
-NEXT_DIST_DIR=.next-verify yarn build
-NEXT_DIST_DIR=.next-verify PORT=3111 yarn start
-```
-
-`next.config.js` reads that variable; unset, the build goes to `./.next` as
-usual. Next 16 solves this itself by writing `next dev` output to `.next/dev`.
-
-**`next lint` walks only what it is told to.** Its default directory list is
-`pages`, `components`, `lib`, `src`. This repo's is `libs` (plural), so for a
-long time nothing in it was linted at all; the `lint` script now passes
-`--dir pages --dir components --dir libs --dir hooks --dir context`. Adding a
-top-level directory means adding it there too.
+**`next dev` and `next build` no longer collide.** Next 16 writes the dev
+server's output to `.next/dev`, so a server left running in the workspace can
+stay up while you build and curl `next start`. On Next 12 they shared `./.next`
+and the clobbering cost time twice.
 
 **The suite is two projects.** `libs` runs on node and covers the pure
 derivations; `ui` runs on jsdom and covers the component seams the pure tests
 cannot reach. Run one with `yarn vitest run --project ui`.
 
 `ui` mocks everything below the component in `test/setup.tsx`: `next/head`
-renders its children inline so the annotations are queryable, `next/link` clones
-its `<a>` child the way Next 12 does, `next/image` becomes an `<img>`, and
+renders its children inline so the annotations are queryable, `next/link`
+renders the anchor itself the way Next 13+ does, `next/image` becomes an
+`<img>`, and
 `libs/clientApi` is stubbed because it throws at import without
 `NEXT_PUBLIC_SANITY_ID`. A test sets the router with `setRouter({ locale: 'en' })`
-in place of re-mocking the module. Stylesheets resolve to `test/style-stub.ts`,
-because Vite 8 calls a sass API the pinned 1.54.3 does not have; bumping sass
-changes the CSS the production build emits, so it waits for the Next upgrade.
+in place of re-mocking the module. Stylesheets compile for real: sass is current
+again since the upgrade, so the stub the project used to need is gone.
 
 What `ui` is for: which annotations the head actually publishes (and which a
 `noindex` page suppresses), what the JSON-LD graph says about a document, and
@@ -138,7 +141,7 @@ whether a CMS-authored link leaves the site. Those were curl-and-eyeball before.
 the site, and decide whether a CMS-authored link is same-site or hostile; they
 fail silently into a 404 or an unsafe anchor, and one of them already broke
 once. The agent surface adds the negotiation (`libs/accept.ts`), the routing
-decision (`libs/middleware-route.ts`), the markdown rendering, the page list,
+decision (`libs/proxy-route.ts`), the markdown rendering, the page list,
 the URL spelling and llms.txt.
 
 What makes a module testable is not importing the Sanity client or React —
@@ -271,7 +274,8 @@ share), not CMS driven — swapping it needs a developer.
 ## The agent surface
 
 Every page answers in HTML to a browser and in markdown to an agent, from the
-same URL. `middleware.ts` is the whole routing shim:
+same URL. `proxy.ts` is the whole routing shim (`middleware` was renamed to
+`proxy` in Next 16, and runs on Node rather than the edge):
 
 | Request | Response |
 |---|---|
@@ -282,14 +286,14 @@ same URL. `middleware.ts` is the whole routing shim:
 | a method other than `GET` or `HEAD` on a generated route | `405`. No CDN caches a non-GET, so it would otherwise reach the CMS on every request |
 | anything else | the HTML page, plus `Vary: Accept` and a `Link: rel="alternate"` |
 | a path that does not exist | `404` either way, and the markdown body lists the site |
-| `/llms.txt`, `/en/llms.txt` | generated by `pages/api/llms.ts`, routed by the middleware |
-| `/sitemap.xml` | generated by `pages/api/sitemap.ts`, routed by a `next.config.js` rewrite. Never reaches the middleware, so it bounds its own key space: an unexpected parameter is a `404`, not a `308` |
+| `/llms.txt`, `/en/llms.txt` | generated by `pages/api/llms.ts`, routed by the proxy |
+| `/sitemap.xml` | generated by `pages/api/sitemap.ts`, routed by a `next.config.js` rewrite. Never reaches the proxy, so it bounds its own key space: an unexpected parameter is a `404`, not a `308` |
 
 Rules worth keeping:
 
-- **The middleware decision is in `libs/middleware-route.ts`**, not in
-  `middleware.ts`, which only turns the returned tag into a `NextResponse`.
-  the suite cannot import a middleware file, and what keeps breaking is the
+- **The routing decision is in `libs/proxy-route.ts`**, not in
+  `proxy.ts`, which only turns the returned tag into a `NextResponse`.
+  the suite cannot import the proxy file itself, and what keeps breaking is the
   branch *ordering* and which branch sets `Vary` — one table-driven test covers
   both. The decision is a tagged union (`pass` / `rewrite` / `redirect`), so the
   test narrows through a small helper per branch rather than reading a field off
@@ -300,22 +304,24 @@ Rules worth keeping:
   must resolve to HTML.
 - **`Vary: Accept` on both branches.** Without it a CDN serves whichever variant
   it cached first to everyone.
-- **Middleware cannot return a body** in Next 12; that is a build error, not a
-  warning. Anything with a body is an API route it rewrites to.
+- **The 406 is an API route the proxy rewrites to.** Next 12's middleware could
+  not return a body at all; Next 16's proxy runs on Node and could, but keeping
+  it a rewrite is what keeps the decision in `libs/proxy-route.ts` a value, and
+  therefore testable.
 - **Rewrites to an API route are built from `req.nextUrl.origin`** plus the
   route path, not from `nextUrl.clone()`, which carries the locale and would
   produce `/en/api/…`. The destination is the origin plus a constant route
   path, so nothing from the incoming URL reaches the route except the
-  parameters middleware sets on it.
+  parameters the proxy sets on it.
 - **The CDN keys on the incoming URL, not the rewritten one**, so keeping the
   query out of the rewrite is not what bounds the key space — the `redirect()`
-  branch in `libs/middleware-route.ts` is. A markdown request carrying a query is 308'd onto the bare path, which
+  branch in `libs/proxy-route.ts` is. A markdown request carrying a query is 308'd onto the bare path, which
   collapses `?bust=n` onto one cacheable URL. It has to re-attach the locale:
   `nextUrl.pathname` arrives stripped, so building the target from it alone
   permanently redirects the English edition of a page to the French one.
 - `locale: false` on a `next.config.js` rewrite silently stops it matching under
   i18n. `/sitemap.xml` is one rewrite without it; `/llms.txt` cannot be one at
-  all, because it has a French and an English edition and only middleware knows
+  all, because it has a French and an English edition and only the proxy knows
   which was asked for.
 - The markdown of a page and its HTML come from the same fetchers
   (`libs/page-content.ts`, `libs/expertise.ts`), so they cannot drift.
@@ -465,9 +471,6 @@ call button). Adding a fourth should need a reason.
   platform supplies it, so this only matters if the site is ever self-hosted.
 - `public/images/alice-portrait-illustration.png` is 1.7MB in the repo. It goes
   through `next/image`, so what ships is optimised, but the source is heavy.
-- `sass` is pinned at 1.54.3 (2022). It predates the async compiler API Vite 8
-  calls, which is why the `ui` project stubs stylesheets rather than compiling
-  them. Bumping it changes the CSS the production build emits.
 - Legacy tokens (`$white`, `$gray*`, `$cyan*`) still sit in `_variables.scss`;
   `$green600` and `$amber600` are genuinely used by form status icons.
 - `content/publicationsContent.json` carries no `description`, so the markdown
@@ -477,6 +480,11 @@ call button). Adding a fourth should need a reason.
   `components/ui/sanityImage.tsx` is unexercised in production. It is covered by
   the reference parser's tests, a component test for the size and alt reaching
   the DOM, and a manual check that all three CDN URLs it builds resolve.
+- `images.qualities` in `next.config.js` does not take effect: Next 16 inlines
+  two copies of the image config into the pages-router SSR bundle, and
+  `next/image` resolves against the default `[75]` rather than the project's.
+  The portrait's `quality={72}` was dropped for that reason. Do not re-add a
+  `quality` prop expecting it to survive without checking the emitted `q=`.
 - `libs/types.ts` describes the CMS documents by hand rather than parsing them.
   The GROQ projections are the contract, and nothing validates that a document
   matches the type at the boundary; a studio schema change is caught by a
@@ -485,3 +493,13 @@ call button). Adding a fourth should need a reason.
 > When auditing for unused tokens, note that macOS ships **BSD grep**, which does
 > not honour `\b`. A `grep -r '\$token\b'` sweep silently matches nothing and
 > reports everything as unused. Use `grep -rF`.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

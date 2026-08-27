@@ -7,7 +7,7 @@ import { methodNotAllowed, unexpectedQuery } from "../../libs/query-guard";
 import { pageUrl } from "../../libs/site-url";
 import type { LinkItem, Locale } from "../../libs/types";
 
-// /llms.txt, routed by middleware.ts rather than by a next.config.js rewrite:
+// /llms.txt, routed by proxy.ts rather than by a next.config.js rewrite:
 // the file has a French and an English edition and only middleware knows which
 // one was asked for. Built from the CMS rather than checked in, so a field
 // renamed in the studio does not leave a dead link here.

@@ -48,7 +48,7 @@ const SanityImage = ({ asset, alt }: { asset: SanityImageRef; alt: string }) => 
 				.quality(BLUR_QUALITY)
 				.blur(BLUR_AMOUNT)
 				.url()}
-			layout="responsive"
+			style={{ width: "100%", height: "auto" }}
 			sizes="(max-width: 800px) 100vw, 800px"
 		/>
 	);

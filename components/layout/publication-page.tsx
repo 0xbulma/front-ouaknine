@@ -35,14 +35,14 @@ function SeriesRail({
 		<nav className={classes.rail} aria-label={copy.series}>
 			<div className={classes.railinner}>
 				{series.map(({ post, episode, title }) => (
-					<Link key={post._id} href={`/publications/${post.slug}`}>
-						<a
-							className={classes.railitem}
-							aria-current={post._id === current ? "page" : undefined}
-						>
-							{episode ? <span className={classes.railindex}>{pad(episode)}</span> : <span />}
-							<span className={classes.railtitle}>{title}</span>
-						</a>
+					<Link
+						key={post._id}
+						href={`/publications/${post.slug}`}
+						className={classes.railitem}
+						aria-current={post._id === current ? "page" : undefined}
+					>
+						{episode ? <span className={classes.railindex}>{pad(episode)}</span> : <span />}
+						<span className={classes.railtitle}>{title}</span>
 					</Link>
 				))}
 			</div>
@@ -89,8 +89,8 @@ function PublicationPage({ post, series, seo }: PublicationPageProps) {
 				</span>
 			)}
 			{fieldSlug && (
-				<Link href={`/expertise/${fieldSlug}`}>
-					<a className={classes.metalink}>{post.field}</a>
+				<Link href={`/expertise/${fieldSlug}`} className={classes.metalink}>
+					{post.field}
 				</Link>
 			)}
 		</div>
@@ -138,28 +138,27 @@ function PublicationPage({ post, series, seo }: PublicationPageProps) {
 						{previous || next ? (
 							<div className={classes.pager}>
 								{previous ? (
-									<Link href={`/publications/${previous.post.slug}`}>
-										<a className={classes.pagerlink}>
-											<span className={classes.pagerlabel}>{copy.previous}</span>
-											<span className={classes.pagertitle}>{previous.title}</span>
-										</a>
+									<Link href={`/publications/${previous.post.slug}`} className={classes.pagerlink}>
+										<span className={classes.pagerlabel}>{copy.previous}</span>
+										<span className={classes.pagertitle}>{previous.title}</span>
 									</Link>
 								) : (
 									<span />
 								)}
 								{next ? (
-									<Link href={`/publications/${next.post.slug}`}>
-										<a className={`${classes.pagerlink} ${classes.pagernext}`}>
-											<span className={classes.pagerlabel}>{copy.next}</span>
-											<span className={classes.pagertitle}>{next.title}</span>
-										</a>
+									<Link
+										href={`/publications/${next.post.slug}`}
+										className={`${classes.pagerlink} ${classes.pagernext}`}
+									>
+										<span className={classes.pagerlabel}>{copy.next}</span>
+										<span className={classes.pagertitle}>{next.title}</span>
 									</Link>
 								) : null}
 							</div>
 						) : null}
 
-						<Link href="/publications">
-							<a className={classes.back}>{copy.backToIndex}</a>
+						<Link href="/publications" className={classes.back}>
+							{copy.backToIndex}
 						</Link>
 					</article>
 

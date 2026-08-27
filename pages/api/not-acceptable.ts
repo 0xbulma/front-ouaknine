@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
-// Reached only through the middleware, when the Accept header rules out every
+// Reached only through the proxy, when the Accept header rules out every
 // representation this site can produce. RFC 9110 §15.5.7 asks the body to list
 // what is available so the client can retry with a usable Accept.
 export default function handler(_req: NextApiRequest, res: NextApiResponse) {

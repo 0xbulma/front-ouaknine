@@ -20,11 +20,12 @@ function NavMobile({ navlinks, iska }: { navlinks: NavLink[]; iska: IskaCopy }) 
 			<ul className={`${classes.navlist} ${isOn ? classes.listvisible : ""}`}>
 				{navlinks.map((link, index) => (
 					<li key={link.url} className={classes.navitem}>
-						<Link href={link.url}>
-							{/* biome-ignore lint/a11y/noStaticElementInteractions lint/a11y/useKeyWithClickEvents: <Link> injects the href, so this is an anchor; Enter already activates it and the handler only closes the drawer. */}
-							<a className={`${classes.link} ${classes[`animation${index}`]}`} onClick={toggleNav}>
-								{link.label}
-							</a>
+						<Link
+							href={link.url}
+							className={`${classes.link} ${classes[`animation${index}`]}`}
+							onClick={toggleNav}
+						>
+							{link.label}
 						</Link>
 						<div className={`${classes.separator} ${classes[`animationsep${index}`]}`} />
 					</li>

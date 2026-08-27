@@ -15,7 +15,7 @@
 			"pages/**/*.ts",
 			"pages/**/*.tsx",
 			"types/**/*.d.ts",
-			"middleware.ts",
+			"proxy.ts",
 			"vitest.config.mts"
 		]
 	},
@@ -36,11 +36,6 @@
 		"enabled": true,
 		"rules": {
 			"preset": "recommended",
-			"a11y": {
-				"useValidAnchor": "off",
-				"useAnchorContent": "off",
-				"useAriaPropsSupportedByRole": "off"
-			},
 			"complexity": {
 				"noExcessiveCognitiveComplexity": "warn",
 				"noExcessiveLinesPerFunction": {

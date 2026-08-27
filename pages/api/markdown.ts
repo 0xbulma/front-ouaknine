@@ -27,7 +27,7 @@ import { routePath } from "../../libs/site-url";
 import type { MarkdownContext } from "../../libs/types";
 
 // The text/markdown representation of every page. Reached through the
-// middleware, either from an Accept header or from a .md URL.
+// proxy, either from an Accept header or from a .md URL.
 
 // The middleware only ever sends these two. The route is also reachable
 // directly, and the CDN keys on the whole URL, so an unexpected parameter would

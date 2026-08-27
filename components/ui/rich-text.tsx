@@ -81,8 +81,8 @@ export default function RichText({
 
 						if (internal) {
 							return (
-								<Link href={internal}>
-									<a className={classes.link}>{children}</a>
+								<Link href={internal} className={classes.link}>
+									{children}
 								</Link>
 							);
 						}

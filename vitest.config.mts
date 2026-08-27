@@ -1,8 +1,5 @@
-import { fileURLToPath } from "node:url";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vitest/config";
-
-const styleStub = fileURLToPath(new URL("./test/style-stub.ts", import.meta.url));
 
 // Two projects, because the two halves of the suite need different worlds.
 //
@@ -12,7 +9,8 @@ const styleStub = fileURLToPath(new URL("./test/style-stub.ts", import.meta.url)
 // `ui` covers the seams the pure tests cannot reach: which annotations the head
 // actually emits, what the JSON-LD graph says about a document, and whether a
 // CMS-authored link leaves the site. Everything below those components is
-// mocked in test/setup.tsx.
+// mocked in test/setup.tsx. Stylesheets compile for real: sass is current again
+// since the Next 16 upgrade, so the stub the `ui` project used is gone.
 export default defineConfig({
 	test: {
 		projects: [
@@ -26,8 +24,6 @@ export default defineConfig({
 			},
 			{
 				plugins: [react()],
-				// Every stylesheet resolves to the same stub; see test/style-stub.ts.
-				resolve: { alias: [{ find: /^.+\.scss$/, replacement: styleStub }] },
 				test: {
 					name: "ui",
 					environment: "jsdom",
