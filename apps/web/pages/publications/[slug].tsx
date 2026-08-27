@@ -33,9 +33,14 @@ export const getStaticPaths: GetStaticPaths = async ({ locales = LOCALES }) => {
 	}
 };
 
+// `draftMode` reaches all three fetches below, so an unpublished post renders
+// here and every string on it carries the edit link Presentation clicks. This
+// route builds its own props rather than going through
+// libs/static-page-props.ts, so the client swap is its own to make.
 export const getStaticProps: GetStaticProps<PublicationPageProps> = async ({
 	params,
 	locale: requested,
+	draftMode,
 }) => {
 	const slug = String(params?.slug ?? "");
 	const locale = resolveLocale(requested);
@@ -48,8 +53,8 @@ export const getStaticProps: GetStaticProps<PublicationPageProps> = async ({
 		// is emitted, and a missing alternate is recoverable; a cached 404 is not,
 		// so it must not be able to take the page down with it.
 		const [posts, translations] = await Promise.all([
-			fetchPublications(locale),
-			fetchPublications(twin).catch((err) => {
+			fetchPublications(locale, draftMode),
+			fetchPublications(twin, draftMode).catch((err) => {
 				console.error("publication twin locale", twin, slug, err);
 				return [];
 			}),
@@ -60,7 +65,7 @@ export const getStaticProps: GetStaticProps<PublicationPageProps> = async ({
 		if (!meta) return { notFound: true, revalidate: 60 };
 
 		// Only now, and only this one document's prose.
-		const body = await fetchPublicationBody(locale, meta._id);
+		const body = await fetchPublicationBody(locale, meta._id, draftMode);
 
 		if (!body) return { notFound: true, revalidate: 60 };
 
