@@ -10,6 +10,7 @@ export {
 	groupPublications,
 	isPress,
 	otherLocale,
+	pagerFor,
 	seriesOf,
 	splitTitle,
 } from "./publication-fields";

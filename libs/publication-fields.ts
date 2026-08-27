@@ -104,6 +104,24 @@ export const seriesOf = <T extends TitledPost & { publishedAt?: string | null }>
 				new Date(a.post.publishedAt ?? 0).getTime() - new Date(b.post.publishedAt ?? 0).getTime(),
 		);
 
+// The episode before and after the one being read, from the rail the page was
+// handed. Pure, and apart from the component, because the off-by-one is
+// invisible in a render: at position -1 a bare `series[position + 1]` returns
+// `series[0]`, publishing the guide's first episode as the "next" one on every
+// document that is not part of it.
+export const pagerFor = <T extends { post: { _id: string } }>(
+	series: T[] | null | undefined,
+	id: string,
+): { previous: T | null; next: T | null } => {
+	const position = series?.findIndex((entry) => entry.post._id === id) ?? -1;
+	if (!series || position < 0) return { previous: null, next: null };
+
+	return {
+		previous: series[position - 1] ?? null,
+		next: series[position + 1] ?? null,
+	};
+};
+
 // Three surfaces on the index: the guides, grouped; the standalone articles;
 // and what the press has written.
 export const groupPublications = (posts: PublicationMeta[]): PublicationGroups => {

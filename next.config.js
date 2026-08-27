@@ -1,5 +1,18 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Next 12 gives `next dev` and `next build` the same ./.next, so a dev server
+  // left running in the workspace overwrites the production build while you are
+  // curling `next start` against it. The symptoms look like real bugs: a 500 on
+  // /404 with MissingStaticPage, or `jsxDEV is not a function` from a route
+  // recompiled in development mode. Set NEXT_DIST_DIR to give a verification
+  // build a directory of its own:
+  //
+  //   NEXT_DIST_DIR=.next-verify yarn build
+  //   NEXT_DIST_DIR=.next-verify PORT=3111 yarn start
+  //
+  // Next 16 does this itself; `next dev` writes to .next/dev.
+  ...(process.env.NEXT_DIST_DIR ? { distDir: process.env.NEXT_DIST_DIR } : {}),
+
   i18n: {
     locales: ['fr', 'en'],
     defaultLocale: 'fr',
