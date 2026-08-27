@@ -95,12 +95,24 @@
 						]
 					}
 				},
-				"useSelfClosingElements": "error"
+				"useSelfClosingElements": "error",
+				"noRestrictedImports": {
+					"level": "error",
+					"options": {
+						"paths": {
+							"react": {
+								"importNames": ["useMemo", "useCallback", "memo"],
+								"message": "Manual memoization is not allowed. React Compiler handles memoization automatically."
+							}
+						}
+					}
+				}
 			},
 			"suspicious": {
 				"noExplicitAny": "error",
 				"noLeakedRender": "error",
-				"noShadow": "error"
+				"noShadow": "error",
+				"noReactForwardRef": "error"
 			},
 			"nursery": {
 				"noFloatingPromises": "error",
