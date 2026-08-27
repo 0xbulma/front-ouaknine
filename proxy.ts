@@ -2,14 +2,16 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 import { varyWithAccept } from "./libs/accept";
-import type { RewriteDecision, Vary } from "./libs/middleware-route";
-import { route } from "./libs/middleware-route";
+import type { RewriteDecision, Vary } from "./libs/proxy-route";
+import { route } from "./libs/proxy-route";
 
 // One URL, two representations: HTML for browsers, markdown for agents.
 // https://acceptmarkdown.com/recipes/nextjs
 //
-// The decision is in libs/middleware-route.ts, where it is testable. This file
-// only turns the returned tag into a NextResponse.
+// Named `proxy`, not `middleware`: Next 16 renamed the convention to say what
+// it is for, and the new name runs on Node rather than the edge. The decision
+// is in libs/proxy-route.ts, where it is testable. This file only turns
+// the returned tag into a NextResponse.
 
 const applyVary = (res: NextResponse, vary: Vary | undefined): NextResponse => {
 	if (!vary) return res;
@@ -28,7 +30,7 @@ const apiRewrite = (req: NextRequest, { route: to, path }: RewriteDecision) => {
 	return NextResponse.rewrite(url);
 };
 
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
 	const { pathname, search, locale } = req.nextUrl;
 
 	const decision = route({

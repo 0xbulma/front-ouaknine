@@ -28,7 +28,7 @@ function Iska() {
 								alt={content.title}
 								width={260}
 								height={105}
-								layout="intrinsic"
+								style={{ maxWidth: "100%", height: "auto" }}
 								priority
 							/>
 						</h1>
@@ -50,7 +50,7 @@ function Iska() {
 							src={iskaCollage}
 							alt=""
 							aria-hidden="true"
-							layout="responsive"
+							style={{ width: "100%", height: "auto" }}
 							sizes="(min-width: 992px) 42vw, 80vw"
 							placeholder="blur"
 							priority

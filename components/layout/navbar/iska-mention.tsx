@@ -11,31 +11,27 @@ function IskaMention({ content }: { content: IskaCopy }) {
 	const { pathname } = useRouter();
 
 	return (
-		<Link href={ISKA_PATH}>
-			<a
-				className={`${classes.mention} ${pathname === ISKA_PATH ? classes.active : ""}`}
-				aria-label={content.aria}
-			>
-				<span className={classes.separator} aria-hidden="true" />
-				<span className={classes.label}>{content.label}</span>
-				<span className={classes.chip}>
-					<Image src={IskaLogo} alt="ISKA" width={52} height={21} layout="fixed" priority />
-				</span>
-			</a>
+		<Link
+			href={ISKA_PATH}
+			className={`${classes.mention} ${pathname === ISKA_PATH ? classes.active : ""}`}
+			aria-label={content.aria}
+		>
+			<span className={classes.separator} aria-hidden="true" />
+			<span className={classes.label}>{content.label}</span>
+			<span className={classes.chip}>
+				<Image src={IskaLogo} alt="ISKA" width={52} height={21} priority />
+			</span>
 		</Link>
 	);
 }
 
 function IskaMentionMobile({ content, onClick }: { content: IskaCopy; onClick: () => void }) {
 	return (
-		<Link href={ISKA_PATH}>
-			{/* biome-ignore lint/a11y/noStaticElementInteractions lint/a11y/useKeyWithClickEvents: <Link> injects the href, so this is an anchor; Enter already activates it and the handler only closes the drawer. */}
-			<a className={classes.mobile} aria-label={content.aria} onClick={onClick}>
-				<span className={classes.mobilelabel}>{content.labelMobile}</span>
-				<span className={classes.chip}>
-					<Image src={IskaLogo} alt="ISKA" width={54} height={22} layout="fixed" />
-				</span>
-			</a>
+		<Link href={ISKA_PATH} className={classes.mobile} aria-label={content.aria} onClick={onClick}>
+			<span className={classes.mobilelabel}>{content.labelMobile}</span>
+			<span className={classes.chip}>
+				<Image src={IskaLogo} alt="ISKA" width={54} height={22} />
+			</span>
 		</Link>
 	);
 }

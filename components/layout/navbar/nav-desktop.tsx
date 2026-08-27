@@ -18,10 +18,11 @@ function NavDesktop({ navlinks, iska }: { navlinks: NavLink[]; iska: IskaCopy })
 			<ul className={classes.navlist}>
 				{navlinks.map((link) => (
 					<li key={link.url}>
-						<Link href={link.url}>
-							<a className={`${classes.navitem} ${isActive(link.url) ? classes.active : ""}`}>
-								{link.label}
-							</a>
+						<Link
+							href={link.url}
+							className={`${classes.navitem} ${isActive(link.url) ? classes.active : ""}`}
+						>
+							{link.label}
 						</Link>
 					</li>
 				))}

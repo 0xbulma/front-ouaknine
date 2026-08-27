@@ -49,11 +49,9 @@ export default function Home({ data }: { data: HomeDocument }) {
 					<ul className={classes.spegroup}>
 						{tags.map((tag, i) => (
 							<li key={tag.link ?? tag.label}>
-								<Link href={`/expertise/${expertiseSlug(tag.link)}`}>
-									<a className={classes.spe}>
-										<span className={classes.speindex}>{String(i + 1).padStart(2, "0")}</span>
-										<span className={classes.spelabel}>{tag.label?.trim()}</span>
-									</a>
+								<Link href={`/expertise/${expertiseSlug(tag.link)}`} className={classes.spe}>
+									<span className={classes.speindex}>{String(i + 1).padStart(2, "0")}</span>
+									<span className={classes.spelabel}>{tag.label?.trim()}</span>
 								</Link>
 							</li>
 						))}

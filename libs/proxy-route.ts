@@ -1,16 +1,16 @@
 import { isMarkdownPath, isNegotiablePath, preferredType } from "./accept";
 import { markdownUrl, withLocale } from "./site-url";
 
-// What the middleware should do with a request, as a value.
+// What the proxy should do with a request, as a value.
 //
-// The decision lives here rather than in middleware.ts because the suite cannot
+// The decision lives here rather than in proxy.ts because the suite cannot
 // import that file, and the branch *ordering* is what has repeatedly broken: a
 // redirect built from the locale-stripped path, a data guard placed above the
 // branches it then preempted, a variant served without naming its discriminator
 // in `Vary`. None of those are visible in a leaf primitive; all of them are one
 // table-driven case here.
 //
-// middleware.ts turns the tag into a NextResponse and does nothing else.
+// proxy.ts turns the tag into a NextResponse and does nothing else.
 
 export const MARKDOWN_ROUTE = "/api/markdown";
 export const NOT_ACCEPTABLE_ROUTE = "/api/not-acceptable";
@@ -96,8 +96,8 @@ export const route = ({
 		return { ...rewrite(MARKDOWN_ROUTE, path), vary: true };
 	}
 
-	// Next 12 hoists `_next/data/<buildId>` ahead of the matcher's lookahead, so
-	// every <Link> prefetch payload reaches middleware. None of them is
+	// Next hoists `_next/data/<buildId>` ahead of the matcher's lookahead, so
+	// every <Link> prefetch payload reaches the proxy. None of them is
 	// negotiable: left to negotiate, a prefetch sending `Accept: application/json`
 	// gets a 406.
 	//
@@ -116,8 +116,9 @@ export const route = ({
 		return { ...rewrite(MARKDOWN_ROUTE, pathname), vary: true };
 	}
 
-	// Next 12 middleware cannot return a body of its own, so the 406 is rendered
-	// by an API route.
+	// The 406 is rendered by an API route. Next 16's proxy runs on Node and
+	// could return a body itself; keeping the route means the decision here
+	// stays a value, which is what makes it testable.
 	if (chosen === null) return { ...rewrite(NOT_ACCEPTABLE_ROUTE), vary: true };
 
 	// Built from HOST, not the request origin, so this header and the

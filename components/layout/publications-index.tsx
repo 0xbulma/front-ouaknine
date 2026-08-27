@@ -30,24 +30,22 @@ function Row({
 
 	return (
 		<li>
-			<Link href={`/publications/${post.slug}`}>
-				<a className={classes.row}>
-					<span className={classes.index}>{pad(index)}</span>
-					<span className={classes.value}>
-						<h3 className={classes.title}>{title}</h3>
-						<span className={classes.meta}>
-							{formatDate(post.publishedAt, locale, {
-								year: "numeric",
-								month: "long",
-							})}
-							{isPress(post) && post.author
-								? ` — ${post.author}`
-								: post.readingTime
-									? ` — ${post.readingTime} ${copy.readingTime}`
-									: ""}
-						</span>
+			<Link href={`/publications/${post.slug}`} className={classes.row}>
+				<span className={classes.index}>{pad(index)}</span>
+				<span className={classes.value}>
+					<h3 className={classes.title}>{title}</h3>
+					<span className={classes.meta}>
+						{formatDate(post.publishedAt, locale, {
+							year: "numeric",
+							month: "long",
+						})}
+						{isPress(post) && post.author
+							? ` — ${post.author}`
+							: post.readingTime
+								? ` — ${post.readingTime} ${copy.readingTime}`
+								: ""}
 					</span>
-				</a>
+				</span>
 			</Link>
 		</li>
 	);

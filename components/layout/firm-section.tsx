@@ -28,7 +28,7 @@ function FirmSection({
 				<Image
 					src={portrait}
 					alt={imageAlt ?? "Alice Ouaknine"}
-					layout="responsive"
+					style={{ width: "100%", height: "auto" }}
 					sizes="(min-width: 992px) 34vw, 78vw"
 					placeholder="blur"
 					quality={72}

@@ -48,22 +48,26 @@ function LanguagePicker() {
 				<ChevronDownIcon className={`${classes.svg} ${state ? classes.svgactive : ""}`} />
 			</button>
 			<div className={`${classes.selector} ${state ? classes.selectoractive : ""}`}>
-				<Link locale="fr" href={localePath(router, "fr", availableLocales)}>
-					<a className={classes.label}>
-						<CheckIcon
-							className={`${classes.check} ${locale !== "fr" ? classes.checkinactive : ""}`}
-						/>
-						<span>Français</span>
-					</a>
+				<Link
+					locale="fr"
+					href={localePath(router, "fr", availableLocales)}
+					className={classes.label}
+				>
+					<CheckIcon
+						className={`${classes.check} ${locale !== "fr" ? classes.checkinactive : ""}`}
+					/>
+					<span>Français</span>
 				</Link>
 
-				<Link locale="en" href={localePath(router, "en", availableLocales)}>
-					<a className={classes.label}>
-						<CheckIcon
-							className={`${classes.check} ${locale !== "en" ? classes.checkinactive : ""}`}
-						/>
-						<span>English</span>
-					</a>
+				<Link
+					locale="en"
+					href={localePath(router, "en", availableLocales)}
+					className={classes.label}
+				>
+					<CheckIcon
+						className={`${classes.check} ${locale !== "en" ? classes.checkinactive : ""}`}
+					/>
+					<span>English</span>
 				</Link>
 			</div>
 		</div>

@@ -21,18 +21,18 @@ function MainFooter() {
 		<footer className={`${classes.footer} ${underPinnedIndex ? classes.footerbare : ""}`}>
 			<div className={classes.innercontainer}>
 				<div className={classes.logo}>
-					<Image src={LogoSquare} alt="logo" width={70} height={38.73} layout="fixed" />
+					<Image src={LogoSquare} alt="logo" width={70} height={38.73} />
 				</div>
 
 				<div className={classes.links}>
-					<Link href="/">
-						<a className={classes.link}>{CONTENT[locale].link1}</a>
+					<Link href="/" className={classes.link}>
+						{CONTENT[locale].link1}
 					</Link>
-					<Link href="/about">
-						<a className={classes.link}>{CONTENT[locale].link4}</a>
+					<Link href="/about" className={classes.link}>
+						{CONTENT[locale].link4}
 					</Link>
-					<Link href="/legal">
-						<a className={classes.link}>{CONTENT[locale].link2}</a>
+					<Link href="/legal" className={classes.link}>
+						{CONTENT[locale].link2}
 					</Link>
 					<a
 						href={STUDIO_URL}

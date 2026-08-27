@@ -47,8 +47,8 @@ function Page404() {
 									{link.label}
 								</a>
 							) : (
-								<Link href={link.url}>
-									<a className={classes.link}>{link.label}</a>
+								<Link href={link.url} className={classes.link}>
+									{link.label}
 								</Link>
 							)}
 						</li>

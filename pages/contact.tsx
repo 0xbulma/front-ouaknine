@@ -30,6 +30,7 @@ function Contact({ data }: { data: ContactDocument }) {
 
 			<section className={classes.container}>
 				<div className={classes.grid}>
+					{/* biome-ignore lint/a11y/useAnchorContent: decorative and aria-hidden, with tabIndex -1. The labelled link to the same map is the address below. */}
 					<a
 						className={classes.map}
 						href={footerContent.mapsUrl}
@@ -38,7 +39,7 @@ function Contact({ data }: { data: ContactDocument }) {
 						tabIndex={-1}
 						aria-hidden="true"
 					>
-						<Image src={parisMap} alt="" layout="responsive" />
+						<Image src={parisMap} alt="" style={{ width: "100%", height: "auto" }} />
 					</a>
 
 					<dl className={classes.details}>

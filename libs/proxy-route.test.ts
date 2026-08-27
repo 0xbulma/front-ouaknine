@@ -6,7 +6,7 @@ import {
 	type RewriteDecision,
 	type RouteInput,
 	route,
-} from "./middleware-route";
+} from "./proxy-route";
 import { HOST } from "./site-url";
 
 const CHROME =

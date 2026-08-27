@@ -58,15 +58,16 @@ function ExpertiseFields({
 						const isActive = index === active;
 
 						return (
-							<Link key={item.slug} href={`/expertise/${item.slug}`} scroll={false}>
-								<a
-									className={classes.railitem}
-									style={{ "--i": index }}
-									aria-current={isActive ? "page" : undefined}
-								>
-									<span className={classes.railindex}>{pad(index + 1)}</span>
-									<span className={classes.railtitle}>{item.title?.trim()}</span>
-								</a>
+							<Link
+								key={item.slug}
+								href={`/expertise/${item.slug}`}
+								scroll={false}
+								className={classes.railitem}
+								style={{ "--i": index }}
+								aria-current={isActive ? "page" : undefined}
+							>
+								<span className={classes.railindex}>{pad(index + 1)}</span>
+								<span className={classes.railtitle}>{item.title?.trim()}</span>
 							</Link>
 						);
 					})}
@@ -104,11 +105,9 @@ function ExpertiseFields({
 						) : null}
 					</div>
 
-					<Link href="/contact">
-						<a className={classes.link}>
-							<span>{linkLabel}</span>
-							<ArrowSmRightIcon className={classes.arrow} />
-						</a>
+					<Link href="/contact" className={classes.link}>
+						<span>{linkLabel}</span>
+						<ArrowSmRightIcon className={classes.arrow} />
 					</Link>
 				</div>
 			</article>
