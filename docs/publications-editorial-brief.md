@@ -263,6 +263,17 @@ Documents are of type `post`. Fill:
 `publishedAt` has passed.** Nothing else gates it: `language` is a legacy field
 the publications section does not read, so leave it as you find it.
 
+**Never leave an empty block in a body to open up space.** The stylesheet owns
+prose spacing: `.body p` carries the margin, and headings carry their own. An
+empty block renders as a `<br>` on top of that margin, so the paragraph after it
+gets a different gap from every other paragraph on the page. This is how the
+garde à vue guide ended up with paragraph gaps of 36px, 44px and 64px and
+heading gaps of 84px, 92px and 112px in a single episode. An empty list item is
+worse: it splits one list into several, puts a blank bullet in the accessibility
+tree, and reaches an agent as a bare `- ` line in the markdown. If a passage
+needs more air than the stylesheet gives it, that is a change to
+`publication-page.module.scss`, not to the document.
+
 **Until `series` and `episode` exist, the title carries them.** Write an episode
 title as `<Guide> - Épisode <n> : <subtitle>`; that is the shape the code parses
 to group a guide and to set the page heading. Use one spelling of the guide name

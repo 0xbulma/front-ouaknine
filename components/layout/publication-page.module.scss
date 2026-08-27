@@ -171,6 +171,29 @@
     line-height: 1.7;
   }
 
+  // Prose spacing belongs here, not in the CMS. `globals.scss` zeroes the
+  // margin on every `p`, so before this rule a body only had air where an
+  // editor had hand-placed an empty block, which Portable Text renders as a
+  // `<br>`. Five years of that produced paragraph gaps of one `<br>` in most
+  // places and two in a few, and heading gaps of 75px or 102px depending on
+  // the episode, because the `<br>`s stack on top of the margin-top above.
+  //
+  // 1.5rem against a 1.7 line-height is a shade tighter than the `<br>` it
+  // replaces, which measured about 27px.
+  //
+  // Scoped to `p` deliberately. `.bullet` and `.bullet2` carry their own
+  // margins in rich-text.module.scss, and one press cutting is a 413 item
+  // numbered list of signatories that a per-item margin would stretch over
+  // several screens.
+  p {
+    margin-bottom: $space-3;
+  }
+
+  // The container owns the gap to whatever follows the prose.
+  > :last-child {
+    margin-bottom: 0;
+  }
+
   strong {
     color: $ink;
     font-weight: 500;
