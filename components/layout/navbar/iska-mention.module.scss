@@ -44,7 +44,7 @@
 }
 
 .label {
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-inter, sans-serif);
   font-size: 13px;
   line-height: 1.4;
   letter-spacing: 0.17em;
@@ -65,7 +65,7 @@
 }
 
 .mobilelabel {
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-inter, sans-serif);
   font-size: 14px;
   letter-spacing: 0.17em;
   text-transform: uppercase;

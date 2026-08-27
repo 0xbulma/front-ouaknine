@@ -27,7 +27,7 @@
   width: 50%;
   height: 100%;
   cursor: pointer;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-inter, sans-serif);
 }
 
 .labelactive{

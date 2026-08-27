@@ -39,12 +39,12 @@ $cyan800: #155e75;
 // Bodoni Moda for display, Inter for everything else. Two families, split by
 // size: the Didone only appears above ~40px, where its hairlines survive.
 @mixin seriflight {
-  font-family: 'Bodoni Moda', Didot, 'Times New Roman', serif;
+  font-family: var(--font-bodoni, Didot, 'Times New Roman', serif);
   font-weight: 400;
   font-optical-sizing: auto;
 }
 @mixin serif {
-  font-family: 'Bodoni Moda', Didot, 'Times New Roman', serif;
+  font-family: var(--font-bodoni, Didot, 'Times New Roman', serif);
   font-weight: 500;
   font-optical-sizing: auto;
 }
@@ -52,7 +52,7 @@ $cyan800: #155e75;
 // The counterweight to the display type: tiny, letterspaced, uppercase. Used
 // for nav, labels, section numbers and anything else that is not a headline.
 @mixin micro {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif;
+  font-family: var(--font-inter, -apple-system, BlinkMacSystemFont, sans-serif);
   font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.18em;
