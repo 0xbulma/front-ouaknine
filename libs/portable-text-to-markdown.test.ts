@@ -106,3 +106,80 @@ test("images render as their alt text only", () => {
 	expect(toMarkdown([{ _type: "image", _key: "i" }])).toBe("");
 	expect(toMarkdown([{ _type: "image", _key: "i" }]).includes("![")).toBe(false);
 });
+
+const spans = (
+	parts: [string, string[]][],
+	markDefs: PortableNode["markDefs"] = [],
+): PortableNode => ({
+	_type: "block",
+	_key: "runs",
+	style: "normal",
+	markDefs,
+	children: parts.map(([text, marks], i) => ({
+		_type: "span",
+		_key: `s${i}`,
+		text,
+		marks,
+	})),
+});
+
+test("a decorator shared by consecutive spans is opened once", () => {
+	// What the guide stores for a bold sentence with one italic word in it.
+	// Wrapping each span on its own emitted `**a****_b_****c**`, where two `**`
+	// runs meet and CommonMark stops reading it as one bold sentence.
+	const value = [
+		spans([
+			["informé « ", ["strong"]],
+			["par tous moyens", ["em", "strong"]],
+			[" ».", ["strong"]],
+		]),
+	];
+	expect(toMarkdown(value)).toBe("**informé « _par tous moyens_ ».**");
+});
+
+test("mark order within a span does not change the nesting", () => {
+	const a = toMarkdown([spans([["x", ["em", "strong"]]])]);
+	const b = toMarkdown([spans([["x", ["strong", "em"]]])]);
+	expect(a).toBe(b);
+	expect(a).toBe("**_x_**");
+});
+
+test("consecutive spans sharing one link stay a single link", () => {
+	const value = [
+		spans(
+			[
+				["Guide", ["l1"]],
+				[" de survie", ["strong", "l1"]],
+			],
+			[{ _key: "l1", _type: "link", href: "https://example.test/a" }],
+		),
+	];
+	expect(toMarkdown(value)).toBe("[Guide** de survie**](https://example.test/a)");
+});
+
+test("adjacent links to different places stay separate", () => {
+	const value = [
+		spans(
+			[
+				["one", ["l1"]],
+				["two", ["l2"]],
+			],
+			[
+				{ _key: "l1", _type: "link", href: "https://example.test/a" },
+				{ _key: "l2", _type: "link", href: "https://example.test/b" },
+			],
+		),
+	];
+	expect(toMarkdown(value)).toBe("[one](https://example.test/a)[two](https://example.test/b)");
+});
+
+test("an unmarked span between two bold ones closes and reopens", () => {
+	const value = [
+		spans([
+			["a", ["strong"]],
+			[" and ", []],
+			["b", ["strong"]],
+		]),
+	];
+	expect(toMarkdown(value)).toBe("**a** and **b**");
+});
