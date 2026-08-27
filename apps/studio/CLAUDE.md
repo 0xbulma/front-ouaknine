@@ -15,7 +15,7 @@ dataset `production`, deployed to Sanity's own hosting rather than to Vercel.
 | Language | **JavaScript**, ESM (`"type": "module"`). No TypeScript, so no `typecheck` |
 | Lint | **ESLint** with `@sanity/eslint-config-studio`. Biome does not run here |
 | Tests | `node --test`. No Vitest, no test framework |
-| Deploy | `pnpm --filter studio deploy`, pinned to the existing studio by `appId` |
+| Deploy | `pnpm --filter studio run deploy`, pinned to the existing studio by `appId` |
 
 `presentationTool` puts the site in an iframe beside the form that feeds it, and
 turns every string on the page into a click target for its field. That needs
