@@ -16,11 +16,11 @@
     "check:data": "node scripts/check-orphaned-fields.mjs"
   },
   "dependencies": {
-    "@sanity/vision": "6.9.2",
+    "@sanity/vision": "6.10.1",
     "react": "catalog:",
     "react-dom": "catalog:",
     "react-icons": "5.7.0",
-    "sanity": "6.9.2",
+    "sanity": "6.10.1",
     "styled-components": "6.5.3"
   },
   "devDependencies": {
