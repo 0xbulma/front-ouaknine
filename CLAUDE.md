@@ -50,7 +50,7 @@ Three asymmetries are deliberate, and named here so nobody tries to fix them:
 |---|---|
 | `engines.node` only in `apps/web` | Vercel reads it from the deployed workspace. A second copy would be a second thing to forget. CI points at that one file |
 | Biome only covers `apps/web` | Its rules assume TypeScript and the React Compiler. The studio's own ESLint config covers the studio |
-| Only the site has a `deploy` through git | The studio deploys with `pnpm --filter studio deploy`, to Sanity's hosting, by hand |
+| Only the site has a `deploy` through git | The studio deploys with `pnpm --filter studio run deploy`, to Sanity's hosting, by hand |
 
 ## The seam
 
@@ -112,8 +112,18 @@ Vercel builds `apps/web` only. Its **Root Directory** must be `apps/web`, with
 lockfile. Nothing in the repo sets that, so it is a dashboard change and the
 build breaks without it.
 
-The studio deploys separately with `pnpm studio:deploy`, to Sanity's own
-hosting. It is not part of the Vercel build and CI never builds it.
+The studio deploys separately, to Sanity's own hosting. It is not part of the
+Vercel build and CI never builds it.
+
+```bash
+pnpm --filter studio run deploy
+```
+
+**`run` is not optional there.** `deploy` is one of pnpm's own commands, so
+`pnpm --filter studio deploy` never reaches the script: it tries to deploy the
+workspace as a bundle and fails with `ERR_PNPM_INVALID_DEPLOY_TARGET`. `run`
+is what says "the script by that name". Every other task in this repo is safe
+to call bare, because none of the rest collides with a builtin.
 
 ## History
 
