@@ -2,7 +2,7 @@
  * Proves the v6 schema is shape-identical to the v2 schema in git.
  *
  * Both versions define schema types as plain, import-free JS objects, so we can
- * load the v2 originals straight out of `origin/master` and deep-compare them
+ * load the v2 originals straight out of git history and deep-compare them
  * against the current ones. Any unintended drift in a field name, type, nesting,
  * validation rule, or preview config fails the test.
  *
@@ -17,7 +17,12 @@ import {tmpdir} from 'node:os'
 import {join, dirname} from 'node:path'
 import {pathToFileURL} from 'node:url'
 
-const BASE = 'origin/master'
+// The last v2 commit, pinned by sha rather than by a branch ref: `origin/master`
+// moved onto v6 the moment the upgrade merged, and the test quietly started
+// comparing v6 against itself. The commit predates the move into this monorepo,
+// so its tree still has `schemas/` at the top level, so there is no
+// `apps/studio/` prefix below. Reaching it needs full history: see ci.yml.
+const BASE = '835b9718740535baf19a4a1d465752cfa44691e0'
 
 const SCHEMA_FILES = [
   'schemas/blockContent.js',

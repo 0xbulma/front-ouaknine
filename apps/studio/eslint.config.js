@@ -13,4 +13,16 @@ export default [
       },
     },
   },
+  {
+    // ...and it declares no browser globals either, so the two timers
+    // debounce-hooks.js calls read as undefined. Declared by hand rather than
+    // by pulling in `globals` for two identifiers.
+    files: ['components/**/*.{js,jsx}', 'helpers/**/*.js'],
+    languageOptions: {
+      globals: {
+        setTimeout: 'readonly',
+        clearTimeout: 'readonly',
+      },
+    },
+  },
 ]

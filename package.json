@@ -1,55 +1,13 @@
 {
-  "name": "front-ouaknine",
-  "version": "0.1.0",
+  "name": "ouaknine",
   "private": true,
-  "engines": {
-    "node": "24.x"
-  },
-  "browserslist": [
-    ">0.3%",
-    "not ie 11",
-    "not dead",
-    "not op_mini all"
-  ],
+  "packageManager": "pnpm@11.1.1",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "biome:check": "biome check .",
-    "biome:fix": "biome check --write .",
-    "format": "biome format --write .",
-    "lint": "eslint .",
-    "typecheck": "tsc --noEmit",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "verify": "yarn biome:check && yarn lint && yarn typecheck && yarn test"
-  },
-  "dependencies": {
-    "@heroicons/react": "1.0.6",
-    "@portabletext/react": "8.0.1",
-    "@sanity/client": "8.2.0",
-    "@sanity/image-url": "2.1.1",
-    "next": "16.3.2",
-    "react": "19.2.8",
-    "react-dom": "19.2.8",
-    "react-icons": "4.4.0"
-  },
-  "devDependencies": {
-    "@biomejs/biome": "2.5.3",
-    "@next/eslint-plugin-next": "16.3.2",
-    "@testing-library/dom": "10.4.1",
-    "@testing-library/jest-dom": "7.0.1",
-    "@testing-library/react": "16.3.2",
-    "@types/node": "24.13.3",
-    "@types/react": "19.2.18",
-    "@types/react-dom": "19.2.5",
-    "@typescript-eslint/parser": "8.68.0",
-    "@vitejs/plugin-react": "6.1.0",
-    "babel-plugin-react-compiler": "1.0.0",
-    "eslint": "10.9.1",
-    "jsdom": "30.0.1",
-    "sass": "1.103.1",
-    "typescript": "5.9.3",
-    "vitest": "4.1.11"
+    "dev": "pnpm --filter web dev",
+    "build": "pnpm --filter web build",
+    "start": "pnpm --filter web start",
+    "verify": "pnpm --filter web verify && pnpm --filter studio verify",
+    "studio": "pnpm --filter studio dev",
+    "studio:deploy": "pnpm --filter studio deploy"
   }
 }

@@ -1,0 +1,14 @@
+packages:
+  - "apps/*"
+
+# React is the one dependency the site and the studio genuinely share. The
+# catalog is what stops them drifting onto two different 19.x behind a caret.
+catalog:
+  react: 19.2.8
+  react-dom: 19.2.8
+
+# The studio's Vite toolchain. Nothing in the site needs a postinstall, so this
+# stays an allowlist rather than a blanket `dangerouslyAllowAllBuilds`.
+allowBuilds:
+  "@parcel/watcher": true
+  esbuild: true
