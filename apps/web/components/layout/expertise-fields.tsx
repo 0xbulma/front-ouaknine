@@ -24,6 +24,7 @@ function ExpertiseFields({
 	current?: string;
 }) {
 	const fieldRef = useRef<HTMLElement>(null);
+	const railRef = useRef<HTMLDivElement>(null);
 	const landed = useRef(false);
 
 	const active = items.findIndex((item) => item.slug === current);
@@ -34,11 +35,14 @@ function ExpertiseFields({
 	// first render, though — a page opened from a search result should start
 	// where it was asked to start.
 	//
-	// And not while that first line is already clear of the header. The field
-	// starts at a fixed offset down the document, so at the top of the page it
-	// sits about 70px below the reading line: pulling it up from there scrolls a
-	// page that was not scrolled, and left every field looking like it had
-	// already been read into.
+	// And not, beside the index, while that first line is already clear of the
+	// header: there the field is on screen whichever row is picked, and at the
+	// top of the page it sits about 70px below the reading line, so pulling it up
+	// scrolls a page that was not scrolled and leaves every field looking like it
+	// had already been read into. Stacked, the index is above the field rather
+	// than beside it and the field it picks starts a screen further down, out of
+	// sight — that one always has to be scrolled to, which is what the offset
+	// test alone got wrong.
 	useEffect(() => {
 		if (!landed.current) {
 			landed.current = true;
@@ -46,8 +50,12 @@ function ExpertiseFields({
 		}
 
 		const element = fieldRef.current;
-		const top = element?.getBoundingClientRect().top;
-		if (!element || top === undefined || top >= READING_TOP) return;
+		const rail = railRef.current;
+		if (!element || !rail) return;
+
+		const rect = element.getBoundingClientRect();
+		const beside = rail.getBoundingClientRect().right <= rect.left;
+		if (beside && rect.top >= READING_TOP) return;
 
 		const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 		element.scrollIntoView({
@@ -58,7 +66,7 @@ function ExpertiseFields({
 
 	return (
 		<div className={classes.fields}>
-			<div className={classes.rail}>
+			<div className={classes.rail} ref={railRef}>
 				<nav className={classes.railinner} aria-label={label}>
 					{items.map((item, index) => {
 						const isActive = index === active;
