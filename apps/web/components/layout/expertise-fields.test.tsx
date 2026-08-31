@@ -27,8 +27,10 @@ const scrollIntoView = vi.fn();
 
 beforeEach(() => {
 	scrollIntoView.mockClear();
+	vi.restoreAllMocks();
 	Element.prototype.scrollIntoView = scrollIntoView;
 	vi.stubGlobal("matchMedia", () => ({ matches: false }));
+	vi.stubGlobal("scrollY", 0);
 });
 
 // `top` is the field's first line; `beside` puts the index in its own column to
@@ -45,6 +47,19 @@ const pick = ({ beside, top }: { beside: boolean; top: number }) => {
 	view.rerender(
 		<ExpertiseFields items={items} label="Expertise" linkLabel="Contact" current="presse" />,
 	);
+};
+
+// Arriving at a field names it in the URL the same way picking it does, from the
+// home page, from a publication, or from a search result. The rects have to be in
+// place before the component mounts, so this one stubs the prototype.
+const arrive = ({ beside, scrolled = 0 }: { beside: boolean; scrolled?: number }) => {
+	vi.spyOn(Element.prototype, "getBoundingClientRect").mockImplementation(function (this: Element) {
+		if (this.tagName === "ARTICLE") return rect(368, 1200, beside ? 164 : 757);
+		return beside ? rect(96, 368, 164) : rect(368, 1200, 157);
+	});
+	vi.stubGlobal("scrollY", scrolled);
+
+	render(<ExpertiseFields items={items} label="Expertise" linkLabel="Contact" current="presse" />);
 };
 
 test("beside the index, a field picked from the top of the page is left where it is", () => {
@@ -67,4 +82,24 @@ test("under the index, the field is scrolled to however the page was scrolled", 
 	pick({ beside: false, top: 757 });
 
 	expect(scrollIntoView).toHaveBeenCalled();
+});
+
+test("under the index, a field arrived at is scrolled to rather than left below it", () => {
+	// The home page's practice list and a publication's field link both land here,
+	// on a phone, a screen above the field they name.
+	arrive({ beside: false });
+
+	expect(scrollIntoView).toHaveBeenCalledWith({ block: "start", behavior: "auto" });
+});
+
+test("beside the index, a field arrived at is left where the page landed", () => {
+	arrive({ beside: true });
+
+	expect(scrollIntoView).not.toHaveBeenCalled();
+});
+
+test("a position the browser restored survives arriving at the field", () => {
+	arrive({ beside: false, scrolled: 400 });
+
+	expect(scrollIntoView).not.toHaveBeenCalled();
 });

@@ -31,23 +31,23 @@ function ExpertiseFields({
 	const field = items[active >= 0 ? active : 0];
 
 	// Every field is read from its own first line: whichever one is arrived at,
-	// and however far into the last one the page had been scrolled. Not on the
-	// first render, though — a page opened from a search result should start
-	// where it was asked to start.
+	// and however far into the last one the page had been scrolled. That holds for
+	// a field picked from the index and for one arrived at from outside it, the
+	// home page or a publication, because the URL names the field either way.
 	//
-	// And not, beside the index, while that first line is already clear of the
-	// header: there the field is on screen whichever row is picked, and at the
-	// top of the page it sits about 70px below the reading line, so pulling it up
-	// scrolls a page that was not scrolled and leaves every field looking like it
-	// had already been read into. Stacked, the index is above the field rather
-	// than beside it and the field it picks starts a screen further down, out of
-	// sight — that one always has to be scrolled to, which is what the offset
-	// test alone got wrong.
+	// Not, beside the index, while that first line is already clear of the header:
+	// there the field is on screen whichever row is picked, and at the top of the
+	// page it sits about 70px below the reading line, so pulling it up scrolls a
+	// page that was not scrolled and leaves every field looking like it had
+	// already been read into. Stacked, the index is above the field rather than
+	// beside it and the field starts a screen further down, out of sight, so that
+	// one always has to be scrolled to however it was reached.
+	//
+	// And not over a position the browser restored on a reload or a back, which is
+	// where the reader left off rather than the top of the field.
 	useEffect(() => {
-		if (!landed.current) {
-			landed.current = true;
-			return;
-		}
+		const arriving = !landed.current;
+		landed.current = true;
 
 		const element = fieldRef.current;
 		const rail = railRef.current;
@@ -55,12 +55,17 @@ function ExpertiseFields({
 
 		const rect = element.getBoundingClientRect();
 		const beside = rail.getBoundingClientRect().right <= rect.left;
-		if (beside && rect.top >= READING_TOP) return;
+
+		if (arriving) {
+			if (beside || window.scrollY > 0) return;
+		} else if (beside && rect.top >= READING_TOP) return;
 
 		const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 		element.scrollIntoView({
 			block: "start",
-			behavior: reduced ? "auto" : "smooth",
+			// An arrival is a landing position rather than a change, so it does not
+			// animate: the page is simply already there.
+			behavior: reduced || arriving ? "auto" : "smooth",
 		});
 	}, [current]);
 

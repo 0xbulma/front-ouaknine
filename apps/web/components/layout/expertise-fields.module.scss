@@ -75,16 +75,30 @@
     transition: transform $dur $ease;
   }
 
-  &:hover::after,
   &[aria-current='page']::after {
     transform: scaleX(1);
   }
 
-  &:hover,
   &[aria-current='page'] {
     .railindex,
     .railtitle {
       color: $ink;
+    }
+  }
+
+  // A touch leaves :hover stuck on the row it landed on, so the index came away
+  // from a tap showing two rows picked out: the field being read, and the last
+  // one touched. The row is only ruled in for a pointer that can really hover.
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      &::after {
+        transform: scaleX(1);
+      }
+
+      .railindex,
+      .railtitle {
+        color: $ink;
+      }
     }
   }
 }
