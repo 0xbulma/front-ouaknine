@@ -1,11 +1,22 @@
 @use '../../../styles/variables' as *;
 
+// Out of the flow, under the sticky header that contains it. In the flow it
+// pushed the whole page down by its own height, and since it closes over 0.3s
+// it was still doing so while the next page mounted: a route change from the
+// menu landed on a layout 764px too long, and anything that measured it there
+// scrolled to the wrong place and then slid as the panel finished collapsing.
 .nav {
+  position: absolute;
+  top: 100%;
+  left: 0;
   display: block;
   height: 0;
   width: 100%;
   transition: all 0.3s;
   overflow: hidden;
+  // Opaque, because it now covers the page rather than displacing it, and the
+  // list inside it starts 3vh down.
+  background-color: $bg;
 }
 
 @media (min-width: 993px) {
