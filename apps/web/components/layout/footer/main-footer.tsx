@@ -21,7 +21,7 @@ function MainFooter() {
 		<footer className={`${classes.footer} ${underPinnedIndex ? classes.footerbare : ""}`}>
 			<div className={classes.innercontainer}>
 				<div className={classes.logo}>
-					<Image src={LogoSquare} alt="logo" width={70} height={39} />
+					<Image src={LogoSquare} alt="" aria-hidden="true" width={70} height={39} />
 				</div>
 
 				<div className={classes.links}>
@@ -34,13 +34,7 @@ function MainFooter() {
 					<Link href="/legal" className={classes.link}>
 						{CONTENT[locale].link2}
 					</Link>
-					<a
-						href={STUDIO_URL}
-						target="_blank"
-						rel="noreferrer"
-						aria-label="Administration console"
-						className={classes.link}
-					>
+					<a href={STUDIO_URL} target="_blank" rel="noreferrer" className={classes.link}>
 						{CONTENT[locale].link3}
 					</a>
 				</div>
@@ -52,7 +46,7 @@ function MainFooter() {
 						href={LINKEDIN_URL}
 						target="_blank"
 						rel="noreferrer"
-						aria-label="Open LinkedIn Alice Ouaknine"
+						aria-label={CONTENT[locale].linkedinAria}
 					>
 						<FaLinkedin className={classes.socialicon} />
 					</a>
@@ -60,7 +54,7 @@ function MainFooter() {
 						href={CONTENT.mapsUrl}
 						target="_blank"
 						rel="noreferrer"
-						aria-label="Open Google Alice Ouaknine"
+						aria-label={CONTENT[locale].mapsAria}
 					>
 						<FaGooglePlusSquare className={classes.socialicon} />
 					</a>
