@@ -18,7 +18,9 @@
     "link4": "À propos",
     "address": "17 rue de Douai, 75009 Paris, France\nTél. : +33 (0)1 84 16 20 35",
     "email": "cabinet@ouaknine-avocats.com",
-    "mobile": "+33 (0)6 29 65 35 12"
+    "mobile": "+33 (0)6 29 65 35 12",
+    "linkedinAria": "LinkedIn d’Alice Ouaknine, ouverture dans un nouvel onglet",
+    "mapsAria": "Le cabinet sur Google Maps, ouverture dans un nouvel onglet"
   },
   "en": {
     "link1": "Ouaknine Law Firm",
@@ -27,6 +29,8 @@
     "link4": "About",
     "address": "17 rue de Douai, 75009 Paris, France\nTel: +33 (0)1 84 16 20 35",
     "email": "cabinet@ouaknine-avocats.com",
-    "mobile": "+33 (0)6 29 65 35 12"
+    "mobile": "+33 (0)6 29 65 35 12",
+    "linkedinAria": "Alice Ouaknine on LinkedIn, opens in a new tab",
+    "mapsAria": "The firm on Google Maps, opens in a new tab"
   }
 }
