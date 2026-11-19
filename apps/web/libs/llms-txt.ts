@@ -88,6 +88,22 @@ export type LlmsTxtInput = {
 	otherLocale: Locale;
 };
 
+export type LlmsHeaderInput = Pick<LlmsTxtInput, "locale" | "labels" | "contact">;
+
+// The H1, the summary, the guidance and the contact line: everything above the
+// first H2. /llms-full.txt opens on the same lines, so it is one function.
+export const llmsHeader = ({ locale, labels, contact }: LlmsHeaderInput): string => {
+	const { street, phone } = splitAddress(contact[locale].address);
+	const email = contact[locale].email;
+
+	return joinBlocks([
+		`# ${labels.footerLead}`,
+		`> ${labels.summary}`,
+		labels.guidance.map((line) => fill(line, { street, phone: contact.phone, email })).join("\n\n"),
+		`${street}. ${phone}. ${email}`,
+	]);
+};
+
 export const llmsTxt = ({
 	locale,
 	labels,
@@ -96,14 +112,8 @@ export const llmsTxt = ({
 	fields,
 	otherLocale,
 }: LlmsTxtInput): string => {
-	const { street, phone } = splitAddress(contact[locale].address);
-	const email = contact[locale].email;
-
 	const blocks = [
-		`# ${labels.footerLead}`,
-		`> ${labels.summary}`,
-		labels.guidance.map((line) => fill(line, { street, phone: contact.phone, email })).join("\n\n"),
-		`${street}. ${phone}. ${email}`,
+		llmsHeader({ locale, labels, contact }),
 		// The lead is dropped with the list: a heading followed by "the situations
 		// this firm is right for" and then nothing is the empty section this file's
 		// own helper exists to prevent.
@@ -115,6 +125,7 @@ export const llmsTxt = ({
 		section(
 			"Optional",
 			linkList([
+				{ label: "llms-full.txt", url: pageUrl(locale, "/llms-full.txt"), note: labels.fullNote },
 				{ label: "sitemap.xml", url: `${HOST}/sitemap.xml`, note: labels.sitemapNote },
 				{
 					label: labels.otherLocaleLabel,

@@ -24,6 +24,7 @@ const FR_LABELS: LlmsLabels = {
 	whenToUseLead: "Les situations pour lesquelles le cabinet est le bon interlocuteur.",
 	pages: "Pages",
 	sitemapNote: "toutes les URL du site",
+	fullNote: "le site entier en un fichier",
 	englishNote: "la même arborescence en anglais",
 	otherLocaleLabel: "English",
 };
@@ -36,6 +37,7 @@ const EN_LABELS: LlmsLabels = {
 	whenToUseLead: "The situations this firm is the right contact for.",
 	pages: "Pages",
 	sitemapNote: "every URL on the site",
+	fullNote: "the whole site in one file",
 	englishNote: "the same tree in French",
 	otherLocaleLabel: "Français",
 };
@@ -99,6 +101,9 @@ test("the contact facts and both well-known files are listed", () => {
 		),
 	).toBe(true);
 	expect(markdown.includes(`- [sitemap.xml](${HOST}/sitemap.xml)`)).toBe(true);
+	expect(
+		markdown.includes(`- [llms-full.txt](${HOST}/llms-full.txt): le site entier en un fichier`),
+	).toBe(true);
 	expect(markdown.includes(`- [English](${HOST}/en)`)).toBe(true);
 	expect(markdown.endsWith("\n")).toBe(true);
 });
@@ -187,6 +192,7 @@ test("the English edition is a full file, not the French one relabelled", () => 
 		file,
 	).toBe(true);
 	expect(file.includes(`- [Français](${HOST}/)`), file).toBe(true);
+	expect(file.includes(`- [llms-full.txt](${HOST}/en/llms-full.txt)`), file).toBe(true);
 	expect(file.includes("Cabinet Ouaknine")).toBe(false);
 });
 

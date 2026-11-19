@@ -9,8 +9,7 @@
     "navAria": "Menu de navigation",
     "iska": {
       "label": "Membre du\nréseau",
-      "labelMobile": "Membre du réseau",
-      "aria": "Membre du réseau ISKA"
+      "labelMobile": "Membre du réseau"
     }
   },
 
@@ -24,8 +23,7 @@
     "navAria": "Navigation menu",
     "iska": {
       "label": "Member of the\nnetwork",
-      "labelMobile": "Member of the network",
-      "aria": "Member of the ISKA network"
+      "labelMobile": "Member of the network"
     }
   }
 }

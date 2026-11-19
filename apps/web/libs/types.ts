@@ -273,6 +273,7 @@ export type LlmsLabels = {
 	whenToUseLead: string;
 	pages: string;
 	sitemapNote: string;
+	fullNote: string;
 	englishNote: string;
 	otherLocaleLabel: string;
 };
