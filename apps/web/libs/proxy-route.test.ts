@@ -82,6 +82,23 @@ test("/llms.txt is rewritten to its generator", () => {
 	});
 });
 
+test("/llms-full.txt is rewritten to its generator, in either language", () => {
+	for (const locale of ["fr", "en"]) {
+		expect(route({ pathname: "/llms-full.txt", locale, accept: CHROME })).toStrictEqual({
+			kind: "rewrite",
+			route: "/api/llms-full",
+			path: undefined,
+		});
+	}
+});
+
+test("/llms-full.txt with a query collapses onto the bare path, keeping the locale", () => {
+	expect(redirecting({ pathname: "/llms-full.txt", search: "?bust=1" }).to).toBe("/llms-full.txt");
+	expect(redirecting({ pathname: "/llms-full.txt", search: "?bust=1", locale: "en" }).to).toBe(
+		"/en/llms-full.txt",
+	);
+});
+
 test("a non-negotiable path is passed straight through", () => {
 	expect(route({ pathname: "/favicon.ico", accept: CHROME })).toStrictEqual({
 		kind: "pass",

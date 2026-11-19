@@ -58,8 +58,8 @@ export function proxy(req: NextRequest) {
 export const config = {
 	// Narrow rather than a bare prefix denylist: every file in public/ would
 	// otherwise pay an edge invocation just to be turned away. Matched here are
-	// extensionless page paths, `.md` siblings, and the one generated file that
-	// has a locale. `_next/data/` cannot be excluded at this level — Next hoists
+	// extensionless page paths, `.md` siblings, and the two generated files that
+	// have a locale. `_next/data/` cannot be excluded at this level — Next hoists
 	// it ahead of the lookahead and rewrites it to the page route — so the
 	// handler drops those on the `x-nextjs-data` header, after the branches that
 	// answer an explicit `.md` URL and /llms.txt.
@@ -68,6 +68,7 @@ export const config = {
 	matcher: [
 		"/",
 		"/llms.txt",
+		"/llms-full.txt",
 		"/((?!api/|_next/|_vercel/)[^.]*)",
 		"/((?!api/|_next/|_vercel/).*\\.md)",
 	],

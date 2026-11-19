@@ -14,7 +14,6 @@ function IskaMention({ content }: { content: IskaCopy }) {
 		<Link
 			href={ISKA_PATH}
 			className={`${classes.mention} ${pathname === ISKA_PATH ? classes.active : ""}`}
-			aria-label={content.aria}
 		>
 			<span className={classes.separator} aria-hidden="true" />
 			<span className={classes.label}>{content.label}</span>
@@ -27,7 +26,7 @@ function IskaMention({ content }: { content: IskaCopy }) {
 
 function IskaMentionMobile({ content, onClick }: { content: IskaCopy; onClick: () => void }) {
 	return (
-		<Link href={ISKA_PATH} className={classes.mobile} aria-label={content.aria} onClick={onClick}>
+		<Link href={ISKA_PATH} className={classes.mobile} onClick={onClick}>
 			<span className={classes.mobilelabel}>{content.labelMobile}</span>
 			<span className={classes.chip}>
 				<Image src={IskaLogo} alt="ISKA" width={54} height={22} />

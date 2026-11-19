@@ -8,3 +8,5 @@ Sitemap: https://www.ouaknine-avocats.com/sitemap.xml
 
 # Written for agents: what this site is for, and where each page lives.
 # https://www.ouaknine-avocats.com/llms.txt
+# The whole site in one markdown file, every page in full:
+# https://www.ouaknine-avocats.com/llms-full.txt

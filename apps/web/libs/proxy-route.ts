@@ -21,6 +21,7 @@ export const NOT_ACCEPTABLE_ROUTE = "/api/not-acceptable";
 // middleware knows which one was asked for.
 export const WELL_KNOWN: Record<string, string> = {
 	"/llms.txt": "/api/llms",
+	"/llms-full.txt": "/api/llms-full",
 };
 
 // `true` means "add Accept to whatever Vary already says"; a string is the

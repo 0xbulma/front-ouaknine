@@ -119,6 +119,7 @@ test("the real agent copy fills every label and note, in both languages", () => 
 			"whenToUseNote",
 			"pages",
 			"sitemapNote",
+			"fullNote",
 			"englishNote",
 			"otherLocaleLabel",
 			"expertiseLabel",
