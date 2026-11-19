@@ -17,3 +17,22 @@ catalog:
 allowBuilds:
   "@parcel/watcher": true
   esbuild: true
+
+# Security floors for transitive dependencies, from the Dependabot advisories.
+# Each selector is scoped to the major its parents already ask for, so these
+# only lift a patch or minor and never move a parent onto a new major. Most of
+# them come in through the studio's Sanity CLI; drop one once its parent's own
+# range has moved past the floor.
+overrides:
+  "adm-zip": ^0.6.1
+  "brace-expansion@5": ^5.0.13
+  "dompurify@3": ^3.4.18
+  "js-yaml@3": ^3.15.2
+  "markdown-it@14": ^14.3.3
+  "sharp": ^0.35.5
+  "smol-toml@1": ^1.9.1
+  "undici@6": ^6.29.1
+  "undici@7": ^7.30.2
+  "undici@8": ^8.12.4
+  "vite@8": ^8.3.8
+  "zod@4": ^4.6.7
